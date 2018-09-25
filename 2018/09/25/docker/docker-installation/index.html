@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          tags - banban&#39;s Blog
+          Docker 安装 - banban&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="https://banbanpeppa.github.io/tags/">
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/images/blog-bg.png')
-            /*page*/
+            background-image: url('undefined')
+            /*post*/
         
     }
     
@@ -83,10 +83,18 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>tags</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">Learn Anything, Anytime, Anywhere~</span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Docker" title="Docker">Docker</a>
+                            
+                        </div>
+                        <h1>Docker 安装</h1>
+                        <h2 class="subheading">&quot;不同操作系统&quot;</h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-09-25
+                        </span>
                     </div>
                 
 
@@ -189,106 +197,183 @@
 
 
     <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- 标签云 -->
-            <div id='tag_cloud' class="tags">
-                
-                    <a href="#随笔" title="随笔" rel="1">随笔</a>
-                
-                    <a href="#Kubernetes" title="Kubernetes" rel="1">Kubernetes</a>
-                
-                    <a href="#Docker" title="Docker" rel="1">Docker</a>
-                
-            </div>
+    <!-- Modify by Yu-Hsuan Yen -->
 
-            <!-- 标签列表 -->
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="随笔">
-                    <span class="tag-text">随笔</span>
-                </span>
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="Debian9"><a href="#Debian9" class="headerlink" title="Debian9"></a>Debian9</h2><h3 id="移除旧的docker相关软件"><a href="#移除旧的docker相关软件" class="headerlink" title="移除旧的docker相关软件"></a>移除旧的docker相关软件</h3><pre><code>$ sudo apt-get remove docker docker-engine docker.io
+</code></pre><pre><code>$ sudo apt-get update
+</code></pre><h3 id="安装基本软件"><a href="#安装基本软件" class="headerlink" title="安装基本软件"></a>安装基本软件</h3><pre><code>$ sudo apt-get install -y \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+</code></pre><h3 id="添加docker安装源"><a href="#添加docker安装源" class="headerlink" title="添加docker安装源"></a>添加docker安装源</h3><pre><code>$ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+</code></pre><pre><code>$ sudo apt-key fingerprint 0EBFCD88
+</code></pre><pre><code>$ sudo add-apt-repository \
+   &quot;deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable&quot;
+</code></pre><pre><code>$ sudo apt-get update
+</code></pre><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code>$ sudo apt-get install -y docker-ce
+</code></pre><h3 id="更改国内源"><a href="#更改国内源" class="headerlink" title="更改国内源"></a>更改国内源</h3><pre><code>vim /etc/default/docker
+</code></pre><p>更改内容</p>
+<pre><code>DOCKER_OPTS=&quot;--dns 114.114.114.114 --graph=/home/chenzhiling/docker --registry-mirror=https://docker.mirrors.ustc.edu.cn/&quot;
+</code></pre><pre><code>$ sudo service docker restart
+</code></pre><h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><pre><code>apt-get update
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository &quot;deb https://download.docker.com/linux/$(. /etc/os-release; echo &quot;$ID&quot;) $(lsb_release -cs) stable&quot;
+apt-get update &amp;&amp; apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk &#39;{print $3}&#39;)
+</code></pre><h2 id="Deepin"><a href="#Deepin" class="headerlink" title="Deepin"></a>Deepin</h2><pre><code>apt-get update
+apt-get install -y docker.io
+systemctl enable docker.service
+</code></pre>
                 
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <div class="post-preview">
-                     <a href="/2018/09/20/hello-world/hello-blog/">
-                        <h2 class="post-title">
-                            2018-09-20
-                            Hello Blog
-                        </h2>
-                        
-                            <h3 class="post-subtitle">
-                                 "Hello World"
-                            </h3>
-                        
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </div>
+
                 <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="Kubernetes">
-                    <span class="tag-text">Kubernetes</span>
-                </span>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <div class="post-preview">
-                     <a href="/2018/09/25/kubernetes/installation/">
-                        <h2 class="post-title">
-                            2018-09-25
-                            Kubernetes 集群安装(使用kubeadm)
-                        </h2>
-                        
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </div>
-                <hr>
-                
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-tag listing-seperator" id="Docker">
-                    <span class="tag-text">Docker</span>
-                </span>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <div class="post-preview">
-                     <a href="/2018/09/25/docker/docker-installation/">
-                        <h2 class="post-title">
-                            2018-09-25
-                            Docker 安装
-                        </h2>
-                        
-                            <h3 class="post-subtitle">
-                                "不同操作系统"
-                            </h3>
-                        
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </div>
-                <hr>
-                
-            </div>
-            
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/25/kubernetes/installation/" data-toggle="tooltip" data-placement="top" title="Kubernetes 集群安装(使用kubeadm)">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
 
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
 
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Debian9"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Debian9</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#移除旧的docker相关软件"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">移除旧的docker相关软件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装基本软件"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">安装基本软件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#添加docker安装源"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">添加docker安装源</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">安装</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#更改国内源"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">更改国内源</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Ubuntu"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Ubuntu</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Deepin"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Deepin</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Docker" title="Docker">Docker</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://gaocegege.com/Blog/" target="_blank">gaocegege</a></li>
+                    
+                </ul>
+                
+            </div>
         </div>
     </div>
-</div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->

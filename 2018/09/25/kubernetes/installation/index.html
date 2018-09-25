@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword"  content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Kubernetes 集群安装(使用kubeadm) - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/25/kubernetes/installation/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/kube/bg.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
+                            
+                        </div>
+                        <h1>Kubernetes 集群安装(使用kubeadm)</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-09-25
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h3><pre><code>Debian9: Debian 4.9.65-3+deb9u1 (2017-12-23) x86_64 GNU/Linux
+</code></pre><h3 id="服务器信息"><a href="#服务器信息" class="headerlink" title="服务器信息"></a>服务器信息</h3><table>
+<thead>
+<tr>
+<th>hostname</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master-node</td>
+<td>10.82.45.41</td>
+</tr>
+<tr>
+<td>minion-node-1</td>
+<td>10.82.45.42</td>
+</tr>
+<tr>
+<td>minion-node-2</td>
+<td>10.82.45.43</td>
+</tr>
+</tbody>
+</table>
+<h3 id="预装软件"><a href="#预装软件" class="headerlink" title="预装软件"></a>预装软件</h3><ol>
+<li><p>安装systemd</p>
+<p> <code>systemctl</code>工具之所以重要，是因为<code>systemctl</code>服务管理工具是之后Kubernetes安装过程中，其要判断别的服务是否启动的方式，如<code>kubeadm</code>在初始化集群的时候会判断<code>kubelet</code>服务是否启动，其主要通过 <code>systemctl</code> 方式判断，如果<code>systemd</code>工具不能使用，会导致失败(除非是强行抑制这个错误，但是难保证后续不出错)</p>
+<p> 如果确定systemctl工具没有安装,可以按照如下安装</p>
+<pre><code> apt-get update
+ apt-get -y install systemd
+</code></pre><p> 如果已经安装好之后发现</p>
+<pre><code> systemctl status xxx.service
+</code></pre><p> 之后会出现如下错误</p>
+<pre><code> Failed to get properties: No such interface &#39;&#39;
+</code></pre><p> 则说明系统默认并没有采用systemd来管理服务，这个时候需要修改系统内核参数</p>
+<p> 编辑<code>/etc/default/grub</code>文件，找到GRUB_CMDLINE_LINUX参数，这个参数的值是一个键值对形式的参数集合，在这个参数内添加如下内容</p>
+<pre><code> GRUB_CMDLINE_LINUX=&quot; ... init=/bin/systemd&quot;
+</code></pre><p> 保存之后，更新grub来更新内核参数</p>
+<pre><code> update-grub
+</code></pre><p> 重启系统</p>
+<pre><code> reboot
+</code></pre></li>
+<li><p>关闭swap</p>
+<p> Kubernetes 1.8开始要求关闭系统的Swap，如果不关闭，默认配置下kubelet将无法启动。可以通过kubelet的启动参数–fail-swap-on=false更改这个限制。 我们这里关闭系统的Swap:</p>
+<pre><code> swapoff -a
+</code></pre><p> 修改 /etc/fstab 文件，注释掉 SWAP 的自动挂载，使用free -m确认swap已经关闭</p>
+<pre><code> 注意：生产环境下,还是建议不要关闭swap,通过--fail-swap-on=false参数来达到目的
+</code></pre></li>
+<li><p>安装<a href="https://github.com/kubernetes-incubator/cri-tools" target="_blank" rel="noopener">cri-tools</a></p>
+<p> CLI and validation tools for Kubelet Container Runtime Interface</p>
+<p> kubelet工具想要正常运行，需要安装该工具</p>
+<p> 打开<a href="https://github.com/kubernetes-incubator/cri-tools/releases" target="_blank" rel="noopener">release</a>找到符合要求的版本(跟需要安装的Kubernetes对应)</p>
+<p> 这边安装的版本选择v1.11.0</p>
+<pre><code> wget https://github.com/kubernetes-incubator/cri-tools/releases/download/v1.11.0/crictl-v1.11.0-linux-amd64.tar.gz \
+ &amp;&amp; tar zxvf crictl-v1.11.0-linux-amd64.tar.gz \
+ &amp;&amp; mv crictl /usr/bin
+</code></pre></li>
+<li><p>安装docker-ce</p>
+<pre><code> apt-get remove docker docker-engine docker.io
+ apt-get update
+
+ apt-get install \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+
+ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+ apt-key fingerprint 0EBFCD88
+
+ add-apt-repository \
+     &quot;deb [arch=amd64] https://download.docker.com/linux/debian \
+         $(lsb_release -cs) \
+     stable&quot;
+
+ apt-get update
+ apt-get install docker-ce
+</code></pre></li>
+<li><p>安装cni工具(K8s网络需要使用)</p>
+<pre><code> CNI_VERSION=v0.6.0 \
+ &amp;&amp; mkdir -p /opt/cni/bin \
+ &amp;&amp; curl -L &quot;https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-amd64-${CNI_VERSION}.tgz&quot; | tar -C /opt/cni/bin -xz
+</code></pre></li>
+<li><p>配置iptables信息</p>
+<pre><code> echo &#39;1&#39; &gt; /proc/sys/net/ipv4/ip_forward
+ echo 1 &gt; /proc/sys/net/bridge/bridge-nf-call-iptables
+ echo 1 &gt; /proc/sys/net/bridge/bridge-nf-call-ip6tables
+ sysctl -p
+</code></pre></li>
+</ol>
+<h2 id="Kubernetes-v1-11-0安装"><a href="#Kubernetes-v1-11-0安装" class="headerlink" title="Kubernetes v1.11.0安装"></a>Kubernetes v1.11.0安装</h2><h3 id="获取二进制文件"><a href="#获取二进制文件" class="headerlink" title="获取二进制文件"></a>获取二进制文件</h3><p>在<a href="https://github.com/kubernetes/kubernetes" target="_blank" rel="noopener">Kubernetes</a>的github页面找到<a href="https://github.com/kubernetes/kubernetes/releases" target="_blank" rel="noopener">release</a>页，选择版本v1.11.0，点击<a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.11.md#v1110" target="_blank" rel="noopener">CHANGELOG-1.11.md</a>，会看到有包含server/client/node三个角色的Kubernetes的二进制文件,这边只需要下载node的二进制文件，我已经上传到了国内七牛云存储中</p>
+<pre><code>wget http://pbqsx8kpd.bkt.clouddn.com/kubernetes-node-linux-11-amd64.tar.gz \
+&amp;&amp; tar zxvf kubernetes-node-linux-11-amd64.tar.gz \
+&amp;&amp; cd kubernetes/node/bin \
+&amp;&amp; chmod +x kube* \
+&amp;&amp; cp kubelet kubectl kubeadm /usr/bin \
+&amp;&amp; cd $HOME
+</code></pre><h3 id="配置kubelet服务到systemd中"><a href="#配置kubelet服务到systemd中" class="headerlink" title="配置kubelet服务到systemd中"></a>配置kubelet服务到systemd中</h3><pre><code>RELEASE=v1.11.0 \
+&amp;&amp; curl -sSL &quot;https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/kubelet.service&quot; &gt; /etc/systemd/system/kubelet.service \
+&amp;&amp; mkdir -p /etc/systemd/system/kubelet.service.d \
+&amp;&amp; curl -sSL &quot;https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/10-kubeadm.conf&quot; &gt; /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+</code></pre><p>重启服务</p>
+<pre><code>systemctl stop kubelet
+systemctl daemon reload
+systemctl enable kubelet
+systemctl start kubelet
+systemctl status kubelet
+</code></pre><h3 id="提前拉取docker镜像"><a href="#提前拉取docker镜像" class="headerlink" title="提前拉取docker镜像"></a>提前拉取docker镜像</h3><p>由于kubeadm工具默认会去国外谷歌的镜像源拉取k8s安装需要的镜像文件(k8s.gcr.io), 这个时候就需要提前将docker镜像拉取下来之后重新tag，本人已经将镜像放置在netease内部镜像源中,直接按照如下执行即可</p>
+<pre><code>docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/kube-scheduler-amd64:v1.11.0 &amp;&amp; \
+docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/kube-controller-manager-amd64:v1.11.0 &amp;&amp; \
+docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/kube-apiserver-amd64:v1.11.0 &amp;&amp; \
+docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/kube-proxy-amd64:v1.11.0 &amp;&amp; \
+docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/coredns:1.1.3 &amp;&amp; \
+docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/etcd-amd64:3.2.18 &amp;&amp; \
+docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/pause-amd64:3.1 &amp;&amp; \
+docker pull registry.cn-shenzhen.aliyuncs.com/k8s_gcr_io/pause:3.1
+</code></pre><pre><code>其中有一些镜像是非必需的,本人是因为后续需要为kubeflow提供镜像支撑,因此提前拉取，其中tf_operator、jupyterhub-k8s为非必需镜像
+</code></pre><p>接下来为各个镜像打tag</p>
+<pre><code>docker tag 0e4a34a3b0e6 k8s.gcr.io/kube-scheduler-amd64:v1.11.0 &amp;&amp; \ 
+docker tag 55b70b420785 k8s.gcr.io/kube-controller-manager-amd64:v1.11.0 &amp;&amp; \ 
+docker tag 1d3d7afd77d1 k8s.gcr.io/kube-proxy-amd64:v1.11.0 &amp;&amp; \ 
+docker tag 214c48e87f58 k8s.gcr.io/kube-apiserver-amd64:v1.11.0 &amp;&amp; \ 
+docker tag b3b94275d97c k8s.gcr.io/coredns:1.1.3 &amp;&amp; \ 
+docker tag b8df3b177be2 k8s.gcr.io/etcd-amd64:3.2.18 &amp;&amp; \ 
+docker tag da86e6ba6ca1 k8s.gcr.io/pause-amd64:3.1 &amp;&amp; \ 
+docker tag da86e6ba6ca1 k8s.gcr.io/pause:3.1
+</code></pre><h3 id="初始化Master节点"><a href="#初始化Master节点" class="headerlink" title="初始化Master节点"></a>初始化Master节点</h3><pre><code>kubeadm init --kubernetes-version=v1.11.0 --apiserver-advertise-address 10.82.45.41 --pod-network-cidr=10.244.0.0/16 --node-name=master-node
+</code></pre><p><code>--apiserver-advertise-address</code> 指明用 Master 的哪个 interface 与 Cluster 的其他节点通信。如果 Master 有多个 interface，建议明确指定，如果不指定，kubeadm 会自动选择有默认网关的 interface</p>
+<p><code>--pod-network-cidr</code> 指定 Pod 网络的范围。Kubernetes 支持多种网络方案，而且不同网络方案对 <code>--pod-network-cidr</code> 有自己的要求，这里设置为 <code>10.244.0.0/16</code> 是因为我们将使用 flannel 网络方案，必须设置成这个 CIDR。当然还有其他网络方案，比如 <code>Canal</code></p>
+<p>初始化过程中,经历的主要过程包括</p>
+<p><img src="/images/kube/kubeadm-init.png" alt="image"></p>
+<pre><code>① kubeadm 执行初始化前的检查
+
+② 生成 token 和证书 (token查询可以使用 kubeadm token list)
+
+③ 生成 KubeConfig 文件，kubelet 需要这个文件与 Master 通信
+
+④ 安装 Master 组件，会从 goolge 的 Registry 下载组件的 Docker 镜像，这一步可能会花一些时间，主要取决于网络质量
+
+⑤ 安装附加组件 kube-proxy 和 kube-dns
+
+⑥ Kubernetes Master 初始化成功
+
+⑦ 提示如何配置 kubectl，后面会实践
+
+⑧ 提示如何安装 Pod 网络，后面会实践
+
+⑨ 提示如何注册其他节点到 Cluster，后面会实践
+</code></pre><h3 id="配置-kubectl"><a href="#配置-kubectl" class="headerlink" title="配置 kubectl"></a>配置 kubectl</h3><p>kubectl 是管理 Kubernetes Cluster 的命令行工具，前面我们已经在所有的节点安装了 kubectl。Master 初始化完成后需要做一些配置工作，然后 kubectl 就能使用了</p>
+<p>依照 kubeadm init 输出的第 ⑦ 步提示，推荐用 Linux 普通用户执行 kubectl（root 会有一些问题）</p>
+<p>我们为 普通用户(banban) 用户配置 kubectl：</p>
+<pre><code>su - banban
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre><p>为了使用更便捷，启用 kubectl 命令的自动补全功能</p>
+<pre><code>echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; ~/.bashrc
+</code></pre><p>这样 banban 用户就可以使用 kubectl 了</p>
+<h3 id="安装-Flannel-网络-Optional"><a href="#安装-Flannel-网络-Optional" class="headerlink" title="安装 Flannel 网络(Optional)"></a>安装 Flannel 网络(Optional)</h3><p>要让 Kubernetes Cluster 能够工作，必须安装 Pod 网络，否则 Pod 之间无法通信</p>
+<p>Kubernetes 支持多种网络方案，这里我们先使用 flannel, flannel是一个 coreOS组织开源的项目, 这个组织做了很多在k8s上面的工作, 信息如下</p>
+<p><a href="https://coreos.com/" target="_blank" rel="noopener">CoreOS</a></p>
+<p><a href="https://github.com/coreos" target="_blank" rel="noopener">CoreOS github</a></p>
+<p>执行如下命令部署 flannel</p>
+<pre><code>kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+</code></pre><p>由于这边直接使用的是master分支的yaml文件, 不能保证后续是否出现兼容性问题, 因此如果出现了问题可以使用下列tag下的yaml文件</p>
+<pre><code>kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+</code></pre><p>结果如下</p>
+<pre><code>clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrolebinding.rbac.authorization.k8s.io/flannel created
+serviceaccount/flannel created
+configmap/kube-flannel-cfg created
+daemonset.extensions/kube-flannel-ds-amd64 created
+daemonset.extensions/kube-flannel-ds-arm64 created
+daemonset.extensions/kube-flannel-ds-arm created
+daemonset.extensions/kube-flannel-ds-ppc64le created
+daemonset.extensions/kube-flannel-ds-s390x created
+</code></pre><h3 id="安装weave网络模型-Optional-和Flannel网络二选一"><a href="#安装weave网络模型-Optional-和Flannel网络二选一" class="headerlink" title="安装weave网络模型(Optional)(和Flannel网络二选一)"></a>安装weave网络模型(Optional)(和Flannel网络二选一)</h3><pre><code>sysctl net.bridge.bridge-nf-call-iptables=1
+</code></pre><p>Weave Net works on <code>amd64</code>, <code>arm</code>, <code>arm64</code> and <code>ppc64le</code> without any extra action required. Weave Net sets hairpin mode by default. This allows Pods to access themselves via their Service IP address if they don’t know their PodIP.</p>
+<pre><code>kubectl apply -f &quot;https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d &#39;\n&#39;)&quot;
+</code></pre><h3 id="开启RBAC权限作为开发使用"><a href="#开启RBAC权限作为开发使用" class="headerlink" title="开启RBAC权限作为开发使用"></a>开启RBAC权限作为开发使用</h3><p><strong>Permissive RBAC Permissions</strong></p>
+<p>You can replicate a permissive policy using RBAC role bindings.</p>
+<p><em>==Warning: The following policy allows ALL service accounts to act as cluster administrators. Any application running in a container receives service account credentials automatically, and could perform any action against the API, including viewing secrets and modifying permissions. This is not a recommended policy.==</em></p>
+<pre><code>kubectl create clusterrolebinding permissive-binding \
+--clusterrole=cluster-admin \
+--user=admin \
+--user=kubelet \
+--group=system:serviceaccounts
+</code></pre><pre><code>kubectl create clusterrolebinding add-on-cluster-admin \
+--clusterrole=cluster-admin \
+--serviceaccount=kube-system:default
+</code></pre><h3 id="添加-k8s-node1、k8s-node2"><a href="#添加-k8s-node1、k8s-node2" class="headerlink" title="添加 k8s-node1、k8s-node2"></a>添加 k8s-node1、k8s-node2</h3><p>在 k8s-node1、k8s-node2上执行如下命令，将其注册到 Cluster 中</p>
+<pre><code>kubeadm join 10.82.45.41:6443 --token ylwv3f.n5iqf5mova5xm3nl --discovery-token-ca-cert-hash sha256:a3b77b9f9af801f9fa238a5e06db9a0dff37a159f1083ecf238042942b9a51b7
+</code></pre><p>这里的 –token 来自前面 kubeadm init 输出的第 ⑨ 步提示，如果当时没有记录下来可以通过 kubeadm token list 查看</p>
+<p>执行结果</p>
+<pre><code>[preflight] running pre-flight checks
+        [WARNING RequiredIPVSKernelModulesAvailable]: the IPVS proxier will not be used, because the following required kernel modules are not loaded: [ip_vs ip_vs_rr ip_vs_wrr ip_vs_sh] or no builtin kernel ipvs support: map[ip_vs:{} ip_vs_rr:{} ip_vs_wrr:{} ip_vs_sh:{} nf_conntrack_ipv4:{}]
+you can solve this problem with following methods:
+ 1. Run &#39;modprobe -- &#39; to load missing kernel modules;
+2. Provide the missing builtin kernel ipvs support
+
+        [WARNING Service-Docker]: docker service is not enabled, please run &#39;systemctl enable docker.service&#39;
+I0711 10:56:53.967088    6978 kernel_validator.go:81] Validating kernel version
+I0711 10:56:53.967522    6978 kernel_validator.go:96] Validating kernel config
+[discovery] Trying to connect to API Server &quot;192.168.18.129:6443&quot;
+[discovery] Created cluster-info discovery client, requesting info from &quot;https://192.168.18.129:6443&quot;
+[discovery] Requesting info from &quot;https://192.168.18.129:6443&quot; again to validate TLS against the pinned public key
+[discovery] Cluster info signature and contents are valid and TLS certificate validates against pinned roots, will use API Server &quot;192.168.18.129:6443&quot;
+[discovery] Successfully established connection with API Server &quot;192.168.18.129:6443&quot;
+[kubelet] Downloading configuration for the kubelet from the &quot;kubelet-config-1.11&quot; ConfigMap in the kube-system namespace
+[kubelet] Writing kubelet configuration to file &quot;/var/lib/kubelet/config.yaml&quot;
+[kubelet] Writing kubelet environment file with flags to file &quot;/var/lib/kubelet/kubeadm-flags.env&quot;
+[preflight] Activating the kubelet service
+[tlsbootstrap] Waiting for the kubelet to perform the TLS Bootstrap...
+[patchnode] Uploading the CRI Socket information &quot;/var/run/dockershim.sock&quot; to the Node API object &quot;banban-k8s-2&quot; as an annotation
+
+This node has joined the cluster:
+* Certificate signing request was sent to master and a response
+  was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run &#39;kubectl get nodes&#39; on the master to see this node join the cluster.
+</code></pre><p>为了能够在工作节点上执行kubectl命令,需要执行如下</p>
+<pre><code>sudo cp /etc/kubernetes/kubelet.conf $HOME/
+sudo chown $(id -u):$(id -g) $HOME/kubelet.conf
+export KUBECONFIG=$HOME/kubelet.conf
+</code></pre><h3 id="启动一个简单demo"><a href="#启动一个简单demo" class="headerlink" title="启动一个简单demo"></a>启动一个简单demo</h3><ul>
+<li><p>部署应用</p>
+<pre><code>  kubectl run kubernetes-bootcamp \
+        --image=docker.io/jocatalin/kubernetes-bootcamp:v1 \
+        --port=8080
+</code></pre><p>  这里我们通过 kubectl run 部署了一个应用，命名为 kubernetes-bootcamp</p>
+<p>  Docker 镜像通过 <code>--image</code> 指定</p>
+<p>  <code>--port</code> 设置应用对外服务的端口</p>
+<p>  输出结果如下</p>
+<pre><code>  deployment.apps/kubernetes-bootcamp created
+</code></pre><p>  这里 deployment 是 Kubernetes 的术语，可以理解为应用</p>
+<p>  <strong>Kubernetes 还有一个重要术语</strong> <code>Pod</code></p>
+<p>  <code>Pod</code> 是容器的集合，通常会将紧密相关的一组容器放到一个 <code>Pod</code> 中，同一个 <code>Pod</code> 中的所有容器共享 IP 地址和 Port 空间，也就是说它们在一个 <code>network namespace</code> 中</p>
+<p>  <code>Pod</code> 是 Kubernetes 调度的最小单位，同一 Pod 中的容器始终被一起调度</p>
+<p>  运行 <code>kubectl get pods</code> 查看当前的 Pod</p>
+</li>
+<li><p>访问应用</p>
+<p>  默认情况下，所有 Pod 只能在集群内部访问。对于上面这个例子，要访问应用只能直接访问容器的 8080 端口。为了能够从外部访问应用，我们需要将容器的 8080 端口映射到节点的端口。</p>
+<p>  执行如下命令：</p>
+<pre><code>  kubectl expose deployment/kubernetes-bootcamp \
+        --type=&quot;NodePort&quot; \
+        --port 8080
+</code></pre><p>  输出</p>
+<pre><code>  service/kubernetes-bootcamp exposed
+</code></pre><p>  执行命令 kubectl get services 可以查看应用被映射到节点的哪个端口</p>
+<pre><code>  kubectl get services 
+</code></pre><pre><code>  NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+  kubernetes            ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP          1h
+  kubernetes-bootcamp   NodePort    10.106.120.173   &lt;none&gt;        8080:31295/TCP   11s
+</code></pre><p>  查看这个服务对应的pod</p>
+<pre><code>  kubectl get pods
+</code></pre><pre><code>  NAME                                   READY     STATUS    RESTARTS   AGE
+  kubernetes-bootcamp-86647cdf87-55msz   1/1       Running   0          1h
+</code></pre><p>  查看具体这个pod在哪一个node</p>
+<pre><code>  kubectl describe pods kubernetes-bootcamp-86647cdf87-55msz
+</code></pre><pre><code>  Name:           kubernetes-bootcamp-86647cdf87-55msz
+  Namespace:      default
+  Node:           banban-k8s-2/192.168.18.130
+  Start Time:     Wed, 11 Jul 2018 13:07:33 +0800
+  Labels:         pod-template-hash=4220378943
+                  run=kubernetes-bootcamp
+  Annotations:    &lt;none&gt;
+  Status:         Running
+  IP:             10.244.1.6
+</code></pre><p>  因此外部访问服务可以通过</p>
+<pre><code>  curl 192.168.18.130:31295
+</code></pre><pre><code>  Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-86647cdf87-55msz | v=1
+</code></pre></li>
+</ul>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ul>
+<li><p><strong><em>kubeadm</em></strong></p>
+<p>  node节点加入到集群中 </p>
+<pre><code>  kubeadm join --token &lt;token1&gt; &lt;master-ip&gt;:6443
+</code></pre><p>  master节点查找认证token信息</p>
+<pre><code>  kubeadm token list
+</code></pre><p>  重置配置</p>
+<pre><code>  kubeadm reset
+</code></pre></li>
+<li><p><strong><em>kubectl</em></strong></p>
+<p>  获取nodes节点信息</p>
+<pre><code>  kubectl get nodes
+</code></pre><p>  获取所有pod的信息</p>
+<pre><code>  kubectl get pod --all-namespaces
+</code></pre><p>  获取pod信息及其具体在哪一node上</p>
+<pre><code>  kubectl get pod --all-namespaces -o wide
+</code></pre><p>  获取某一个pod的具体信息</p>
+<pre><code>  kubectl describe pod &lt;Pod Name&gt;
+</code></pre><p>  删除</p>
+<pre><code>  kubectl delete -f &lt;file-name&gt;
+  kubectl delete pod &lt;pod-name&gt;
+  kubectl delete rc &lt;rc-name&gt;
+  kubectl delete service &lt;service-name&gt;
+  kubectl delete pod --all
+</code></pre><p>  出于安全考虑，默认配置下 Kubernetes 不会将 Pod 调度到 Master 节点。如果希望将 k8s-master 也当作 Node 使用，可以执行如下命令：</p>
+<pre><code>  kubectl taint node &lt;k8s-master-name&gt; node-role.kubernetes.io/master-
+</code></pre><p>  如果要恢复 Master Only 状态，执行如下命令：</p>
+<pre><code>  kubectl taint node &lt;k8s-master-name&gt; node-role.kubernetes.io/master=&quot;&quot;:NoSchedule
+</code></pre><p>  查看所有的pods发生的事件</p>
+<pre><code>  kubectl get events
+</code></pre></li>
+<li><p><strong><em>kubelet</em></strong></p>
+<p>  kubelet 是唯一没有以容器形式运行的 Kubernetes 组件，它在 Ubuntu 中通过 Systemd 运行</p>
+<pre><code>  systemctl status kubelet.service
+</code></pre><p>  查看kubelet是否正常启动,查看其健康状态</p>
+<pre><code>  curl -L http://127.0.0.1:10250/healthz
+</code></pre></li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Kubernetes安装过程中难免遇到很多问题，这边也许有些问题没有遇到，但是只要认真寻找解决方案就可以解决。目前Kubernete使用的网络是比较简单的flannel和wavenet，或许在之后的使用中会变更网络</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/09/25/docker/docker-installation/" data-toggle="tooltip" data-placement="top" title="Docker 安装">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/20/hello-world/hello-blog/" data-toggle="tooltip" data-placement="top" title="Hello Blog">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#环境准备"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">环境准备</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#操作系统"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">操作系统</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#服务器信息"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">服务器信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#预装软件"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">预装软件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Kubernetes-v1-11-0安装"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Kubernetes v1.11.0安装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#获取二进制文件"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">获取二进制文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#配置kubelet服务到systemd中"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">配置kubelet服务到systemd中</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#提前拉取docker镜像"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">提前拉取docker镜像</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#初始化Master节点"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">初始化Master节点</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#配置-kubectl"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">配置 kubectl</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装-Flannel-网络-Optional"><span class="toc-nav-number">2.6.</span> <span class="toc-nav-text">安装 Flannel 网络(Optional)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装weave网络模型-Optional-和Flannel网络二选一"><span class="toc-nav-number">2.7.</span> <span class="toc-nav-text">安装weave网络模型(Optional)(和Flannel网络二选一)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#开启RBAC权限作为开发使用"><span class="toc-nav-number">2.8.</span> <span class="toc-nav-text">开启RBAC权限作为开发使用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#添加-k8s-node1、k8s-node2"><span class="toc-nav-number">2.9.</span> <span class="toc-nav-text">添加 k8s-node1、k8s-node2</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#启动一个简单demo"><span class="toc-nav-number">2.10.</span> <span class="toc-nav-text">启动一个简单demo</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#常用命令"><span class="toc-nav-number">2.11.</span> <span class="toc-nav-text">常用命令</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">总结</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://gaocegege.com/Blog/" target="_blank">gaocegege</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/25/kubernetes/installation/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/09/25/kubernetes/installation/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wisteria-somnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2018
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
