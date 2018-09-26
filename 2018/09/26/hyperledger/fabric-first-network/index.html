@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword"  content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          超级账本使用fabric-sample - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/26/hyperledger/fabric-first-network/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/blockchain/hyperledger/bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                            
+                              <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                            
+                              <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                            
+                        </div>
+                        <h1>超级账本使用fabric-sample</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-09-26
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><ul>
+<li>环境基于Ubuntu16.04</li>
+<li>Fabric version = 1.2.0</li>
+</ul>
+<h3 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h3><pre><code>apt-get install docker.io -y
+</code></pre><h3 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h3><pre><code>apt-get install -y python-pip python-setuptools
+pip install --upgrade pip
+pip install docker-compose
+
+curl -L --fail https://github.com/docker/compose/releases/download/1.19.0/run.sh -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+</code></pre><h3 id="安装go"><a href="#安装go" class="headerlink" title="安装go"></a>安装go</h3><pre><code>wget http://p22qphkhy.bkt.clouddn.com/go1.10.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.10.linux-amd64.tar.gz
+vim /etc/profile
+
+    export GOROOT=/usr/local/go
+    export PATH=$PATH:$GOROOT/bin
+    export GOPATH=/opt/gopath
+
+source  /etc/profile
+go version
+</code></pre><h2 id="下载代码"><a href="#下载代码" class="headerlink" title="下载代码"></a>下载代码</h2><p>创建<code>fabric-sample</code>项目的根路径，由于<code>fabric</code>的很多example项目基于Golang开发，因此建议是将Go路径设置在${GOPATH}，然后创建如下路径</p>
+<pre><code>mkdir -p ${GOPATH}/src/github.com/hyperledger/ &amp;&amp; cd ${GOPATH}/src/github.com/hyperledger/
+</code></pre><p>克隆fabric-sample项目</p>
+<pre><code>git clone https://github.com/hyperledger/fabric-samples.git &amp;&amp; cd fabric-samples/
+</code></pre><h2 id="安装fabric-tools"><a href="#安装fabric-tools" class="headerlink" title="安装fabric-tools"></a>安装fabric-tools</h2><p>进入到<code>fabric-sample</code>目录下进行fabric-tools的安装</p>
+<pre><code>curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s 1.2.0
+</code></pre><p>执行完成之后，fabric-sample下会多出一个bin目录，这个目录下面包含了<code>fabric-tools</code>，可以将这个bin文件夹添加到环境变量中</p>
+<pre><code>vim /etc/profile
+
+---
+export PATH=$GOPATH/src/github.com/hyperledger/fabric-samples/bin:$PATH
+---
+
+</code></pre><h2 id="通过脚本启动fabirc网络"><a href="#通过脚本启动fabirc网络" class="headerlink" title="通过脚本启动fabirc网络"></a>通过脚本启动fabirc网络</h2><p>通过脚本启动fabric是比较简单的方式，这个fabric网络拓扑是最简单的网络，具体如下图所示</p>
+<p><img src="/images/blockchain/hyperledger/fabric-sample-topology.png" alt="image"></p>
+<p>首先进入到first-network目录下</p>
+<pre><code>cd ./first-network
+</code></pre><h3 id="生成认证密钥"><a href="#生成认证密钥" class="headerlink" title="生成认证密钥"></a>生成认证密钥</h3><p>生成fabric-sample需要的所有的认证和密钥，以方便之后启动整个网络的时候使用</p>
+<pre><code>echo y | ./byfn.sh -m generate
+</code></pre><p>执行结果如下</p>
+<pre><code>Generating certs and genesis block for channel &#39;mychannel&#39; with CLI timeout of &#39;10&#39; seconds and CLI delay of &#39;3&#39; seconds
+proceeding ...
+/opt/go/src/github.com/hyperledger/fabric-samples/bin/cryptogen
+
+##########################################################
+##### Generate certificates using cryptogen tool #########
+##########################################################
++ cryptogen generate --config=./crypto-config.yaml
+org1.example.com
+org2.example.com
++ res=0
++ set +x
+
+/opt/go/src/github.com/hyperledger/fabric-samples/bin/configtxgen
+##########################################################
+#########  Generating Orderer Genesis block ##############
+##########################################################
++ configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
+2018-09-26 10:59:32.833 HKT [common/tools/configtxgen] main -&gt; WARN 001 Omitting the channel ID for configtxgen is deprecated.  Explicitly passing the channel ID will be required in the future, defaulting to &#39;testchainid&#39;.
+2018-09-26 10:59:32.833 HKT [common/tools/configtxgen] main -&gt; INFO 002 Loading configuration
+2018-09-26 10:59:32.839 HKT [common/tools/configtxgen/encoder] NewChannelGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the channel group in configtx.yaml
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererGroup -&gt; WARN 004 Default policy emission is deprecated, please include policy specificiations for the orderer group in configtx.yaml
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the orderer org group OrdererOrg in configtx.yaml
+2018-09-26 10:59:32.840 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org1MSP in configtx.yaml
+2018-09-26 10:59:32.840 HKT [msp] getMspConfig -&gt; INFO 008 Loading NodeOUs
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 009 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org2MSP in configtx.yaml
+2018-09-26 10:59:32.841 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00a Generating genesis block
+2018-09-26 10:59:32.841 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00b Writing genesis block
++ res=0
++ set +x
+
+#################################################################
+### Generating channel configuration transaction &#39;channel.tx&#39; ###
+#################################################################
++ configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID mychannel
+2018-09-26 10:59:32.875 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 002 Generating new channel configtx
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen/encoder] NewApplicationGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the application group in configtx.yaml
+2018-09-26 10:59:32.882 HKT [msp] getMspConfig -&gt; INFO 004 Loading NodeOUs
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the application org group Org1MSP in configtx.yaml
+2018-09-26 10:59:32.882 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the application org group Org2MSP in configtx.yaml
+2018-09-26 10:59:32.883 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 008 Writing new channel tx
++ res=0
++ set +x
+
+#################################################################
+#######    Generating anchor peer update for Org1MSP   ##########
+#################################################################
++ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID mychannel -asOrg Org1MSP
+2018-09-26 10:59:32.917 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-26 10:59:32.924 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-26 10:59:32.924 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
++ res=0
++ set +x
+
+#################################################################
+#######    Generating anchor peer update for Org2MSP   ##########
+#################################################################
++ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID mychannel -asOrg Org2MSP
+2018-09-26 10:59:32.958 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-26 10:59:32.964 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-26 10:59:32.965 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
++ res=0
++ set +x
+</code></pre><h3 id="启动fabric-sample网络"><a href="#启动fabric-sample网络" class="headerlink" title="启动fabric-sample网络"></a>启动fabric-sample网络</h3><p>启动fabric-sample网络</p>
+<pre><code>echo y | ./byfn.sh -m up
+</code></pre><blockquote>
+<p>如果想要使用nodejs语言编写的智能合约，可以使用 -l 标志指定智能合约语言<br>不指定默认使用Golang<br><code>./byfn.sh -m up -l node</code></p>
+</blockquote>
+<p>执行成功结果</p>
+<pre><code>Installing chaincode on peer1.org2...
++ peer chaincode install -n mycc -v 1.0 -l golang -p github.com/chaincode/chaincode_example02/go/
++ res=0
++ set +x
+2018-09-26 03:00:38.660 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 001 Using default escc
+2018-09-26 03:00:38.660 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 002 Using default vscc
+2018-09-26 03:00:38.810 UTC [chaincodeCmd] install -&gt; INFO 003 Installed remotely response:&lt;status:200 payload:&quot;OK&quot; &gt; 
+===================== Chaincode is installed on peer1.org2 ===================== 
+
+Querying chaincode on peer1.org2...
+===================== Querying on peer1.org2 on channel &#39;mychannel&#39;... ===================== 
++ peer chaincode query -C mychannel -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;,&quot;a&quot;]}&#39;
+Attempting to Query peer1.org2 ...3 secs
++ res=0
++ set +x
+
+90
+===================== Query successful on peer1.org2 on channel &#39;mychannel&#39; ===================== 
+
+========= All GOOD, BYFN execution completed =========== 
+
+
+ _____   _   _   ____   
+| ____| | \ | | |  _ \  
+|  _|   |  \| | | | | | 
+| |___  | |\  | | |_| | 
+|_____| |_| \_| |____/  
+</code></pre><p>执行</p>
+<pre><code>docker ps -a
+
+CONTAINER ID        IMAGE                                                                                                  COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+4b4f8645851b        dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab   &quot;chaincode -peer.add…&quot;   13 minutes ago      Up 13 minutes                                                          dev-peer1.org2.example.com-mycc-1.0
+c7c9b42dabb5        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   &quot;chaincode -peer.add…&quot;   14 minutes ago      Up 14 minutes                                                          dev-peer0.org1.example.com-mycc-1.0
+60a0739363b8        dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b   &quot;chaincode -peer.add…&quot;   14 minutes ago      Up 14 minutes                                                          dev-peer0.org2.example.com-mycc-1.0
+d37d3e69b469        hyperledger/fabric-tools:latest                                                                        &quot;/bin/bash&quot;              14 minutes ago      Up 14 minutes                                                          cli
+5fa3f4446d13        hyperledger/fabric-orderer:latest                                                                      &quot;orderer&quot;                15 minutes ago      Up 14 minutes       0.0.0.0:7050-&gt;7050/tcp                             orderer.example.com
+bc307a3fb4bd        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:8051-&gt;7051/tcp, 0.0.0.0:8053-&gt;7053/tcp     peer1.org1.example.com
+220a1b0c964e        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:7051-&gt;7051/tcp, 0.0.0.0:7053-&gt;7053/tcp     peer0.org1.example.com
+3e3a078b25bc        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:9051-&gt;7051/tcp, 0.0.0.0:9053-&gt;7053/tcp     peer0.org2.example.com
+5c02ec9c1b24        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:10051-&gt;7051/tcp, 0.0.0.0:10053-&gt;7053/tcp   peer1.org2.example.com
+</code></pre><p>会看到有一个排序节点<code>orderer.example.com</code>，2个组织，4个节点<code>peer0.org1.example.com</code>、<code>peer0.org2.example.com</code>、<code>peer1.org1.example.com</code>、<code>peer1.org2.example.com</code></p>
+<p>其中<code>cli</code>容器是<code>fabric-first-network</code>的一个客户端, 可以直接进入到<code>cli</code>进行操作</p>
+<pre><code>docker exec -it cli sh
+</code></pre><blockquote>
+<p>使用bash也可以</p>
+</blockquote>
+<h3 id="关闭fabric-sample网络"><a href="#关闭fabric-sample网络" class="headerlink" title="关闭fabric-sample网络"></a>关闭fabric-sample网络</h3><p>如果在启动网络的过程中出现了错误或者失败，则可以关闭网络重来，或者说实验完之后想删除整个实验网络，则执行如下命令，这个脚本执行会会将对应的docker容器删除，通过脚本进行实验也只是为了对这个网络的启动和关闭有一个完整的体验和感知，之后我们需要通过一些步骤来启动一个完整功能的网络</p>
+<pre><code>echo y | ./byfn.sh -m down
+</code></pre>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/25/docker/docker-installation/" data-toggle="tooltip" data-placement="top" title="Docker 安装">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#环境准备"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">环境准备</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">安装docker</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker-compose"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">安装docker-compose</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装go"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">安装go</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#下载代码"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">下载代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#安装fabric-tools"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">安装fabric-tools</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#通过脚本启动fabirc网络"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">通过脚本启动fabirc网络</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#生成认证密钥"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">生成认证密钥</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#启动fabric-sample网络"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">启动fabric-sample网络</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关闭fabric-sample网络"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">关闭fabric-sample网络</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                        
+                          <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                        
+                          <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://gaocegege.com/Blog/" target="_blank">gaocegege</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/26/hyperledger/fabric-first-network/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/09/26/hyperledger/fabric-first-network/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wisteria-somnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2018
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
