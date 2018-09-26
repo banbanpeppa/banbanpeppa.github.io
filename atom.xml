@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://banbanpeppa.github.io/"/>
-  <updated>2018-09-25T15:42:26.895Z</updated>
+  <updated>2018-09-26T01:51:27.225Z</updated>
   <id>https://banbanpeppa.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/"/>
     <id>https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/</id>
     <published>2018-09-25T05:00:00.000Z</published>
-    <updated>2018-09-25T15:42:26.895Z</updated>
+    <updated>2018-09-26T01:51:27.225Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Debian9"><a href="#Debian9" class="headerlink" title="Debian9"></a>Debian9</h2><h3 id="移除旧的docker相关软件"><a href="#移除旧的docker相关软件" class="headerlink" title="移除旧的docker相关软件"></a>移除旧的docker相关软件</h3><pre><code>$ sudo apt-get remove docker docker-engine docker.io</code></pre><pre><code>$ sudo apt-get update</code></pre><h3 id="安装基本软件"><a href="#安装基本软件" class="headerlink" title="安装基本软件"></a>安装基本软件</h3><pre><code>$ sudo apt-get install -y \     apt-transport-https \     ca-certificates \     curl \     gnupg2 \     software-properties-common</code></pre><h3 id="添加docker安装源"><a href="#添加docker安装源" class="headerlink" title="添加docker安装源"></a>添加docker安装源</h3><pre><code>$ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -</code></pre><pre><code>$ sudo apt-key fingerprint 0EBFCD88</code></pre><pre><code>$ sudo add-apt-repository \   &quot;deb [arch=amd64] https://download.docker.com/linux/debian \   $(lsb_release -cs) \   stable&quot;</code></pre><pre><code>$ sudo apt-get update</code></pre><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code>$ sudo apt-get install -y docker-ce</code></pre><h3 id="更改国内源"><a href="#更改国内源" class="headerlink" title="更改国内源"></a>更改国内源</h3><pre><code>vim /etc/default/docker</code></pre><p>更改内容</p><pre><code>DOCKER_OPTS=&quot;--dns 114.114.114.114 --graph=/home/chenzhiling/docker --registry-mirror=https://docker.mirrors.ustc.edu.cn/&quot;</code></pre><pre><code>$ sudo service docker restart</code></pre><h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><pre><code>apt-get updateapt-get install -y apt-transport-https ca-certificates curl software-properties-commoncurl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -add-apt-repository &quot;deb https://download.docker.com/linux/$(. /etc/os-release; echo &quot;$ID&quot;) $(lsb_release -cs) stable&quot;apt-get update &amp;&amp; apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk &#39;{print $3}&#39;)</code></pre><h2 id="Deepin"><a href="#Deepin" class="headerlink" title="Deepin"></a>Deepin</h2><pre><code>apt-get updateapt-get install -y docker.iosystemctl enable docker.service</code></pre>]]></content>
     
