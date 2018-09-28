@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          About Me - banban&#39;s Blog
+          使用SSR搭建VPN - banban&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="https://banbanpeppa.github.io/about/">
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/28/essay/vpn/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/images/blog-bg.png')
-            /*page*/
+            background-image: url('/images/essay/vpn-bg.jpg')
+            /*post*/
         
     }
     
@@ -83,10 +83,18 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>About Me</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">Learn Anything, Anytime, Anywhere~</span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
+                            
+                        </div>
+                        <h1>使用SSR搭建VPN</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-09-28
+                        </span>
                     </div>
                 
 
@@ -189,207 +197,201 @@
 
 
     <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
+    <!-- Modify by Yu-Hsuan Yen -->
 
-<!-- USE SIDEBAR -->
-    <!-- Post Container -->
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>经常会需要爬梯子看看外面的世界，同时没有Google的世界是多么暗淡！弄一个吧！</p>
+<h2 id="国外VPS"><a href="#国外VPS" class="headerlink" title="国外VPS"></a>国外VPS</h2><p>既然想要搭建一个VPN，自然国外的 VPS 必须要用，可以找国内阿里云、腾讯云的一些部署在国外的虚拟机，也可以用国外的云服务商提供的。这里推荐 <a href="https://www.vultr.com/?ref=7530118" target="_blank" rel="noopener">VULTR</a>，便宜，还挺好用的，应该是基于<code>OpenStack</code>做的。最普通的机器只需要<code>$2.5</code>。</p>
+<p>在租用虚拟机的时候可以选择美国或者东南亚的一些国家的机器，具体不赘述</p>
+<h2 id="使用shadowsocksr搭建VPN"><a href="#使用shadowsocksr搭建VPN" class="headerlink" title="使用shadowsocksr搭建VPN"></a>使用shadowsocksr搭建VPN</h2><p>进入到虚拟机内部之后下载代码</p>
+<pre><code>git clone https://github.com/SSRbackup/shadowsocksr.git
+</code></pre><p>编辑配置文件内容如下</p>
+<pre><code>vim /etc/shadowsocksr.json
+</code></pre><p>json内容如下</p>
+<pre><code>{
+    &quot;server&quot;: &quot;0.0.0.0&quot;,
+    &quot;server_ipv6&quot;: &quot;::&quot;,
+    &quot;server_port&quot;: 8488,
+    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
+    &quot;local_port&quot;: 1080,
+
+    &quot;password&quot;: &quot;banban&quot;,
+    &quot;method&quot;: &quot;aes-256-cfb&quot;,
+    &quot;protocol&quot;: &quot;auth_aes128_sha1&quot;,
+    &quot;protocol_param&quot;: &quot;&quot;,
+    &quot;obfs&quot;: &quot;tls1.2_ticket_auth_compatible&quot;,
+    &quot;obfs_param&quot;: &quot;&quot;,
+    &quot;speed_limit_per_con&quot;: 0,
+    &quot;speed_limit_per_user&quot;: 0,
+
+    &quot;additional_ports&quot; : {}, // only works under multi-user mode
+    &quot;additional_ports_only&quot; : false, // only works under multi-user mode
+    &quot;timeout&quot;: 120,
+    &quot;udp_timeout&quot;: 60,
+    &quot;dns_ipv6&quot;: false,
+    &quot;connect_verbose_info&quot;: 0,
+    &quot;redirect&quot;: &quot;&quot;,
+    &quot;fast_open&quot;: false
+}
+</code></pre><p>启动SSR</p>
+<pre><code>cd shadowsocksr/shadowsocks
+
+python server.py -c /etc/shadowsocksr.json -d start
+</code></pre><p>停止SSR</p>
+<pre><code>cd shadowsocksr/shadowsocks
+
+python server.py -c /etc/shadowsocksr.json -d stop
+</code></pre><h2 id="SSR工具包下载"><a href="#SSR工具包下载" class="headerlink" title="SSR工具包下载"></a>SSR工具包下载</h2><h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><p>SSR_for_win.zip <a href="/files/essay/vpn/SSR_for_win.zip">下载地址</a></p>
+<h3 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h3><p>shadowsocksr-release.apk <a href="/files/essay/vpn/shadowsocksr-release.apk">下载地址</a></p>
+<h2 id="Preference"><a href="#Preference" class="headerlink" title="Preference"></a>Preference</h2><p>github：<a href="https://github.com/ssrbackup" target="_blank" rel="noopener">https://github.com/ssrbackup</a><br>shadowsocksr：<a href="https://github.com/ssrbackup/shadowsocksr" target="_blank" rel="noopener">https://github.com/ssrbackup/shadowsocksr</a></p>
+<h3 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h3><p>Linux 配置SSR 客户端 : <a href="https://www.jianshu.com/p/c336fd0bdfbe" target="_blank" rel="noopener">https://www.jianshu.com/p/c336fd0bdfbe</a></p>
+<p>ShadowsocksR客户端下载及操作步骤 : <a href="https://www.qcgzxw.cn/301.html" target="_blank" rel="noopener">https://www.qcgzxw.cn/301.html</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/26/hyperledger/fabric-first-network/" data-toggle="tooltip" data-placement="top" title="超级账本使用fabric-sample">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
             
-                <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p><a href="https://banbanpeppa.github.io">Blog://banbanpeppa.github.io</a><br><a href="https://github.com/banbanpeppa/" target="_blank" rel="noopener">GitHub://banbanpeppa</a><br><a href="https://www.zhihu.com/people/wisteria-somnus/" target="_blank" rel="noopener">知乎://wisteriasomnus</a><br><a href="http://banbansomnus.coding.me/banban/resume-cn.pdf" target="_blank" rel="noopener">中文 Resume</a></p>
-<h2 id="职业经历"><a href="#职业经历" class="headerlink" title="职业经历"></a>职业经历</h2><p><strong>网易游戏</strong> | 2018.07 – 2018.09 | GDC| 基础架构开发工程师(实习)</p>
-<ul>
-<li>基于Kubernetes-CRD机制和TensorFlow框架实现深度学习任务调度平台</li>
-<li>加入深度学习平台开源项目 <a href="https://github.com/kubeflow" target="_blank" rel="noopener">Kubeflow</a> 社区和 <a href="https://github.com/kubeflow/arena" target="_blank" rel="noopener">Arena</a> 并贡献代码</li>
-<li>基于 <a href="https://github.com/kubeflow" target="_blank" rel="noopener">Kubeflow</a> 的组件 tf-operator 实现深度学习管理平台cronus-server、cronus-cli和cronus-Dashboard</li>
-</ul>
-<p><strong>勤思网络科技有限公司</strong> | 2015.07 – 2015.09 | Java研发工程师(实习)</p>
-<ul>
-<li>负责足球社交软件“云球”项目的Java后端开发工作</li>
-<li>采用技术框架: Spring + Resteasy + JPA</li>
-</ul>
-<h2 id="教育经历"><a href="#教育经历" class="headerlink" title="教育经历"></a>教育经历</h2><ul>
-<li><strong>华南理工大学</strong> | 计算机科学与工程学院 | 2016.09 – 2019.09 (预计) | 研究生 | 计算机科学与技术</li>
-<li><strong>华南理工大学</strong> | 计算机科学与工程学院 | 2012.09 – 2016.06 | 计算机软件</li>
-</ul>
-<h2 id="所获奖项"><a href="#所获奖项" class="headerlink" title="所获奖项"></a>所获奖项</h2><ul>
-<li>2018.07 <strong>迅雷区块链大赛五十强</strong>    荣誉证书</li>
-<li>2018.06 <strong>公有链Nebulas全球区块链Dapp大赛</strong>    周星奖</li>
-<li>2018.06 <strong>公有链Nebulas全球区块链Dapp大赛</strong>    优秀奖</li>
-<li>2013.10 <strong>国家励志奖学金</strong>    专业排名 3/56</li>
-</ul>
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
 
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#国外VPS"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">国外VPS</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用shadowsocksr搭建VPN"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">使用shadowsocksr搭建VPN</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#SSR工具包下载"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">SSR工具包下载</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Windows"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">Windows</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Android"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">Android</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Preference"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Preference</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#参考博客"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">参考博客</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
 
-                <!-- 如果开启评论功能 -->
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://gaocegege.com/Blog/" target="_blank">gaocegege</a></li>
+                    
+                </ul>
                 
             </div>
-
-          <!-- Sidebar Container -->
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
-    
-        <!-- Short About -->
-<section class="visible-md visible-lg">
-    <h5><a href="/about/">ABOUT ME</a></h5>
-    <div class="short-about">
-
-        
-            <img id = "avatar_pic" src="/images/profile.png" />
-        
-
-        
-            <p>Hi, I&#39;m banban(Chen Zhi Ling). A software engineer.</p>
-        
-
-        <!-- SNS Link -->
-        <ul class="list-inline">
-            
-                <li>
-                    <a href="/atom.xml">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-                <li>
-                    <a target="_blank" href="https://twitter.com/ZhilingSomnus">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-                <li>
-                    <a target="_blank" href="https://www.zhihu.com/people/wisteria-somnus">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa  fa-stack-1x fa-inverse">知</i>
-                        </span>
-                    </a>
-                </li>
-            
-
-            
-                <li>
-                    <a target="_blank" href="http://weibo.com/3112637187">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-
-            
-
-            
-                <li>
-                    <a target="_blank"  href="https://github.com/banbanpeppa">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-
-
-            
-        </ul>
+        </div>
     </div>
-</section>
+</article>
 
-        <hr>
-    
-        
-  <h5>RECENT POSTS</h3>
-  <div class="widget">
-    <ul>
-      
-        <li>
-          <a href="/2018/09/28/essay/vpn/">使用SSR搭建VPN</a>
-        </li>
-      
-        <li>
-          <a href="/2018/09/26/hyperledger/fabric-first-network/">超级账本使用fabric-sample</a>
-        </li>
-      
-        <li>
-          <a href="/2018/09/25/docker/docker-installation/">Docker 安装</a>
-        </li>
-      
-        <li>
-          <a href="/2018/09/25/kubernetes/installation/">Kubernetes 集群安装(使用kubeadm)</a>
-        </li>
-      
-        <li>
-          <a href="/2018/09/20/essay/hello-blog/">Hello Blog</a>
-        </li>
-      
-    </ul>
-  </div>
 
-        <hr>
-    
-        <!-- Featured Tags -->
 
-<section>
-    <!-- no hr -->
-    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-    <div class="tags">
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-            
-        
-    </div>
-</section>
 
-        <hr>
-    
-        <!-- Friends Blog -->
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/28/essay/vpn/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/09/28/essay/vpn/";
 
-<h5>FRIENDS</h5>
-<ul class="list-inline">
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
 
-    
-        <li><a href="http://gaocegege.com/Blog/" target="_blank">gaocegege</a></li>
-    
-</ul>
 
-        <hr>
-    
-</div>
 
-        
-    </div>
-</div>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->

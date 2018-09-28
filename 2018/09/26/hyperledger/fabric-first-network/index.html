@@ -144,14 +144,14 @@
 
                         
                         <li>
-                            <a href="/about/">About Me</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About Me</a>
                         </li>
                         
                     
@@ -240,7 +240,7 @@ go version
 <pre><code>mkdir -p ${GOPATH}/src/github.com/hyperledger/ &amp;&amp; cd ${GOPATH}/src/github.com/hyperledger/
 </code></pre><p>克隆fabric-sample项目</p>
 <pre><code>git clone https://github.com/hyperledger/fabric-samples.git &amp;&amp; cd fabric-samples/
-</code></pre><h2 id="安装fabric-tools"><a href="#安装fabric-tools" class="headerlink" title="安装fabric-tools"></a>安装fabric-tools</h2><p>进入到<code>fabric-sample</code>目录下进行fabric-tools的安装</p>
+</code></pre><h2 id="安装fabric-tools及下载fabric-images"><a href="#安装fabric-tools及下载fabric-images" class="headerlink" title="安装fabric-tools及下载fabric-images"></a>安装fabric-tools及下载fabric-images</h2><p>进入到<code>fabric-sample</code>目录下进行fabric-tools的安装和fabric-images的下载</p>
 <pre><code>curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s 1.2.0
 </code></pre><p>执行完成之后，fabric-sample下会多出一个bin目录，这个目录下面包含了<code>fabric-tools</code>，可以将这个bin文件夹添加到环境变量中</p>
 <pre><code>vim /etc/profile
@@ -249,6 +249,28 @@ go version
 export PATH=$GOPATH/src/github.com/hyperledger/fabric-samples/bin:$PATH
 ---
 
+</code></pre><p>查询下载好的镜像</p>
+<pre><code># docker images 
+
+REPOSITORY                                                                                             TAG                 IMAGE ID            CREATED             SIZE
+hyperledger/fabric-ca                                                                                  1.3.0-rc1           784b38dab5ba        2 days ago          244MB
+hyperledger/fabric-ca                                                                                  latest              784b38dab5ba        2 days ago          244MB
+hyperledger/fabric-zookeeper                                                                           0.4.12              bca71b814159        9 days ago          1.39GB
+hyperledger/fabric-zookeeper                                                                           latest              bca71b814159        9 days ago          1.39GB
+hyperledger/fabric-kafka                                                                               0.4.12              58b901c762ea        9 days ago          1.4GB
+hyperledger/fabric-kafka                                                                               latest              58b901c762ea        9 days ago          1.4GB
+hyperledger/fabric-couchdb                                                                             0.4.12              fe8d64d1233c        9 days ago          1.45GB
+hyperledger/fabric-couchdb                                                                             latest              fe8d64d1233c        9 days ago          1.45GB
+hyperledger/fabric-tools                                                                               1.2.0               379602873003        2 months ago        1.51GB
+hyperledger/fabric-tools                                                                               latest              379602873003        2 months ago        1.51GB
+hyperledger/fabric-ccenv                                                                               1.2.0               6acf31e2d9a4        2 months ago        1.43GB
+hyperledger/fabric-ccenv                                                                               latest              6acf31e2d9a4        2 months ago        1.43GB
+hyperledger/fabric-orderer                                                                             1.2.0               4baf7789a8ec        2 months ago        152MB
+hyperledger/fabric-orderer                                                                             latest              4baf7789a8ec        2 months ago        152MB
+hyperledger/fabric-peer                                                                                1.2.0               82c262e65984        2 months ago        159MB
+hyperledger/fabric-peer                                                                                latest              82c262e65984        2 months ago        159MB
+hyperledger/fabric-baseimage                                                                           amd64-0.4.10        62513965e238        3 months ago        1.39GB
+hyperledger/fabric-baseos                                                                              amd64-0.4.10        52190e831002        3 months ago        132MB
 </code></pre><h2 id="通过脚本启动fabirc-first-network网络"><a href="#通过脚本启动fabirc-first-network网络" class="headerlink" title="通过脚本启动fabirc-first-network网络"></a>通过脚本启动fabirc-first-network网络</h2><p>通过脚本启动fabric是比较简单的方式，这个fabric网络拓扑是最简单的网络，具体如下图所示</p>
 <p><img src="/images/blockchain/hyperledger/fabric-sample-topology.png" alt="image"></p>
 <p>首先进入到first-network目录下</p>
@@ -419,12 +441,362 @@ ex02 Invoke
 Query Response:{&quot;Name&quot;:&quot;a&quot;,&quot;Amount&quot;:&quot;90&quot;}
 </code></pre><h3 id="关闭fabric-sample网络"><a href="#关闭fabric-sample网络" class="headerlink" title="关闭fabric-sample网络"></a>关闭fabric-sample网络</h3><p>如果在启动网络的过程中出现了错误或者失败，则可以关闭网络重来，或者说实验完之后想删除整个实验网络，则执行如下命令，这个脚本执行会会将对应的docker容器删除，通过脚本进行实验也只是为了对这个网络的启动和关闭有一个完整的体验和感知，之后我们需要通过一些步骤来启动一个完整功能的网络</p>
 <pre><code>echo y | ./byfn.sh -m down
-</code></pre><h2 id="手动启动first-network"><a href="#手动启动first-network" class="headerlink" title="手动启动first-network"></a>手动启动first-network</h2>
+</code></pre><h2 id="手动启动first-network"><a href="#手动启动first-network" class="headerlink" title="手动启动first-network"></a>手动启动first-network</h2><p>手动启动fabric-sample的first-network会对整体的一个架构有比较清晰的认识，按照手动步骤一步一步完成，能够知道脚本运行fabric网络的过程涉及到哪些具体操作</p>
+<h3 id="fabric-tool介绍"><a href="#fabric-tool介绍" class="headerlink" title="fabric-tool介绍"></a>fabric-tool介绍</h3><h4 id="Crypto-Generator"><a href="#Crypto-Generator" class="headerlink" title="Crypto Generator"></a>Crypto Generator</h4><p>fabric使用<code>cryptogen</code>工具为网络实体生成对应的密码密钥，主要包含了x509标准的证书和签名使用的keys。这些证书其实标识了fabric网络中的不同实体，同时实体要进行通讯和交易都需要使用这些证书进行签名/校验身份。</p>
+<p>首先需要生成对应的证书和密钥，需要使用<code>cryptogen</code>工具同时读取<code>crypto-config.yaml</code>配置文件，<code>crypto-config.yaml</code>文件内容如下所示</p>
+<pre><code># Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# ---------------------------------------------------------------------------
+# &quot;OrdererOrgs&quot; - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderer
+  # ---------------------------------------------------------------------------
+  - Name: Orderer
+    Domain: example.com
+    # ---------------------------------------------------------------------------
+    # &quot;Specs&quot; - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: orderer
+# ---------------------------------------------------------------------------
+# &quot;PeerOrgs&quot; - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Org1
+  # ---------------------------------------------------------------------------
+  - Name: Org1
+    Domain: org1.example.com
+    EnableNodeOUs: true
+    # ---------------------------------------------------------------------------
+    # &quot;Specs&quot;
+    # ---------------------------------------------------------------------------
+    # Uncomment this section to enable the explicit definition of hosts in your
+    # configuration.  Most users will want to use Template, below
+    #
+    # Specs is an array of Spec entries.  Each Spec entry consists of two fields:
+    #   - Hostname:   (Required) The desired hostname, sans the domain.
+    #   - CommonName: (Optional) Specifies the template or explicit override for
+    #                 the CN.  By default, this is the template:
+    #
+    #                              &quot;{{.Hostname}}.{{.Domain}}&quot;
+    #
+    #                 which obtains its values from the Spec.Hostname and
+    #                 Org.Domain, respectively.
+    # ---------------------------------------------------------------------------
+    # Specs:
+    #   - Hostname: foo # implicitly &quot;foo.org1.example.com&quot;
+    #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
+    #   - Hostname: bar
+    #   - Hostname: baz
+    # ---------------------------------------------------------------------------
+    # &quot;Template&quot;
+    # ---------------------------------------------------------------------------
+    # Allows for the definition of 1 or more hosts that are created sequentially
+    # from a template. By default, this looks like &quot;peer%d&quot; from 0 to Count-1.
+    # You may override the number of nodes (Count), the starting index (Start)
+    # or the template used to construct the name (Hostname).
+    #
+    # Note: Template and Specs are not mutually exclusive.  You may define both
+    # sections and the aggregate nodes will be created for you.  Take care with
+    # name collisions
+    # ---------------------------------------------------------------------------
+    Template:
+      Count: 2
+      # Start: 5
+      # Hostname: {{.Prefix}}{{.Index}} # default
+    # ---------------------------------------------------------------------------
+    # &quot;Users&quot;
+    # ---------------------------------------------------------------------------
+    # Count: The number of user accounts _in addition_ to Admin
+    # ---------------------------------------------------------------------------
+    Users:
+      Count: 1
+  # ---------------------------------------------------------------------------
+  # Org2: See &quot;Org1&quot; for full specification
+  # ---------------------------------------------------------------------------
+  - Name: Org2
+    Domain: org2.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+</code></pre><p>这个配置文件描述了first-network的网络拓扑，并且可以根据这个配置文件生成对应的证书和keys。每一个组织都被分配了一个独一无二的根证书<code>ca-cert</code>，这个证书会绑定到对应的组成部分上如<code>peers</code>和<code>orderers</code>。这样，整个环境就可以模拟一个联盟链的网络，这个网络里每一个成员都会有自己的认证证书，所有的交易和通讯都是会使用其中的<code>keystore</code>私钥来签名实例，使用<code>signcerts</code>这个公钥来校验。</p>
+<p>通过<code>cryptogen</code>工具生成的证书和私钥等文件会创建并保存在crypto-config文件目录下，如下</p>
+<pre><code># tree crypto-config/ordererOrganizations/
+</code></pre><p>得到结果</p>
+<pre><code>crypto-config/ordererOrganizations/
+└── example.com
+    ├── ca
+    │   ├── ca.example.com-cert.pem
+    │   └── e568f6ceac08db6c113b470774fd975612adff6620d4d8747a1802559ce13820_sk
+    ├── msp
+    │   ├── admincerts
+    │   │   └── Admin@example.com-cert.pem
+    │   ├── cacerts
+    │   │   └── ca.example.com-cert.pem
+    │   └── tlscacerts
+    │       └── tlsca.example.com-cert.pem
+    ├── orderers
+    │   └── orderer.example.com
+    │       ├── msp
+    │       │   ├── admincerts
+    │       │   │   └── Admin@example.com-cert.pem
+    │       │   ├── cacerts
+    │       │   │   └── ca.example.com-cert.pem
+    │       │   ├── keystore
+    │       │   │   └── 349468c790b915b35dc6cb83f47f2f0f2eef733b359d0047c87a06d426890896_sk
+    │       │   ├── signcerts
+    │       │   │   └── orderer.example.com-cert.pem
+    │       │   └── tlscacerts
+    │       │       └── tlsca.example.com-cert.pem
+    │       └── tls
+    │           ├── ca.crt
+    │           ├── server.crt
+    │           └── server.key
+    ├── tlsca
+    │   ├── ac51fdfee3946e638c3f116c65b8a126e866f18a1e9688cc32f387157a36b58e_sk
+    │   └── tlsca.example.com-cert.pem
+    └── users
+        └── Admin@example.com
+            ├── msp
+            │   ├── admincerts
+            │   │   └── Admin@example.com-cert.pem
+            │   ├── cacerts
+            │   │   └── ca.example.com-cert.pem
+            │   ├── keystore
+            │   │   └── 2efa0e5c708509fa6d0a8c4f206f70c380d927a1d99a498d8cf50ae4ab4707e8_sk
+            │   ├── signcerts
+            │   │   └── Admin@example.com-cert.pem
+            │   └── tlscacerts
+            │       └── tlsca.example.com-cert.pem
+            └── tls
+                ├── ca.crt
+                ├── client.crt
+                └── client.key
+</code></pre><p>会看到文件目录的组织关系，也会看到对于排序节点有自己的<code>ca</code>，所以最后排序节点的容器名称就是<code>order.example.com</code>，这个也就作为排序节点的<code>MSP</code> ID。关于<code>MSP</code>可以参考<a href="https://hyperledger-fabric.readthedocs.io/en/latest/msp.html" target="_blank" rel="noopener">Membership Service Providers (MSP)</a></p>
+<h4 id="Configuration-Transaction-Generator"><a href="#Configuration-Transaction-Generator" class="headerlink" title="Configuration Transaction Generator"></a>Configuration Transaction Generator</h4><p>配置网络中的交易信息会用到<code>configtxgen</code>工具，这其中会涉及到如下几个信息的准备</p>
+<ul>
+<li>orderer <code>genesis block</code> - 这个是初始区块信息, 是创世块,</li>
+<li>channel <code>configuration transaction</code> - 配置交易<code>channel</code>,</li>
+<li>two <code>anchor peer transactions</code> - 每一个锚节点对应一个组织Org.</li>
+</ul>
+<p>orderer区块是排序服务需要使用的创世区块，而channel configuration 交易文件是用于在channel创建的时候需要广播给orderer节点的。锚节点交易用于在channel中锚定对应的组织Org中的节点。</p>
+<p><code>configtxgen</code> 使用的配置文件为<code>configtx.yaml</code>，内容如下：</p>
+<pre><code>---
+Organizations:
+
+    # SampleOrg defines an MSP using the sampleconfig.  It should never be used
+    # in production but may be used as a template for other definitions
+    - &amp;OrdererOrg
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: OrdererOrg
+
+        # ID to load the MSP definition as
+        ID: OrdererMSP
+
+        # MSPDir is the filesystem path which contains the MSP configuration
+        MSPDir: crypto-config/ordererOrganizations/example.com/msp
+
+    - &amp;Org1
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: Org1MSP
+
+        # ID to load the MSP definition as
+        ID: Org1MSP
+
+        MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.org1.example.com
+              Port: 7051
+
+    - &amp;Org2
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: Org2MSP
+
+        # ID to load the MSP definition as
+        ID: Org2MSP
+
+        MSPDir: crypto-config/peerOrganizations/org2.example.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.org2.example.com
+              Port: 7051
+Capabilities:
+    # Channel capabilities apply to both the orderers and the peers and must be
+    # supported by both.  Set the value of the capability to true to require it.
+    Global: &amp;ChannelCapabilities
+        # V1.1 for Global is a catchall flag for behavior which has been
+        # determined to be desired for all orderers and peers running v1.0.x,
+        # but the modification of which would cause incompatibilities.  Users
+        # should leave this flag set to true.
+        V1_1: true
+
+    # Orderer capabilities apply only to the orderers, and may be safely
+    # manipulated without concern for upgrading peers.  Set the value of the
+    # capability to true to require it.
+    Orderer: &amp;OrdererCapabilities
+        # V1.1 for Order is a catchall flag for behavior which has been
+        # determined to be desired for all orderers running v1.0.x, but the
+        # modification of which  would cause incompatibilities.  Users should
+        # leave this flag set to true.
+        V1_1: true
+
+    # Application capabilities apply only to the peer network, and may be safely
+    # manipulated without concern for upgrading orderers.  Set the value of the
+    # capability to true to require it.
+    Application: &amp;ApplicationCapabilities
+        # V1.2 for Application is a catchall flag for behavior which has been
+        # determined to be desired for all peers running v1.0.x, but the
+        # modification of which would cause incompatibilities.  Users should
+        # leave this flag set to true.
+        V1_2: true
+
+Application: &amp;ApplicationDefaults
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the application side of the network
+    Organizations:
+
+Orderer: &amp;OrdererDefaults
+
+    # Orderer Type: The orderer implementation to start
+    # Available types are &quot;solo&quot; and &quot;kafka&quot;
+    OrdererType: solo
+
+    Addresses:
+        - orderer.example.com:7050
+
+    # Batch Timeout: The amount of time to wait before creating a batch
+    BatchTimeout: 2s
+
+    # Batch Size: Controls the number of messages batched into a block
+    BatchSize:
+
+        # Max Message Count: The maximum number of messages to permit in a batch
+        MaxMessageCount: 10
+
+        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
+        # the serialized messages in a batch.
+        AbsoluteMaxBytes: 99 MB
+
+        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
+        # the serialized messages in a batch. A message larger than the preferred
+        # max bytes will result in a batch larger than preferred max bytes.
+        PreferredMaxBytes: 512 KB
+
+    Kafka:
+        # Brokers: A list of Kafka brokers to which the orderer connects
+        # NOTE: Use IP:port notation
+        Brokers:
+            - 127.0.0.1:9092
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the orderer side of the network
+    Organizations:
+
+Profiles:
+    TwoOrgsOrdererGenesis:
+        Capabilities:
+            &lt;&lt;: *ChannelCapabilities
+        Orderer:
+            &lt;&lt;: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+                &lt;&lt;: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+    TwoOrgsChannel:
+        Consortium: SampleConsortium
+        Application:
+            &lt;&lt;: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
+            Capabilities:
+                &lt;&lt;: *ApplicationCapabilities
+</code></pre><p>这个文件定义了first-network的组织结构，包含了三个成员：一个排序组织、两个端节点组织(<code>Org1</code> &amp; <code>Org2</code>) - 每个组织管理了两个节点，同时配置文件也配置了一个联盟<code>SampleConsortium</code>，这个联盟包含了两个端节点组织，这个配置主要<code>Profile</code>下，有两个特别的属性，一个是<code>TwoOrgsOrdererGenesis</code>，另一个是<code>TwoOrgsChannel</code>。</p>
+<h3 id="使用fabric-tools构建first-network"><a href="#使用fabric-tools构建first-network" class="headerlink" title="使用fabric-tools构建first-network"></a>使用fabric-tools构建first-network</h3><p>手动使用<code>configtxgen</code>和<code>cryptogen</code>进行密钥、证书、创世块信息、channel等和<code>byfn.sh generate</code>的效果是一样的，因此可以通过脚本来看这部分的工作包含了那些工作。这部分工作的具体内容在<code>byfn.sh</code>脚本里面的方法<code>generateCerts</code>、<code>replacePrivateKey</code>、<code>generateChannelArtifacts</code></p>
+<h4 id="手动生成证书"><a href="#手动生成证书" class="headerlink" title="手动生成证书"></a>手动生成证书</h4><p>由于之前已经将fabric-tools的路径暴露到环境变量中了，所以可以直接使用一下的所有命令</p>
+<pre><code>configtxgen  configtxlator  cryptogen  discover  fabric-ca-client idemixgen  orderer  peer
+</code></pre><p>使用<code>cryptogen</code>工具生成证书和密钥，会保存在<code>crypto-config</code>目录下</p>
+<pre><code>cryptogen generate --config=./crypto-config.yaml
+</code></pre><p>会得到输出内容</p>
+<pre><code>org1.example.com
+org2.example.com
+</code></pre><p>之后对应的证书和私钥都会生成在<code>crypto-config</code>目录下</p>
+<p>接下来就使用<code>configtxgen</code>工具来创建创世区块信息</p>
+<pre><code>configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block 
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:31:40.406 HKT [common/tools/configtxgen] main -&gt; WARN 001 Omitting the channel ID for configtxgen is deprecated.  Explicitly passing the channel ID will be required in the future, defaulting to &#39;testchainid&#39;.
+2018-09-28 19:31:40.406 HKT [common/tools/configtxgen] main -&gt; INFO 002 Loading configuration
+2018-09-28 19:31:40.417 HKT [common/tools/configtxgen/encoder] NewChannelGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the channel group in configtx.yaml
+2018-09-28 19:31:40.417 HKT [common/tools/configtxgen/encoder] NewOrdererGroup -&gt; WARN 004 Default policy emission is deprecated, please include policy specificiations for the orderer group in configtx.yaml
+2018-09-28 19:31:40.418 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the orderer org group OrdererOrg in configtx.yaml
+2018-09-28 19:31:40.418 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-28 19:31:40.418 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org1MSP in configtx.yaml
+2018-09-28 19:31:40.419 HKT [msp] getMspConfig -&gt; INFO 008 Loading NodeOUs
+2018-09-28 19:31:40.419 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 009 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org2MSP in configtx.yaml
+2018-09-28 19:31:40.419 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00a Generating genesis block
+2018-09-28 19:31:40.419 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00b Writing genesis block
+</code></pre><h4 id="创建channel的锚节点"><a href="#创建channel的锚节点" class="headerlink" title="创建channel的锚节点"></a>创建channel的锚节点</h4><p>首先创建一个channel名为<code>mychannel</code>，因此将mychannel作为环境变量</p>
+<pre><code>export CHANNEL_NAME=mychannel
+</code></pre><p>使用configtxgen创建channel</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx \
+-channelID $CHANNEL_NAME
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:32:32.450 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-28 19:32:32.457 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 002 Generating new channel configtx
+2018-09-28 19:32:32.457 HKT [common/tools/configtxgen/encoder] NewApplicationGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the application group in configtx.yaml
+2018-09-28 19:32:32.458 HKT [msp] getMspConfig -&gt; INFO 004 Loading NodeOUs
+2018-09-28 19:32:32.458 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the application org group Org1MSP in configtx.yaml
+2018-09-28 19:32:32.458 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-28 19:32:32.458 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the application org group Org2MSP in configtx.yaml
+2018-09-28 19:32:32.459 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 008 Writing new channel tx
+</code></pre><p>接下来为Org1创建锚节点，这个锚节点是在<code>mychannel</code>上的</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate \
+./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:35:35.240 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-28 19:35:35.247 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-28 19:35:35.247 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
+</code></pre><p>为Org2创建锚节点</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate \
+./channel-artifacts/Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:39:33.053 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-28 19:39:33.060 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-28 19:39:33.060 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
+</code></pre><h4 id="启动network"><a href="#启动network" class="headerlink" title="启动network"></a>启动network</h4>
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/09/28/essay/vpn/" data-toggle="tooltip" data-placement="top" title="使用SSR搭建VPN">&larr; Previous Post</a>
+                        </li>
                     
                     
                         <li class="next">
@@ -458,7 +830,7 @@ Query Response:{&quot;Name&quot;:&quot;a&quot;,&quot;Amount&quot;:&quot;90&quot;
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#环境准备"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">环境准备</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">安装docker</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker-compose"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">安装docker-compose</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装go"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">安装go</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#下载代码"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">下载代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#安装fabric-tools"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">安装fabric-tools</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#通过脚本启动fabirc-first-network网络"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">通过脚本启动fabirc-first-network网络</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#生成认证密钥"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">生成认证密钥</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#启动fabric-sample网络"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">启动fabric-sample网络</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#查询链上信息"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">查询链上信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关闭fabric-sample网络"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">关闭fabric-sample网络</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#手动启动first-network"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">手动启动first-network</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#环境准备"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">环境准备</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">安装docker</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker-compose"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">安装docker-compose</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装go"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">安装go</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#下载代码"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">下载代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#安装fabric-tools及下载fabric-images"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">安装fabric-tools及下载fabric-images</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#通过脚本启动fabirc-first-network网络"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">通过脚本启动fabirc-first-network网络</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#生成认证密钥"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">生成认证密钥</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#启动fabric-sample网络"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">启动fabric-sample网络</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#查询链上信息"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">查询链上信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关闭fabric-sample网络"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">关闭fabric-sample网络</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#手动启动first-network"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">手动启动first-network</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#fabric-tool介绍"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">fabric-tool介绍</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Crypto-Generator"><span class="toc-nav-number">5.1.1.</span> <span class="toc-nav-text">Crypto Generator</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Configuration-Transaction-Generator"><span class="toc-nav-number">5.1.2.</span> <span class="toc-nav-text">Configuration Transaction Generator</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#使用fabric-tools构建first-network"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">使用fabric-tools构建first-network</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#手动生成证书"><span class="toc-nav-number">5.2.1.</span> <span class="toc-nav-text">手动生成证书</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#创建channel的锚节点"><span class="toc-nav-number">5.2.2.</span> <span class="toc-nav-text">创建channel的锚节点</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#启动network"><span class="toc-nav-number">5.2.3.</span> <span class="toc-nav-text">启动network</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>

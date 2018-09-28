@@ -18,7 +18,7 @@
         
     </title>
 
-    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/20/hello-world/hello-blog/">
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/20/essay/hello-blog/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/images/life/hello-world-bg.jpg')
+            background-image: url('/images/essay/hello-world-bg.jpg')
             /*post*/
         
     }
@@ -140,14 +140,14 @@
 
                         
                         <li>
-                            <a href="/about/">About Me</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About Me</a>
                         </li>
                         
                     
@@ -216,13 +216,13 @@
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>折腾了好一会儿，banban 的 Blog 也算是开通了。</p>
 <p>在选用这个模板之前，对比了很多Blog模板，最终是选择了两个模板，一个是<a href="https://github.com/Huxpro/huxpro.github.io" target="_blank" rel="noopener">Hux</a>，另一个是<a href="https://github.com/hmfaysal/Notepad" target="_blank" rel="noopener">Nodepad</a>。</p>
 <p>当然了，我前端写的不多，不能自己撸一个漂亮的模板出来。</p>
-<p>2018 年了，banban 总算装逼一个大佬程序员，有自己的 Blog 了，其实自己想拥有一个博客，主要也是因为自己在去网易游戏实习了两个月之后，接触了一些大牛，了解了大牛做技术的态度，也深深感受到，其实这么久了，自己好像都没有认认真真去对待做程序员这件事情，一直都在看别人的博客，有问题就Goolge，看别人的博客，自己的总结却很少。</p>
+<p>2018 年了，banban 总算可以装成一个大佬程序员，有自己的 Blog 了。一直都想拥有一个属于自己的博客，主要也是因为自己在去网易游戏实习了两个月之后，接触了一些大牛，了解了大牛做技术的态度，也深深感受到，其实这么久了，自己好像都没有认认真真去对待做程序员这件事情，有问题就Goolge，看别人的博客，自己的总结却很少。</p>
 <p>后来开始自己也总结了，起初用了印象笔记，但是印象笔记编写就和写Word文件一样，很不友好，而一个博客在将来自己是否会倒回来看很多时候取决于排版是否优雅，看到印象里面不同的文字风格，是在是难受。</p>
-<p>后来还是选择用markdown文件来编写文档，书写记录。很好写，于是就换了网易云笔记。但是，笔记共享出去 ———— 难看啊！真心难看。</p>
-<p>实习的时候，由于做的项目和 <a href="https://github.com/kubeflow" target="_blank" rel="noopener">kubeflow</a> 相关，同时也了解到一位大牛 <a href="http://gaocegege.com/Blog/" target="_blank" rel="noopener">gaocegege</a>，他是 kubeflow 的 Maintainer ，很大牛，看看人家博客那么漂亮，心动了！意识到写博客是这么享受的一件事，就好像是一个程序员编写的秘籍，不管牛不牛逼，你自己真的觉得自己牛逼了一把！</p>
+<p>后来还是选择用markdown文件来编写文档，书写记录。很好写，于是就换了网易云笔记。但是，笔记想要和队友分享的时候 ———— 难看啊！真心难看。</p>
+<p>实习的时候，由于做的项目和 <a href="https://github.com/kubeflow" target="_blank" rel="noopener">kubeflow</a> 相关，同时也了解到一位大牛 <a href="http://gaocegege.com/Blog/" target="_blank" rel="noopener">gaocegege</a>，他是 kubeflow 的 Maintainer ，很大牛，看着人家博客那么漂亮，心动了！意识到写博客是这么享受的一件事，就好像是一个程序员编写的秘籍，不管牛不牛逼，你自己真的觉得自己牛逼了一把！</p>
 <p>那说什么呢！ 搞一个吧！</p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>接下来说说搭建这个博客的技术细节。  </p>
-<p>主要用了 <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> + <a href="http://jekyllrb.com/" target="_blank" rel="noopener">Jekyll</a> 快速 Building Blog 的技术方案，这个方案我看是目前来说很主流的做法了，当然 Hexo 也很多人用。</p>
+<h3 id="使用NodePad模板"><a href="#使用NodePad模板" class="headerlink" title="使用NodePad模板"></a>使用NodePad模板</h3><p>如果说使用NodePad模板，那么一般使用 <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a> + <a href="http://jekyllrb.com/" target="_blank" rel="noopener">Jekyll</a> 快速 Building Blog 的技术方案，这个方案我看是目前来说很主流的做法了，当然 Hexo 也很多人用。</p>
 <p>其优点非常明显：</p>
 <ul>
 <li><strong>Markdown</strong> 带来的优雅写作体验</li>
@@ -242,7 +242,31 @@ source ~/.bashrc
 gem install jekyll bundler
 gem install pygments.rb
 gem install jekyll-paginate
-</code></pre><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>有了自己的博客，怎么说都算是一个新的开始！未来在这里，记录一些琐事，当然更多是记录我学习的东西！</p>
+</code></pre><h3 id="使用Hexo"><a href="#使用Hexo" class="headerlink" title="使用Hexo"></a>使用Hexo</h3><p>官方网站 <a href="http://hexo.io/zh-cn/" target="_blank" rel="noopener">http://hexo.io/zh-cn/</a></p>
+<p>安装</p>
+<pre><code>npm install hexo-cli -g
+hexo init blog
+cd blog
+npm install
+hexo server
+</code></pre><p><strong>scheme</strong></p>
+<ul>
+<li><p>hexo-theme-chan</p>
+<p>  <em>Usage</em></p>
+<pre><code>  cd ${HEXO_PROJECT}/themes
+  git clone https://github.com/denjones/hexo-theme-chan.git chan
+</code></pre><p>  And set your theme to <code>chan</code> in your site <code>_config.yml</code> file.</p>
+<p>  Before deploying your site, you may need to run hexo clean to clean the cache:</p>
+<pre><code>  hexo clean
+  hexo deploy
+</code></pre></li>
+<li><p>hexo-icer</p>
+<p>  github <a href="https://github.com/GGICE/hexo-icer" target="_blank" rel="noopener">https://github.com/GGICE/hexo-icer</a><br>  <em>Usage</em></p>
+<pre><code>  gem install hexo-generator-tag hexo-renderer-ejs hexo-renderer-sass \
+  hexo-renderer-marked hexo-pagination hexo-generator-search
+</code></pre></li>
+</ul>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>有了自己的博客，怎么说都算是一个新的开始！未来在这里，记录一些琐事，当然更多是记录我学习的东西！</p>
 <p>多写东西对自己也是锻炼。</p>
 <p>有次问了下女朋友，你想要一个自己的网站吗？她说她不会也不想整。全当我在这也给你一片地，说不定你也想来说几句呢，2333333</p>
 <p>—— banban 后记于 2018.09.20</p>
@@ -285,7 +309,7 @@ gem install jekyll-paginate
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#前言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#正文"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">正文</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#后记"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">后记</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#前言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#正文"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">正文</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#使用NodePad模板"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">使用NodePad模板</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#使用Hexo"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">使用Hexo</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#后记"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">后记</span></a></li></ol>
         
         </div>
       </aside>
@@ -334,8 +358,8 @@ gem install jekyll-paginate
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "banbanblog";
-    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/20/hello-world/hello-blog/";
-    var disqus_url = "https://banbanpeppa.github.io/2018/09/20/hello-world/hello-blog/";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/20/essay/hello-blog/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/09/20/essay/hello-blog/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

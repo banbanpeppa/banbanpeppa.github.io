@@ -8,7 +8,23 @@
 
     <url>
         <loc>https://banbanpeppa.github.io/2018/09/26/hyperledger/fabric-first-network/</loc>
-        <lastmod>2018-09-26T12:07:17.640Z</lastmod>
+        <lastmod>2018-09-28T11:57:54.536Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/2018/09/20/essay/hello-blog/</loc>
+        <lastmod>2018-09-28T11:52:29.550Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/2018/09/28/essay/vpn/</loc>
+        <lastmod>2018-09-28T03:26:13.365Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -25,14 +41,6 @@
     <url>
         <loc>https://banbanpeppa.github.io/2018/09/25/kubernetes/installation/</loc>
         <lastmod>2018-09-25T15:15:37.034Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://banbanpeppa.github.io/2018/09/20/hello-world/hello-blog/</loc>
-        <lastmod>2018-09-21T11:41:16.757Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
