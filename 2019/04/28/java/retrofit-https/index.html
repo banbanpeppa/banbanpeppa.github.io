@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          使用Retrofit访问HTTPS接口 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/04/28/java/retrofit-https/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/java/java-bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                        </div>
+                        <h1>使用Retrofit访问HTTPS接口</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-04-28
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="使用Retrofit访问HTTPS接口"><a href="#使用Retrofit访问HTTPS接口" class="headerlink" title="使用Retrofit访问HTTPS接口"></a>使用Retrofit访问HTTPS接口</h1><p>Retrofit是一个类型安全的HTTP客户端工具，使用Java语言开发，主要为Android和Java客户端的HTTP请求的提供方便，Retrofit可以认为是OkHttp的加强版，是一个网络加载框架，底层使用的是OkHttp封装。从根本上来说，网络请求的工作本质上都是OkHttp完成的，而Retrofit则负责网络请求接口的封装，它提供了很多注解，简化了代码，有很多著名的开源库如：Retrofit + RxJava。</p>
+<p>但是在使用Retrofit的过程中，难免会遇到请求HTTPS的情况，为此需要配置类似<code>SSLSocket</code>等内容。</p>
+<h2 id="添加Retrofit依赖"><a href="#添加Retrofit依赖" class="headerlink" title="添加Retrofit依赖"></a>添加Retrofit依赖</h2><p>使用maven引入Retrofit配置，本人使用的版本是<code>2.5.0</code></p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.squareup.retrofit2&lt;/groupId&gt;
+    &lt;artifactId&gt;retrofit&lt;/artifactId&gt;
+    &lt;version&gt;2.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;com.squareup.retrofit2&lt;/groupId&gt;
+    &lt;artifactId&gt;converter-gson&lt;/artifactId&gt;
+    &lt;version&gt;2.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;com.squareup.retrofit2&lt;/groupId&gt;
+    &lt;artifactId&gt;adapter-rxjava&lt;/artifactId&gt;
+    &lt;version&gt;2.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><p>在一般情况下，请求HTTP资源的时候Retrofit的使用很简单，如下是官方给出的例子。</p>
+<p>首先定义一个接口类，通过注解标识请求类型和请求的URL</p>
+<pre><code>public interface GitHubService {
+  @GET(&quot;users/{user}/repos&quot;)
+  Call&lt;List&lt;Repo&gt;&gt; listRepos(@Path(&quot;user&quot;) String user);
+}
+</code></pre><p>通过Retrofit来创建这个接口的请求实例</p>
+<pre><code>Retrofit retrofit = new Retrofit.Builder()
+    .baseUrl(&quot;https://api.github.com/&quot;)
+    .build();
+
+GitHubService service = retrofit.create(GitHubService.class);
+</code></pre><p>之后请求资源内容便可以通过如下方式获取</p>
+<pre><code>Call&lt;List&lt;Repo&gt;&gt; repos = service.listRepos(&quot;octocat&quot;);
+</code></pre><h2 id="Retrofit注解"><a href="#Retrofit注解" class="headerlink" title="Retrofit注解"></a>Retrofit注解</h2><ul>
+<li>请求方法</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>注解代码</th>
+<th style="text-align:center">请求格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@GET</td>
+<td style="text-align:center">GET请求</td>
+</tr>
+<tr>
+<td>@POST</td>
+<td style="text-align:center">POST请求</td>
+</tr>
+<tr>
+<td>@DELETE</td>
+<td style="text-align:center">DELETE请求</td>
+</tr>
+<tr>
+<td>@HEAD</td>
+<td style="text-align:center">HEAD请求</td>
+</tr>
+<tr>
+<td>@OPTIONS</td>
+<td style="text-align:center">OPTIONS请求</td>
+</tr>
+<tr>
+<td>@PATCH</td>
+<td style="text-align:center">PATCH请求</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求参数</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>注解代码</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@Headers</td>
+<td style="text-align:center">添加请求头</td>
+</tr>
+<tr>
+<td>@Path</td>
+<td style="text-align:center">替换路径</td>
+</tr>
+<tr>
+<td>@Query</td>
+<td style="text-align:center">替代参数值，通常是结合get请求的</td>
+</tr>
+<tr>
+<td>@FormUrlEncoded</td>
+<td style="text-align:center">用表单数据提交</td>
+</tr>
+<tr>
+<td>@Field</td>
+<td style="text-align:center">替换参数值，是结合post请求的</td>
+</tr>
+</tbody>
+</table>
+<h2 id="配置使用HTTPS"><a href="#配置使用HTTPS" class="headerlink" title="配置使用HTTPS"></a>配置使用HTTPS</h2><p>定义OkHttpClient</p>
+<pre><code>OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .sslSocketFactory(getSSLSocketFactory(), new CustomTrustManager())
+        .hostnameVerifier(getHostnameVerifier())
+        .build();
+
+Retrofit retrofit = new Retrofit.Builder()
+        .baseUrl(&quot;https://localhost:8843&quot;)
+        .client(okHttpClient)
+        .addConverterFactory(new NullOnEmptyConverterFactory())
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .build();
+</code></pre><p>其中<code>getSSLSocketFactor</code>方法内容如下</p>
+<pre><code>private static SSLSocketFactory getSSLSocketFactory() {
+    SSLContext sslContext = null;
+    try {
+        KeyStore keyStore = KeyStore.getInstance(&quot;PKCS12&quot;);
+        InputStream certificate = new FileInputStream(new File(&quot;tomcat.keystore&quot;));
+        keyStore.load(certificate, &quot;somnus&quot;.toCharArray());
+
+        sslContext = SSLContext.getInstance(&quot;TLS&quot;);
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory
+                .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(keyStore);
+        sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return sslContext.getSocketFactory();
+}
+</code></pre><p>Keystore之所以获取的实例是<code>PKCS12</code>，是因为本例子中的证书是自己生成的证书，证书采用java工具<code>keytool</code>生成，生成之后加到<code>spring-boot</code>中使用，具体可以参考文章<a href="https://banbanpeppa.github.io/2019/04/28/java/spring/spring-boot-https/">Spring-Boot + HTTPS</a>。证书读取的外部文件<code>tomcat.keystore</code>，密码是<code>somnus</code>。</p>
+<p>类<code>CustomTrustManager</code>内容如下</p>
+<pre><code>import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.X509TrustManager;
+
+public class CustomTrustManager implements X509TrustManager {
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return new X509Certificate[0];
+    }
+}
+</code></pre><p>方法<code>getHostnameVerifier</code>内容，这个方法中的<code>HostnameVerifier</code>直接对验证返回了一个<code>true</code>，这个验证主要处理那些需要通过验证的域名，视情况而设置</p>
+<pre><code>public static HostnameVerifier getHostnameVerifier() {
+    HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    };
+    return hostnameVerifier;
+}
+</code></pre><p>在使用Retrofit时，我们一般使用的是<code>GsonConverterFactory</code>转换器。但是有时候后台会返回为空的response。 app端会返回  <code>response.body() on a null object reference</code>错误，解决办法如下，通过自定义一个<code>NullOnEmptyConverterFactory</code>来对返回为空的response进行拦截二次处理。</p>
+<pre><code>import okhttp3.ResponseBody;
+import retrofit2.Converter;
+import retrofit2.Retrofit;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+
+public class NullOnEmptyConverterFactory extends Converter.Factory {
+
+    @Override
+    public Converter&lt;ResponseBody, ?&gt; responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+        final Converter&lt;ResponseBody, ?&gt; delegate = retrofit.nextResponseBodyConverter(this, type, annotations);
+        return new Converter&lt;ResponseBody, Object&gt;() {
+            @Override
+            public Object convert(ResponseBody body) throws IOException {
+                if (body.contentLength() == 0) return null;
+                return delegate.convert(body);
+            }
+        };
+    }
+}
+</code></pre><h2 id="定制X509TrustManager"><a href="#定制X509TrustManager" class="headerlink" title="定制X509TrustManager"></a>定制X509TrustManager</h2><p>证书的验证是必须的，为此可以定制<code>X509TrustManager</code>，对其中的<code>checkServerTrusted</code>方法定制化，例如下例子</p>
+<pre><code>import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPublicKey;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
+public class CustomTrustManager implements X509TrustManager {
+
+    // 证书中的公钥
+    public static final String PUB_KEY = &quot;30820122300d06092a864886f70d01010105000382010f003082010a0282010&quot;
+            + &quot;1009d5d3bc479af1780ec41485b592952cafaeb028f2917606cab945d0b3d2172fea8273921a3866b8c16a537a&quot;
+            + &quot;6502782734c68425be33b16515933881acdda6c008d8cbc8c215f38fecc876543f780ceca81f41d0731c62d5de&quot;
+            + &quot;9bcd4dfcfb05d0bd343a87bb00f60e4cdf2392896003acc6a7de2e161583d2542b4a3c6f290a67c49a06cc2cca&quot;
+            + &quot;ea929165b66a2f18f9f21ff5567a177c33c466a85505060316387762dadd143a63778603c98e29b9cd38aedf9e&quot;
+            + &quot;ccc0f75dda34b78bcc6f4959bd879217d07ce7681d170c41a103ec2f36e2e015ec0a365a8cafc5b5a563671bd0&quot;
+            + &quot;79096b83daf3f4140651975631e79f9becf0238c99cd8edbd7e078e4d0c35d3cb0203010001&quot;;
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        if (chain == null) {
+            throw new IllegalArgumentException(&quot;checkServerTrusted:Certificate array isnull&quot;);
+        }
+
+        if (!(chain.length &gt; 0)) {
+            throw new IllegalArgumentException(&quot;checkServerTrusted: Certificate is empty&quot;);
+        }
+
+        if (!(null != authType &amp;&amp; authType.equalsIgnoreCase(&quot;ECDHE_RSA&quot;))) {
+            throw new CertificateException(&quot;checkServerTrusted: AuthType is not ECDHE_RSA&quot;);
+        }
+
+        // Perform customary SSL/TLS checks
+        try {
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            KeyStore keyStore = KeyStore.getInstance(&quot;PKCS12&quot;);
+            InputStream certificate = new FileInputStream(new File(&quot;tomcat.keystore&quot;));
+            keyStore.load(certificate, &quot;somnus&quot;.toCharArray());
+            tmf.init(keyStore);
+            for (TrustManager trustManager : tmf.getTrustManagers()) {
+                ((X509TrustManager) trustManager).checkServerTrusted(chain, authType);
+            }
+        } catch (Exception e) {
+            throw new CertificateException(e);
+        }
+        // Hack ahead: BigInteger and toString(). We know a DER encoded Public Key begins
+        // with 0×30 (ASN.1 SEQUENCE and CONSTRUCTED), so there is no leading 0×00 to drop.
+        RSAPublicKey pubkey = (RSAPublicKey) chain[0].getPublicKey();
+        String encoded = new BigInteger(1 /* positive */, pubkey.getEncoded()).toString(16);
+        // Pin it!
+        final boolean expected = PUB_KEY.equalsIgnoreCase(encoded);
+        if (!expected) {
+            throw new CertificateException(
+                    &quot;checkServerTrusted: Expected public key: &quot; + PUB_KEY + &quot;, got public key:&quot; + encoded);
+        }
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return new X509Certificate[0];
+    }
+}
+</code></pre><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li><a href="http://square.github.io/retrofit/" target="_blank" rel="noopener">http://square.github.io/retrofit/</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/04/28/java/post-man-authorization/" data-toggle="tooltip" data-placement="top" title="PostMan自动设置OAuth2请求头Auhtorization">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/03/29/essay/v2ray/" data-toggle="tooltip" data-placement="top" title="搭建v2ray">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#使用Retrofit访问HTTPS接口"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">使用Retrofit访问HTTPS接口</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#添加Retrofit依赖"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">添加Retrofit依赖</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Retrofit注解"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Retrofit注解</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#配置使用HTTPS"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">配置使用HTTPS</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#定制X509TrustManager"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">定制X509TrustManager</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Reference"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Reference</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/04/28/java/retrofit-https/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/04/28/java/retrofit-https/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

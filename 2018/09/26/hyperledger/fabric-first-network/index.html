@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hyperledger Fabric (一) — 超级账本使用fabric-first-network - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/26/hyperledger/fabric-first-network/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/blockchain/hyperledger/bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                            
+                              <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                            
+                              <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                            
+                        </div>
+                        <h1>Hyperledger Fabric (一) — 超级账本使用fabric-first-network</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-09-26
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><ul>
+<li>环境基于Ubuntu16.04</li>
+<li>Fabric version = 1.2.0</li>
+</ul>
+<h3 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h3><pre><code>apt-get install docker.io -y
+</code></pre><h3 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h3><pre><code>apt-get install -y python-pip python-setuptools
+pip install --upgrade pip
+pip install docker-compose
+
+curl -L --fail https://github.com/docker/compose/releases/download/1.19.0/run.sh -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose &amp;&amp; sudo cp /usr/local/bin/docker-compose /usr/bin
+docker-compose --version
+</code></pre><p>docker-compose的最新版本可以在<a href="https://github.com/docker/compose/releases" target="_blank" rel="noopener">github</a>找到。</p>
+<h3 id="安装go"><a href="#安装go" class="headerlink" title="安装go"></a>安装go</h3><pre><code>wget http://p22qphkhy.bkt.clouddn.com/go1.10.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.10.linux-amd64.tar.gz
+vim /etc/profile
+
+export GOROOT=/usr/local/go
+export PATH=$PATH:$GOROOT/bin
+export GOPATH=/opt/gopath
+
+source  /etc/profile
+go version
+</code></pre><h3 id="Nodejs"><a href="#Nodejs" class="headerlink" title="Nodejs"></a>Nodejs</h3><p>在全局下安装</p>
+<pre><code>npm install node-gyp
+</code></pre><p>也可以比如在Ubuntu系统下执行</p>
+<pre><code>sudo apt-get install node-gyp
+</code></pre><h2 id="下载代码"><a href="#下载代码" class="headerlink" title="下载代码"></a>下载代码</h2><p>创建<code>fabric-sample</code>项目的根路径，由于<code>fabric</code>的很多example项目基于Golang开发，因此建议是将Go路径设置在${GOPATH}，然后创建如下路径</p>
+<pre><code>mkdir -p ${GOPATH}/src/github.com/hyperledger/ &amp;&amp; cd ${GOPATH}/src/github.com/hyperledger/
+</code></pre><p>克隆fabric-sample项目</p>
+<pre><code>git clone https://github.com/hyperledger/fabric-samples.git -b release-1.2 &amp;&amp; cd fabric-samples/
+</code></pre><h2 id="安装fabric-tools及下载fabric-images"><a href="#安装fabric-tools及下载fabric-images" class="headerlink" title="安装fabric-tools及下载fabric-images"></a>安装fabric-tools及下载fabric-images</h2><p>进入到<code>fabric-sample</code>目录下进行fabric-tools的安装和fabric-images的下载</p>
+<pre><code>curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh | bash -s 1.2.0
+</code></pre><p>执行完成之后，fabric-sample下会多出一个bin目录，这个目录下面包含了<code>fabric-tools</code>，可以将这个bin文件夹添加到环境变量中</p>
+<pre><code>vim /etc/profile
+
+---
+export PATH=$GOPATH/src/github.com/hyperledger/fabric-samples/bin:$PATH
+---
+
+</code></pre><p>查询下载好的镜像</p>
+<pre><code># docker images 
+
+REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
+hyperledger/fabric-ca                1.3.0-rc1           784b38dab5ba        2 days ago          244MB
+hyperledger/fabric-ca                latest              784b38dab5ba        2 days ago          244MB
+hyperledger/fabric-zookeeper         0.4.12              bca71b814159        9 days ago          1.39GB
+hyperledger/fabric-zookeeper         latest              bca71b814159        9 days ago          1.39GB
+hyperledger/fabric-kafka             0.4.12              58b901c762ea        9 days ago          1.4GB
+hyperledger/fabric-kafka             latest              58b901c762ea        9 days ago          1.4GB
+hyperledger/fabric-couchdb           0.4.12              fe8d64d1233c        9 days ago          1.45GB
+hyperledger/fabric-couchdb           latest              fe8d64d1233c        9 days ago          1.45GB
+hyperledger/fabric-tools             1.2.0               379602873003        2 months ago        1.51GB
+hyperledger/fabric-tools             latest              379602873003        2 months ago        1.51GB
+hyperledger/fabric-ccenv             1.2.0               6acf31e2d9a4        2 months ago        1.43GB
+hyperledger/fabric-ccenv             latest              6acf31e2d9a4        2 months ago        1.43GB
+hyperledger/fabric-orderer           1.2.0               4baf7789a8ec        2 months ago        152MB
+hyperledger/fabric-orderer           latest              4baf7789a8ec        2 months ago        152MB
+hyperledger/fabric-peer              1.2.0               82c262e65984        2 months ago        159MB
+hyperledger/fabric-peer              latest              82c262e65984        2 months ago        159MB
+hyperledger/fabric-baseimage         amd64-0.4.10        62513965e238        3 months ago        1.39GB
+hyperledger/fabric-baseos            amd64-0.4.10        52190e831002        3 months ago        132MB
+</code></pre><h2 id="通过脚本启动fabirc-first-network网络"><a href="#通过脚本启动fabirc-first-network网络" class="headerlink" title="通过脚本启动fabirc-first-network网络"></a>通过脚本启动fabirc-first-network网络</h2><p>通过脚本启动fabric是比较简单的方式，这个fabric网络拓扑是最简单的网络，具体如下图所示</p>
+<p><img src="/images/blockchain/hyperledger/fabric-sample-topology.png" alt="image"></p>
+<p>首先进入到first-network目录下</p>
+<pre><code>cd ./first-network
+</code></pre><h3 id="生成认证密钥"><a href="#生成认证密钥" class="headerlink" title="生成认证密钥"></a>生成认证密钥</h3><p>生成fabric-sample需要的所有的认证和密钥，以方便之后启动整个网络的时候使用</p>
+<pre><code>echo y | ./byfn.sh -m generate
+</code></pre><p>执行结果如下</p>
+<pre><code>Generating certs and genesis block for channel &#39;mychannel&#39; with CLI timeout of &#39;10&#39; seconds and CLI delay of &#39;3&#39; seconds
+proceeding ...
+/opt/go/src/github.com/hyperledger/fabric-samples/bin/cryptogen
+
+##########################################################
+##### Generate certificates using cryptogen tool #########
+##########################################################
++ cryptogen generate --config=./crypto-config.yaml
+org1.example.com
+org2.example.com
++ res=0
++ set +x
+
+/opt/go/src/github.com/hyperledger/fabric-samples/bin/configtxgen
+##########################################################
+#########  Generating Orderer Genesis block ##############
+##########################################################
++ configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
+2018-09-26 10:59:32.833 HKT [common/tools/configtxgen] main -&gt; WARN 001 Omitting the channel ID for configtxgen is deprecated.  Explicitly passing the channel ID will be required in the future, defaulting to &#39;testchainid&#39;.
+2018-09-26 10:59:32.833 HKT [common/tools/configtxgen] main -&gt; INFO 002 Loading configuration
+2018-09-26 10:59:32.839 HKT [common/tools/configtxgen/encoder] NewChannelGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the channel group in configtx.yaml
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererGroup -&gt; WARN 004 Default policy emission is deprecated, please include policy specificiations for the orderer group in configtx.yaml
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the orderer org group OrdererOrg in configtx.yaml
+2018-09-26 10:59:32.840 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org1MSP in configtx.yaml
+2018-09-26 10:59:32.840 HKT [msp] getMspConfig -&gt; INFO 008 Loading NodeOUs
+2018-09-26 10:59:32.840 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 009 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org2MSP in configtx.yaml
+2018-09-26 10:59:32.841 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00a Generating genesis block
+2018-09-26 10:59:32.841 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00b Writing genesis block
++ res=0
++ set +x
+
+#################################################################
+### Generating channel configuration transaction &#39;channel.tx&#39; ###
+#################################################################
++ configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID mychannel
+2018-09-26 10:59:32.875 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 002 Generating new channel configtx
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen/encoder] NewApplicationGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the application group in configtx.yaml
+2018-09-26 10:59:32.882 HKT [msp] getMspConfig -&gt; INFO 004 Loading NodeOUs
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the application org group Org1MSP in configtx.yaml
+2018-09-26 10:59:32.882 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-26 10:59:32.882 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the application org group Org2MSP in configtx.yaml
+2018-09-26 10:59:32.883 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 008 Writing new channel tx
++ res=0
++ set +x
+
+#################################################################
+#######    Generating anchor peer update for Org1MSP   ##########
+#################################################################
++ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID mychannel -asOrg Org1MSP
+2018-09-26 10:59:32.917 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-26 10:59:32.924 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-26 10:59:32.924 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
++ res=0
++ set +x
+
+#################################################################
+#######    Generating anchor peer update for Org2MSP   ##########
+#################################################################
++ configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID mychannel -asOrg Org2MSP
+2018-09-26 10:59:32.958 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-26 10:59:32.964 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-26 10:59:32.965 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
++ res=0
++ set +x
+</code></pre><h3 id="启动fabric-sample网络"><a href="#启动fabric-sample网络" class="headerlink" title="启动fabric-sample网络"></a>启动fabric-sample网络</h3><p>启动fabric-sample网络</p>
+<pre><code>echo y | ./byfn.sh -m up
+</code></pre><blockquote>
+<p>如果想要使用nodejs语言或者java编写的智能合约，可以使用 -l 标志指定智能合约语言<br>不指定默认使用Golang<br><code>echo y | ./byfn.sh -m up -l node</code><br><code>echo y | ./byfn.sh -m up -l java</code> java在版本1.2.0以前还属于测试实验阶段，不建议使用</p>
+</blockquote>
+<p>执行成功结果</p>
+<pre><code>Installing chaincode on peer1.org2...
++ peer chaincode install -n mycc -v 1.0 -l golang -p github.com/chaincode/chaincode_example02/go/
++ res=0
++ set +x
+2018-09-26 03:00:38.660 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 001 Using default escc
+2018-09-26 03:00:38.660 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 002 Using default vscc
+2018-09-26 03:00:38.810 UTC [chaincodeCmd] install -&gt; INFO 003 Installed remotely response:&lt;status:200 payload:&quot;OK&quot; &gt; 
+===================== Chaincode is installed on peer1.org2 ===================== 
+
+Querying chaincode on peer1.org2...
+===================== Querying on peer1.org2 on channel &#39;mychannel&#39;... ===================== 
++ peer chaincode query -C mychannel -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;,&quot;a&quot;]}&#39;
+Attempting to Query peer1.org2 ...3 secs
++ res=0
++ set +x
+
+90
+===================== Query successful on peer1.org2 on channel &#39;mychannel&#39; ===================== 
+
+========= All GOOD, BYFN execution completed =========== 
+
+
+ _____   _   _   ____   
+| ____| | \ | | |  _ \  
+|  _|   |  \| | | | | | 
+| |___  | |\  | | |_| | 
+|_____| |_| \_| |____/  
+</code></pre><p>执行</p>
+<pre><code>docker ps -a
+
+CONTAINER ID        IMAGE                                                   COMMAND                  CREATED             STATUS        PORTS                                  NAMES
+d37d3e69b469        hyperledger/fabric-tools:latest                        &quot;/bin/bash&quot;              14 minutes ago       Up 14 minutes                                         cli
+5fa3f4446d13        hyperledger/fabric-orderer:latest                                                                      &quot;orderer&quot;                15 minutes ago      Up 14 minutes       0.0.0.0:7050-&gt;7050/tcp                             orderer.example.com
+bc307a3fb4bd        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:8051-&gt;7051/tcp, 0.0.0.0:8053-&gt;7053/tcp     peer1.org1.example.com
+220a1b0c964e        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:7051-&gt;7051/tcp, 0.0.0.0:7053-&gt;7053/tcp     peer0.org1.example.com
+3e3a078b25bc        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:9051-&gt;7051/tcp, 0.0.0.0:9053-&gt;7053/tcp     peer0.org2.example.com
+5c02ec9c1b24        hyperledger/fabric-peer:latest                                                                         &quot;peer node start&quot;        15 minutes ago      Up 14 minutes       0.0.0.0:10051-&gt;7051/tcp, 0.0.0.0:10053-&gt;7053/tcp   peer1.org2.example.com
+</code></pre><p>会看到有一个排序节点<code>orderer.example.com</code>，2个组织，4个节点<code>peer0.org1.example.com</code>、<code>peer0.org2.example.com</code>、<code>peer1.org1.example.com</code>、<code>peer1.org2.example.com</code></p>
+<p>其中<code>cli</code>容器是<code>fabric-first-network</code>的一个客户端, 可以直接进入到<code>cli</code>进行操作</p>
+<pre><code>docker exec -it cli sh
+</code></pre><blockquote>
+<p>使用bash也可以</p>
+</blockquote>
+<pre><code>peer channel list
+
+2018-09-26 03:34:36.783 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+Channels peers has joined: 
+mychannel
+</code></pre><p>会看到有一个channel名为<code>mychannel</code>，因此将这个加到环境变量中</p>
+<pre><code>export CHANNEL_NAME=mychannel
+</code></pre><p>同时添加下列环境变量</p>
+<pre><code>export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+</code></pre><h3 id="查询链上信息"><a href="#查询链上信息" class="headerlink" title="查询链上信息"></a>查询链上信息</h3><p>查询<code>a</code>账户里面的值</p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;,&quot;a&quot;]}&#39;
+
+90
+</code></pre><p>这个<code>a</code>账户原本是有100的，在部署网络的时候执行了一次转账到<code>b</code>账户，因此变成了90，可以查询<code>b</code>的数值得到</p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;,&quot;b&quot;]}&#39; 
+
+210
+</code></pre><p>这个信息具体可以通过如下打日志的方式查看，先退出<code>bash</code>或者<code>sh</code>，然后在宿主机执行</p>
+<pre><code>docker logs dev-peer0.org1.example.com-mycc-1.0
+
+ex02 Invoke
+Query Response:{&quot;Name&quot;:&quot;a&quot;,&quot;Amount&quot;:&quot;100&quot;}
+ex02 Invoke
+Aval = 90, Bval = 210
+ex02 Invoke
+Query Response:{&quot;Name&quot;:&quot;a&quot;,&quot;Amount&quot;:&quot;90&quot;}
+ex02 Invoke
+Query Response:{&quot;Name&quot;:&quot;a&quot;,&quot;Amount&quot;:&quot;90&quot;}
+ex02 Invoke
+Query Response:{&quot;Name&quot;:&quot;b&quot;,&quot;Amount&quot;:&quot;210&quot;}
+</code></pre><pre><code>docker logs dev-peer0.org2.example.com-mycc-1.0
+
+ex02 Init
+Aval = 100, Bval = 200
+ex02 Invoke
+Aval = 90, Bval = 21
+</code></pre><pre><code>docker logs dev-peer1.org2.example.com-mycc-1.0
+
+ex02 Invoke
+Query Response:{&quot;Name&quot;:&quot;a&quot;,&quot;Amount&quot;:&quot;90&quot;}
+</code></pre><h3 id="关闭fabric-sample网络"><a href="#关闭fabric-sample网络" class="headerlink" title="关闭fabric-sample网络"></a>关闭fabric-sample网络</h3><p>如果在启动网络的过程中出现了错误或者失败，则可以关闭网络重来，或者说实验完之后想删除整个实验网络，则执行如下命令，这个脚本执行会会将对应的docker容器删除，通过脚本进行实验也只是为了对这个网络的启动和关闭有一个完整的体验和感知，之后我们需要通过一些步骤来启动一个完整功能的网络</p>
+<pre><code>echo y | ./byfn.sh -m down
+</code></pre><h2 id="手动启动first-network"><a href="#手动启动first-network" class="headerlink" title="手动启动first-network"></a>手动启动first-network</h2><p>手动启动fabric-sample的first-network会对整体的一个架构有比较清晰的认识，按照手动步骤一步一步完成，能够知道脚本运行fabric网络的过程涉及到哪些具体操作</p>
+<h3 id="fabric-tool介绍"><a href="#fabric-tool介绍" class="headerlink" title="fabric-tool介绍"></a>fabric-tool介绍</h3><h4 id="Crypto-Generator"><a href="#Crypto-Generator" class="headerlink" title="Crypto Generator"></a>Crypto Generator</h4><p>fabric使用<code>cryptogen</code>工具为网络实体生成对应的密码密钥，主要包含了x509标准的证书和签名使用的keys。这些证书其实标识了fabric网络中的不同实体，同时实体要进行通讯和交易都需要使用这些证书进行签名/校验身份。</p>
+<p>首先需要生成对应的证书和密钥，需要使用<code>cryptogen</code>工具同时读取<code>crypto-config.yaml</code>配置文件，<code>crypto-config.yaml</code>文件内容如下所示</p>
+<pre><code># Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# ---------------------------------------------------------------------------
+# &quot;OrdererOrgs&quot; - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderer
+  # ---------------------------------------------------------------------------
+  - Name: Orderer
+    Domain: example.com
+    # ---------------------------------------------------------------------------
+    # &quot;Specs&quot; - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: orderer
+# ---------------------------------------------------------------------------
+# &quot;PeerOrgs&quot; - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Org1
+  # ---------------------------------------------------------------------------
+  - Name: Org1
+    Domain: org1.example.com
+    EnableNodeOUs: true
+    # ---------------------------------------------------------------------------
+    # &quot;Specs&quot;
+    # ---------------------------------------------------------------------------
+    # Uncomment this section to enable the explicit definition of hosts in your
+    # configuration.  Most users will want to use Template, below
+    #
+    # Specs is an array of Spec entries.  Each Spec entry consists of two fields:
+    #   - Hostname:   (Required) The desired hostname, sans the domain.
+    #   - CommonName: (Optional) Specifies the template or explicit override for
+    #                 the CN.  By default, this is the template:
+    #
+    #                              &quot;{{.Hostname}}.{{.Domain}}&quot;
+    #
+    #                 which obtains its values from the Spec.Hostname and
+    #                 Org.Domain, respectively.
+    # ---------------------------------------------------------------------------
+    # Specs:
+    #   - Hostname: foo # implicitly &quot;foo.org1.example.com&quot;
+    #     CommonName: foo27.org5.example.com # overrides Hostname-based FQDN set above
+    #   - Hostname: bar
+    #   - Hostname: baz
+    # ---------------------------------------------------------------------------
+    # &quot;Template&quot;
+    # ---------------------------------------------------------------------------
+    # Allows for the definition of 1 or more hosts that are created sequentially
+    # from a template. By default, this looks like &quot;peer%d&quot; from 0 to Count-1.
+    # You may override the number of nodes (Count), the starting index (Start)
+    # or the template used to construct the name (Hostname).
+    #
+    # Note: Template and Specs are not mutually exclusive.  You may define both
+    # sections and the aggregate nodes will be created for you.  Take care with
+    # name collisions
+    # ---------------------------------------------------------------------------
+    Template:
+      Count: 2
+      # Start: 5
+      # Hostname: {{.Prefix}}{{.Index}} # default
+    # ---------------------------------------------------------------------------
+    # &quot;Users&quot;
+    # ---------------------------------------------------------------------------
+    # Count: The number of user accounts _in addition_ to Admin
+    # ---------------------------------------------------------------------------
+    Users:
+      Count: 1
+  # ---------------------------------------------------------------------------
+  # Org2: See &quot;Org1&quot; for full specification
+  # ---------------------------------------------------------------------------
+  - Name: Org2
+    Domain: org2.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+</code></pre><p>这个配置文件描述了first-network的网络拓扑，并且可以根据这个配置文件生成对应的证书和keys。每一个组织都被分配了一个独一无二的根证书<code>ca-cert</code>，这个证书会绑定到对应的组成部分上如<code>peers</code>和<code>orderers</code>。这样，整个环境就可以模拟一个联盟链的网络，这个网络里每一个成员都会有自己的认证证书，所有的交易和通讯都是会使用其中的<code>keystore</code>私钥来签名实例，使用<code>signcerts</code>这个公钥来校验。</p>
+<p>通过<code>cryptogen</code>工具生成的证书和私钥等文件会创建并保存在crypto-config文件目录下，如下</p>
+<pre><code># tree crypto-config/ordererOrganizations/
+</code></pre><p>得到结果</p>
+<pre><code>crypto-config/ordererOrganizations/
+└── example.com
+    ├── ca
+    │   ├── ca.example.com-cert.pem
+    │   └── e568f6ceac08db6c113b470774fd975612adff6620d4d8747a1802559ce13820_sk
+    ├── msp
+    │   ├── admincerts
+    │   │   └── Admin@example.com-cert.pem
+    │   ├── cacerts
+    │   │   └── ca.example.com-cert.pem
+    │   └── tlscacerts
+    │       └── tlsca.example.com-cert.pem
+    ├── orderers
+    │   └── orderer.example.com
+    │       ├── msp
+    │       │   ├── admincerts
+    │       │   │   └── Admin@example.com-cert.pem
+    │       │   ├── cacerts
+    │       │   │   └── ca.example.com-cert.pem
+    │       │   ├── keystore
+    │       │   │   └── 349468c790b915b35dc6cb83f47f2f0f2eef733b359d0047c87a06d426890896_sk
+    │       │   ├── signcerts
+    │       │   │   └── orderer.example.com-cert.pem
+    │       │   └── tlscacerts
+    │       │       └── tlsca.example.com-cert.pem
+    │       └── tls
+    │           ├── ca.crt
+    │           ├── server.crt
+    │           └── server.key
+    ├── tlsca
+    │   ├── ac51fdfee3946e638c3f116c65b8a126e866f18a1e9688cc32f387157a36b58e_sk
+    │   └── tlsca.example.com-cert.pem
+    └── users
+        └── Admin@example.com
+            ├── msp
+            │   ├── admincerts
+            │   │   └── Admin@example.com-cert.pem
+            │   ├── cacerts
+            │   │   └── ca.example.com-cert.pem
+            │   ├── keystore
+            │   │   └── 2efa0e5c708509fa6d0a8c4f206f70c380d927a1d99a498d8cf50ae4ab4707e8_sk
+            │   ├── signcerts
+            │   │   └── Admin@example.com-cert.pem
+            │   └── tlscacerts
+            │       └── tlsca.example.com-cert.pem
+            └── tls
+                ├── ca.crt
+                ├── client.crt
+                └── client.key
+</code></pre><p>会看到文件目录的组织关系，也会看到对于排序节点有自己的<code>ca</code>，所以最后排序节点的容器名称就是<code>order.example.com</code>，这个也就作为排序节点的<code>MSP</code> ID。关于<code>MSP</code>可以参考<a href="https://hyperledger-fabric.readthedocs.io/en/latest/msp.html" target="_blank" rel="noopener">Membership Service Providers (MSP)</a></p>
+<h4 id="Configuration-Transaction-Generator"><a href="#Configuration-Transaction-Generator" class="headerlink" title="Configuration Transaction Generator"></a>Configuration Transaction Generator</h4><p>配置网络中的交易信息会用到<code>configtxgen</code>工具，这其中会涉及到如下几个信息的准备</p>
+<ul>
+<li>orderer <code>genesis block</code> - 这个是初始区块信息, 是创世块,</li>
+<li>channel <code>configuration transaction</code> - 配置交易<code>channel</code>,</li>
+<li>two <code>anchor peer transactions</code> - 每一个锚节点对应一个组织Org.</li>
+</ul>
+<p>orderer区块是排序服务需要使用的创世区块，而channel configuration 交易文件是用于在channel创建的时候需要广播给orderer节点的。锚节点交易用于在channel中锚定对应的组织Org中的节点。</p>
+<p><code>configtxgen</code> 使用的配置文件为<code>configtx.yaml</code>，内容如下：</p>
+<pre><code>---
+Organizations:
+
+    # SampleOrg defines an MSP using the sampleconfig.  It should never be used
+    # in production but may be used as a template for other definitions
+    - &amp;OrdererOrg
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: OrdererOrg
+
+        # ID to load the MSP definition as
+        ID: OrdererMSP
+
+        # MSPDir is the filesystem path which contains the MSP configuration
+        MSPDir: crypto-config/ordererOrganizations/example.com/msp
+
+    - &amp;Org1
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: Org1MSP
+
+        # ID to load the MSP definition as
+        ID: Org1MSP
+
+        MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.org1.example.com
+              Port: 7051
+
+    - &amp;Org2
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: Org2MSP
+
+        # ID to load the MSP definition as
+        ID: Org2MSP
+
+        MSPDir: crypto-config/peerOrganizations/org2.example.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.org2.example.com
+              Port: 7051
+Capabilities:
+    # Channel capabilities apply to both the orderers and the peers and must be
+    # supported by both.  Set the value of the capability to true to require it.
+    Global: &amp;ChannelCapabilities
+        # V1.1 for Global is a catchall flag for behavior which has been
+        # determined to be desired for all orderers and peers running v1.0.x,
+        # but the modification of which would cause incompatibilities.  Users
+        # should leave this flag set to true.
+        V1_1: true
+
+    # Orderer capabilities apply only to the orderers, and may be safely
+    # manipulated without concern for upgrading peers.  Set the value of the
+    # capability to true to require it.
+    Orderer: &amp;OrdererCapabilities
+        # V1.1 for Order is a catchall flag for behavior which has been
+        # determined to be desired for all orderers running v1.0.x, but the
+        # modification of which  would cause incompatibilities.  Users should
+        # leave this flag set to true.
+        V1_1: true
+
+    # Application capabilities apply only to the peer network, and may be safely
+    # manipulated without concern for upgrading orderers.  Set the value of the
+    # capability to true to require it.
+    Application: &amp;ApplicationCapabilities
+        # V1.2 for Application is a catchall flag for behavior which has been
+        # determined to be desired for all peers running v1.0.x, but the
+        # modification of which would cause incompatibilities.  Users should
+        # leave this flag set to true.
+        V1_2: true
+
+Application: &amp;ApplicationDefaults
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the application side of the network
+    Organizations:
+
+Orderer: &amp;OrdererDefaults
+
+    # Orderer Type: The orderer implementation to start
+    # Available types are &quot;solo&quot; and &quot;kafka&quot;
+    OrdererType: solo
+
+    Addresses:
+        - orderer.example.com:7050
+
+    # Batch Timeout: The amount of time to wait before creating a batch
+    BatchTimeout: 2s
+
+    # Batch Size: Controls the number of messages batched into a block
+    BatchSize:
+
+        # Max Message Count: The maximum number of messages to permit in a batch
+        MaxMessageCount: 10
+
+        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
+        # the serialized messages in a batch.
+        AbsoluteMaxBytes: 99 MB
+
+        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
+        # the serialized messages in a batch. A message larger than the preferred
+        # max bytes will result in a batch larger than preferred max bytes.
+        PreferredMaxBytes: 512 KB
+
+    Kafka:
+        # Brokers: A list of Kafka brokers to which the orderer connects
+        # NOTE: Use IP:port notation
+        Brokers:
+            - 127.0.0.1:9092
+
+    # Organizations is the list of orgs which are defined as participants on
+    # the orderer side of the network
+    Organizations:
+
+Profiles:
+    TwoOrgsOrdererGenesis:
+        Capabilities:
+            &lt;&lt;: *ChannelCapabilities
+        Orderer:
+            &lt;&lt;: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+                &lt;&lt;: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+    TwoOrgsChannel:
+        Consortium: SampleConsortium
+        Application:
+            &lt;&lt;: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
+            Capabilities:
+                &lt;&lt;: *ApplicationCapabilities
+</code></pre><p>这个文件定义了first-network的组织结构，包含了三个成员：一个排序组织、两个端节点组织(<code>Org1</code> &amp; <code>Org2</code>) - 每个组织管理了两个节点，同时配置文件也配置了一个联盟<code>SampleConsortium</code>，这个联盟包含了两个端节点组织，这个配置主要<code>Profile</code>下，有两个特别的属性，一个是<code>TwoOrgsOrdererGenesis</code>，另一个是<code>TwoOrgsChannel</code>。</p>
+<h3 id="使用fabric-tools构建first-network"><a href="#使用fabric-tools构建first-network" class="headerlink" title="使用fabric-tools构建first-network"></a>使用fabric-tools构建first-network</h3><p>手动使用<code>configtxgen</code>和<code>cryptogen</code>进行密钥、证书、创世块信息、channel等和<code>byfn.sh generate</code>的效果是一样的，因此可以通过脚本来看这部分的工作包含了那些工作。这部分工作的具体内容在<code>byfn.sh</code>脚本里面的方法<code>generateCerts</code>、<code>replacePrivateKey</code>、<code>generateChannelArtifacts</code></p>
+<h4 id="手动生成证书"><a href="#手动生成证书" class="headerlink" title="手动生成证书"></a>手动生成证书</h4><p>由于之前已经将fabric-tools的路径暴露到环境变量中了，所以可以直接使用一下的所有命令</p>
+<pre><code>configtxgen  configtxlator  cryptogen  discover  fabric-ca-client idemixgen  orderer  peer
+</code></pre><p>使用<code>cryptogen</code>工具生成证书和密钥，会保存在<code>crypto-config</code>目录下</p>
+<pre><code>cryptogen generate --config=./crypto-config.yaml
+</code></pre><p>会得到输出内容</p>
+<pre><code>org1.example.com
+org2.example.com
+</code></pre><p>之后对应的证书和私钥都会生成在<code>crypto-config</code>目录下</p>
+<p>默认来说我们是在<code>$GOPATH/src/github.com/hyperledger/fabric-samples/first-network</code>目录下面使用<code>configtxgen</code>命令，但是还是建议将<code>config.yaml</code>文件的位置告诉<code>configtxgen</code>目录</p>
+<pre><code>export FABRIC_CFG_PATH=$PWD
+</code></pre><p>接下来就使用<code>configtxgen</code>工具来创建创世区块信息</p>
+<pre><code>configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block 
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:31:40.406 HKT [common/tools/configtxgen] main -&gt; WARN 001 Omitting the channel ID for configtxgen is deprecated.  Explicitly passing the channel ID will be required in the future, defaulting to &#39;testchainid&#39;.
+2018-09-28 19:31:40.406 HKT [common/tools/configtxgen] main -&gt; INFO 002 Loading configuration
+2018-09-28 19:31:40.417 HKT [common/tools/configtxgen/encoder] NewChannelGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the channel group in configtx.yaml
+2018-09-28 19:31:40.417 HKT [common/tools/configtxgen/encoder] NewOrdererGroup -&gt; WARN 004 Default policy emission is deprecated, please include policy specificiations for the orderer group in configtx.yaml
+2018-09-28 19:31:40.418 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the orderer org group OrdererOrg in configtx.yaml
+2018-09-28 19:31:40.418 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-28 19:31:40.418 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org1MSP in configtx.yaml
+2018-09-28 19:31:40.419 HKT [msp] getMspConfig -&gt; INFO 008 Loading NodeOUs
+2018-09-28 19:31:40.419 HKT [common/tools/configtxgen/encoder] NewOrdererOrgGroup -&gt; WARN 009 Default policy emission is deprecated, please include policy specificiations for the orderer org group Org2MSP in configtx.yaml
+2018-09-28 19:31:40.419 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00a Generating genesis block
+2018-09-28 19:31:40.419 HKT [common/tools/configtxgen] doOutputBlock -&gt; INFO 00b Writing genesis block
+</code></pre><p>这个生成的<code>genesis.block</code>文件内容可以通过以下命令将<code>json</code>保存到一个文件中然后阅读</p>
+<pre><code>configtxgen -inspectBlock ./channel-artifacts/genesis.block &gt; ./channel-artifacts/genesis.json
+
+2018-10-26 06:49:20.197 UTC [common/tools/configtxgen] main -&gt; WARN 001 Omitting the channel ID for configtxgen is deprecated.  Explicitly passing the channel ID will be required in the future, defaulting to &#39;testchainid&#39;.
+2018-10-26 06:49:20.197 UTC [common/tools/configtxgen] main -&gt; INFO 002 Loading configuration
+2018-10-26 06:49:20.207 UTC [common/tools/configtxgen] doInspectBlock -&gt; INFO 003 Inspecting block
+2018-10-26 06:49:20.207 UTC [common/tools/configtxgen] doInspectBlock -&gt; INFO 004 Parsing genesis block
+</code></pre><p>文件内容包含了根据<code>configtx.yml</code>文件生成的创世区块信息和结点信息，内容比较多，不赘述。</p>
+<h4 id="创建channel的锚节点"><a href="#创建channel的锚节点" class="headerlink" title="创建channel的锚节点"></a>创建channel的锚节点</h4><p>首先创建一个channel名为<code>mychannel</code>，因此将mychannel作为环境变量</p>
+<pre><code>export CHANNEL_NAME=mychannel
+</code></pre><p>使用configtxgen创建channel</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx \
+-channelID $CHANNEL_NAME
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:32:32.450 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-28 19:32:32.457 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 002 Generating new channel configtx
+2018-09-28 19:32:32.457 HKT [common/tools/configtxgen/encoder] NewApplicationGroup -&gt; WARN 003 Default policy emission is deprecated, please include policy specificiations for the application group in configtx.yaml
+2018-09-28 19:32:32.458 HKT [msp] getMspConfig -&gt; INFO 004 Loading NodeOUs
+2018-09-28 19:32:32.458 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 005 Default policy emission is deprecated, please include policy specificiations for the application org group Org1MSP in configtx.yaml
+2018-09-28 19:32:32.458 HKT [msp] getMspConfig -&gt; INFO 006 Loading NodeOUs
+2018-09-28 19:32:32.458 HKT [common/tools/configtxgen/encoder] NewApplicationOrgGroup -&gt; WARN 007 Default policy emission is deprecated, please include policy specificiations for the application org group Org2MSP in configtx.yaml
+2018-09-28 19:32:32.459 HKT [common/tools/configtxgen] doOutputChannelCreateTx -&gt; INFO 008 Writing new channel tx
+</code></pre><p>生成的<code>channel.tx</code>内容获取如下</p>
+<pre><code>configtxgen -inspectChannelCreateTx ./channel-artifacts/channel.tx &gt; ./channel-artifacts/channel.json
+
+2018-10-26 06:52:58.458 UTC [common/tools/configtxgen] main -&gt; WARN 001 Omitting the channel ID for configtxgen is deprecated.  Explicitly passing the channel ID will be required in the future, defaulting to &#39;testchainid&#39;.
+2018-10-26 06:52:58.458 UTC [common/tools/configtxgen] main -&gt; INFO 002 Loading configuration
+2018-10-26 06:52:58.476 UTC [common/tools/configtxgen] doInspectChannelCreateTx -&gt; INFO 003 Inspecting transaction
+2018-10-26 06:52:58.476 UTC [common/tools/configtxgen] doInspectChannelCreateTx -&gt; INFO 004 Parsing transaction
+</code></pre><p>内容如下</p>
+<pre><code>{
+  &quot;payload&quot;: {
+    &quot;data&quot;: {
+      &quot;config_update&quot;: {
+        &quot;channel_id&quot;: &quot;mychannel&quot;,
+        &quot;read_set&quot;: {
+          &quot;groups&quot;: {
+            &quot;Application&quot;: {
+              &quot;groups&quot;: {
+                &quot;Org1MSP&quot;: {
+                  &quot;mod_policy&quot;: &quot;&quot;,
+                  &quot;version&quot;: &quot;0&quot;
+                },
+                &quot;Org2MSP&quot;: {
+                  &quot;mod_policy&quot;: &quot;&quot;,
+                  &quot;version&quot;: &quot;0&quot;
+                }
+              },
+              &quot;mod_policy&quot;: &quot;&quot;,
+              &quot;version&quot;: &quot;0&quot;
+            }
+          },
+          &quot;mod_policy&quot;: &quot;&quot;,
+          &quot;values&quot;: {
+            &quot;Consortium&quot;: {
+              &quot;mod_policy&quot;: &quot;&quot;,
+              &quot;version&quot;: &quot;0&quot;
+            }
+          },
+          &quot;version&quot;: &quot;0&quot;
+        },
+        &quot;write_set&quot;: {
+          &quot;groups&quot;: {
+            &quot;Application&quot;: {
+              &quot;groups&quot;: {
+                &quot;Org1MSP&quot;: {
+                  &quot;mod_policy&quot;: &quot;&quot;,
+                  &quot;version&quot;: &quot;0&quot;
+                },
+                &quot;Org2MSP&quot;: {
+                  &quot;mod_policy&quot;: &quot;&quot;,
+                  &quot;version&quot;: &quot;0&quot;
+                }
+              },
+              &quot;mod_policy&quot;: &quot;Admins&quot;,
+              &quot;policies&quot;: {
+                &quot;Admins&quot;: {
+                  &quot;mod_policy&quot;: &quot;Admins&quot;,
+                  &quot;policy&quot;: {
+                    &quot;type&quot;: 3,
+                    &quot;value&quot;: {
+                      &quot;rule&quot;: &quot;MAJORITY&quot;,
+                      &quot;sub_policy&quot;: &quot;Admins&quot;
+                    }
+                  },
+                  &quot;version&quot;: &quot;0&quot;
+                },
+                &quot;Readers&quot;: {
+                  &quot;mod_policy&quot;: &quot;Admins&quot;,
+                  &quot;policy&quot;: {
+                    &quot;type&quot;: 3,
+                    &quot;value&quot;: {
+                      &quot;rule&quot;: &quot;ANY&quot;,
+                      &quot;sub_policy&quot;: &quot;Readers&quot;
+                    }
+                  },
+                  &quot;version&quot;: &quot;0&quot;
+                },
+                &quot;Writers&quot;: {
+                  &quot;mod_policy&quot;: &quot;Admins&quot;,
+                  &quot;policy&quot;: {
+                    &quot;type&quot;: 3,
+                    &quot;value&quot;: {
+                      &quot;rule&quot;: &quot;ANY&quot;,
+                      &quot;sub_policy&quot;: &quot;Writers&quot;
+                    }
+                  },
+                  &quot;version&quot;: &quot;0&quot;
+                }
+              },
+              &quot;values&quot;: {
+                &quot;Capabilities&quot;: {
+                  &quot;mod_policy&quot;: &quot;Admins&quot;,
+                  &quot;value&quot;: {
+                    &quot;capabilities&quot;: {
+                      &quot;V1_2&quot;: {}
+                    }
+                  },
+                  &quot;version&quot;: &quot;0&quot;
+                }
+              },
+              &quot;version&quot;: &quot;1&quot;
+            }
+          },
+          &quot;mod_policy&quot;: &quot;&quot;,
+          &quot;values&quot;: {
+            &quot;Consortium&quot;: {
+              &quot;mod_policy&quot;: &quot;&quot;,
+              &quot;value&quot;: {
+                &quot;name&quot;: &quot;SampleConsortium&quot;
+              },
+              &quot;version&quot;: &quot;0&quot;
+            }
+          },
+          &quot;version&quot;: &quot;0&quot;
+        }
+      }
+    },
+    &quot;header&quot;: {
+      &quot;channel_header&quot;: {
+        &quot;channel_id&quot;: &quot;mychannel&quot;,
+        &quot;epoch&quot;: &quot;0&quot;,
+        &quot;timestamp&quot;: &quot;2018-10-26T06:52:06.000Z&quot;,
+        &quot;tx_id&quot;: &quot;&quot;,
+        &quot;type&quot;: 2,
+        &quot;version&quot;: 0
+      }
+    }
+  }
+}
+</code></pre><p>接下来为Org1创建锚节点，这个锚节点是在<code>mychannel</code>上的</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate \
+./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:35:35.240 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-28 19:35:35.247 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-28 19:35:35.247 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
+</code></pre><p>为Org2创建锚节点</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate \
+./channel-artifacts/Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP
+</code></pre><p>输出</p>
+<pre><code>2018-09-28 19:39:33.053 HKT [common/tools/configtxgen] main -&gt; INFO 001 Loading configuration
+2018-09-28 19:39:33.060 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 002 Generating anchor peer update
+2018-09-28 19:39:33.060 HKT [common/tools/configtxgen] doOutputAnchorPeersUpdate -&gt; INFO 003 Writing anchor peer update
+</code></pre><h4 id="启动network"><a href="#启动network" class="headerlink" title="启动network"></a>启动network</h4><p>启动网络会使用<code>first-network</code>目录下面的<code>docker-compose-cli.yaml</code>文件，这个文件描述了网络拓扑和要使用的镜像</p>
+<pre><code>version: &#39;2&#39;
+
+# volumes目的是如果说当前docker网络中已经有以下这些容器存在，则会将原有的容器的卷内容拷贝到新的容器中进而保证原有的卷内容不会丢失
+volumes:
+  orderer.example.com:
+  peer0.org1.example.com:
+  peer1.org1.example.com:
+  peer0.org2.example.com:
+  peer1.org2.example.com:
+
+# 自定义的网络，名为byfn
+networks:
+  byfn:
+
+services:
+
+  orderer.example.com:
+    extends:
+      file:   base/docker-compose-base.yaml # 使用docker-compose的扩展功能，这样可以将这个网络功能的具体实现与整体网络拓扑解耦开来
+      service: orderer.example.com # 服务名
+    container_name: orderer.example.com
+    networks:
+      - byfn
+
+  peer0.org1.example.com:
+    container_name: peer0.org1.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org1.example.com
+    networks:
+      - byfn
+
+  peer1.org1.example.com:
+    container_name: peer1.org1.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org1.example.com
+    networks:
+      - byfn
+
+  peer0.org2.example.com:
+    container_name: peer0.org2.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org2.example.com
+    networks:
+      - byfn
+
+  peer1.org2.example.com:
+    container_name: peer1.org2.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org2.example.com
+    networks:
+      - byfn
+
+  cli: # cli容器没有使用docker-compose的扩展
+    container_name: cli
+    image: hyperledger/fabric-tools:$IMAGE_TAG
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      #- CORE_LOGGING_LEVEL=DEBUG
+      - CORE_LOGGING_LEVEL=INFO
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./../chaincode/:/opt/gopath/src/github.com/chaincode
+        - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+        - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
+    depends_on:
+      - orderer.example.com
+      - peer0.org1.example.com
+      - peer1.org1.example.com
+      - peer0.org2.example.com
+      - peer1.org2.example.com
+    networks:
+      - byfn
+</code></pre><p>关于文件中的扩展服务可以参考<code>./base/docker-compose-base.yaml</code>的内容，里面具体声明了各个节点的环境变量、挂载卷、服务暴露端口等等</p>
+<p>接下来启动网络</p>
+<pre><code>docker-compose -f docker-compose-cli.yaml up -d
+
+Creating network &quot;net_byfn&quot; with the default driver
+Creating volume &quot;net_peer0.org2.example.com&quot; with default driver
+Creating volume &quot;net_peer1.org2.example.com&quot; with default driver
+Creating volume &quot;net_peer1.org1.example.com&quot; with default driver
+Creating volume &quot;net_peer0.org1.example.com&quot; with default driver
+Creating peer0.org1.example.com ... done
+Creating cli ... done
+Creating peer0.org1.example.com ... 
+Creating peer1.org1.example.com ... 
+Creating peer1.org2.example.com ... 
+Creating peer0.org2.example.com ... 
+Creating cli ... 
+</code></pre><p>使用<code>-d</code>让网络启动过程以及其中的日志内容都在容器内部完成而不是在宿主机上挂一个进程，如果说想要实时看对应的日志内容，则去除<code>-d</code>标志</p>
+<p>网络启动之后查看启动的容器</p>
+<pre><code>docker ps -a
+
+CONTAINER ID        IMAGE                               COMMAND             CREATED             STATUS              PORTS                                              NAMES
+2b7d1e263473        hyperledger/fabric-tools:latest     &quot;/bin/bash&quot;         9 minutes ago       Up 9 minutes                                                           cli
+95cf9a788d54        hyperledger/fabric-peer:latest      &quot;peer node start&quot;   9 minutes ago       Up 9 minutes        0.0.0.0:9051-&gt;7051/tcp, 0.0.0.0:9053-&gt;7053/tcp     peer0.org2.example.com
+d5af3a1c1627        hyperledger/fabric-peer:latest      &quot;peer node start&quot;   9 minutes ago       Up 9 minutes        0.0.0.0:10051-&gt;7051/tcp, 0.0.0.0:10053-&gt;7053/tcp   peer1.org2.example.com
+80e9515b06ab        hyperledger/fabric-peer:latest      &quot;peer node start&quot;   9 minutes ago       Up 9 minutes        0.0.0.0:7051-&gt;7051/tcp, 0.0.0.0:7053-&gt;7053/tcp     peer0.org1.example.com
+9757f259a3a5        hyperledger/fabric-peer:latest      &quot;peer node start&quot;   9 minutes ago       Up 9 minutes        0.0.0.0:8051-&gt;7051/tcp, 0.0.0.0:8053-&gt;7053/tcp     peer1.org1.example.com
+5bcae450b599        hyperledger/fabric-orderer:latest   &quot;orderer&quot;           9 minutes ago       Up 9 minutes        0.0.0.0:7050-&gt;7050/tcp                             orderer.example.com
+</code></pre><h4 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h4><p>在启动了网络之后，每一个容器都会有自己对应的环境变量，这个是通过<code>docker-compose</code>的配置文件里面描述的。比如<code>cli</code>容器里面预置的环境变量</p>
+<pre><code>cli:
+    container_name: cli
+    image: hyperledger/fabric-tools:$IMAGE_TAG
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_LOGGING_LEVEL=INFO
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+</code></pre><p>然而因为cli默认配置的是<code>peer0.org1.example.com</code>的环境变量，因此如果想要和其他<code>peer</code>或者<code>orderer</code>节点通讯，则需要修改这些环境变量</p>
+<h4 id="创建并加入Channel"><a href="#创建并加入Channel" class="headerlink" title="创建并加入Channel"></a>创建并加入Channel</h4><p>在之前的步骤中我们创建了<code>channel</code>所需文件，这个文件是通过<code>configtxgen</code>工具结合<code>configtx.yaml</code>文件生成的。因此可以重复之前的步骤，但是使用不同的<code>profile</code>来创建另一个<code>channel</code>的文件.</p>
+<p>因为已经有了<code>channel</code>创建所需文件，现在首先需要创建<code>channel</code>，进入到<code>cli</code>容器中</p>
+<pre><code>docker exec -it cli bash
+</code></pre><p>进入到容器之后，查看各个环境变量</p>
+<pre><code>echo $CORE_PEER_MSPCONFIGPATH &amp;&amp; \
+echo $CORE_PEER_ADDRESS &amp;&amp; \
+echo $CORE_PEER_LOCALMSPID &amp;&amp; \
+echo $CORE_PEER_TLS_ROOTCERT_FILE
+</code></pre><p>内容应该和下面一样</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+</code></pre><p>如果环境变量没问题，接下来我们就可以用之前生成的<code>channel</code>交易配置文件<code>chennel.tx</code>提交到排序节点<code>orderer</code>，一次来创建一个<code>channel</code></p>
+<p>首先来看一下<code>peer channel create</code>的帮助清单</p>
+<pre><code># peer channel create --help
+
+Create a channel and write the genesis block to a file.
+
+Usage:
+  peer channel create [flags]
+
+Flags:
+  -c, --channelID string     In case of a newChain command, the channel ID to create. It must be all lower case, less than 250 characters long and match the regular expression: [a-z][a-z0-9.-]*
+  -f, --file string          Configuration transaction file generated by a tool such as configtxgen for submitting to orderer
+  -h, --help                 help for create
+      --outputBlock string   The path to write the genesis block for the channel. (default ./&lt;channelID&gt;.block)
+  -t, --timeout duration     Channel creation timeout (default 5s)
+
+Global Flags:
+      --cafile string                       Path to file containing PEM-encoded trusted certificate(s) for the ordering endpoint
+      --certfile string                     Path to file containing PEM-encoded X509 public key to use for mutual TLS communication with the orderer endpoint
+      --clientauth                          Use mutual TLS when communicating with the orderer endpoint
+      --connTimeout duration                Timeout for client to connect (default 3s)
+      --keyfile string                      Path to file containing PEM-encoded private key to use for mutual TLS communication with the orderer endpoint
+      --logging-level string                Default logging level and overrides, see core.yaml for full syntax
+  -o, --orderer string                      Ordering service endpoint
+      --ordererTLSHostnameOverride string   The hostname override to use when validating the TLS connection to the orderer.
+      --tls                                 Use TLS when communicating with the orderer endpoint
+</code></pre><p>创建名为<code>mychannel</code>的<code>channel</code></p>
+<pre><code>export CHANNEL_NAME=mychannel
+
+peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-10-26 09:19:12.061 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-10-26 09:19:12.158 UTC [cli/common] readBlock -&gt; INFO 002 Got status: &amp;{NOT_FOUND}
+2018-10-26 09:19:12.168 UTC [channelCmd] InitCmdFactory -&gt; INFO 003 Endorser and orderer connections initialized
+2018-10-26 09:19:12.378 UTC [cli/common] readBlock -&gt; INFO 004 Received block: 0
+</code></pre><p>这里使用<code>--cafile</code>参数指明开启了<code>TLS</code>交互模式，如果不开启直接不添加这一项即可</p>
+<p>查看这个<code>channel</code>是否创建好</p>
+<pre><code>peer channel list
+
+2018-10-26 09:19:56.065 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+Channels peers has joined: 
+</code></pre><p>会看到现在并没有任何<code>channel</code>信息，这是因为当前节点<code>peer0.org1.example.com</code>并没有加入到这个<code>channel</code>中，而这个时候因为通过这个节点向排序节点提交了创建<code>channel</code>的请求，因此在当前目录下会有一个<code>mychannel.block</code>的创世区块文件，这个区块文件包含了<code>channel.tx</code>文件里面包含的配置信息，具体信息想要查看可以通过<code>configtxgen -inspectBlock mychannel.block</code></p>
+<pre><code>ls
+
+channel-artifacts  crypto  mychannel.block  scripts
+</code></pre><p>使用这个区块文件将当前节点<code>peer0.org1.example.com</code>加入到<code>channel</code>中</p>
+<pre><code>peer channel join -b mychannel.block
+
+2018-10-26 09:29:19.430 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-10-26 09:29:19.501 UTC [channelCmd] executeJoin -&gt; INFO 002 Successfully submitted proposal to join channel
+</code></pre><p>查看<code>channel</code>是否创建好</p>
+<pre><code># peer channel list 
+
+2018-10-26 09:29:33.594 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+Channels peers has joined: 
+mychannel
+</code></pre><p>同样也可以将别的节点添加到这个通道中，只需要修改对应的环境变量。比如将<code>peer0.org2.example.com</code>加入到通道中</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer channel join -b mychannel.block
+</code></pre><p>这里的环境变量是临时覆盖了默认环境变量，因此在执行完成之后对应的环境变量不会改变</p>
+<h4 id="更新锚节点"><a href="#更新锚节点" class="headerlink" title="更新锚节点"></a>更新锚节点</h4><p>接下来更新<code>channel</code>来添加锚节点信息，对<code>channel</code>的更新会传播给所有加入通道的节点，这边更新<code>channel</code>其实只是在原有的<code>channel</code>中的创世块上添加信息，当然并不是修改了这个创世块，而是在创世块的基础上添加信息，这个信息便是锚节点的信息</p>
+<p>在<code>peer0.org1.example.com</code>上更新锚节点信息,这个更新操作会为<code>Org1</code>定义对应的节点为<code>peer0.org1.example.com</code></p>
+<pre><code>peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org1MSPanchors.tx --tls \
+--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-10-29 02:55:47.959 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-10-29 02:55:48.021 UTC [channelCmd] update -&gt; INFO 002 Successfully submitted channel update
+</code></pre><p>接下来为<code>Org2</code>定义锚节点<code>peer0.org2.example.com</code>，和之前加入到<code>channel</code>一样，需要设置临时环境变量</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org2MSPanchors.tx --tls \
+--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-10-29 03:03:39.342 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-10-29 03:03:39.385 UTC [channelCmd] update -&gt; INFO 002 Successfully submitted channel update
+</code></pre><h4 id="安装并初始化链码"><a href="#安装并初始化链码" class="headerlink" title="安装并初始化链码"></a>安装并初始化链码</h4><p>基本环境已经准备好了，接下来进行链码的安装。在这里我们使用链码是<code>first-network</code>使用的<code>chaincode-example</code>。如果想要学习怎么写一个自己的链码，可以参考<a href="https://hyperledger-fabric.readthedocs.io/en/latest/chaincode4ade.html" target="_blank" rel="noopener">Chaincode for Developers</a></p>
+<p>这里我们使用<code>golang</code>语言开发的智能合约，内容如下</p>
+<p><code>chaincode-example02.go</code></p>
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;strconv&quot;
+
+    &quot;github.com/hyperledger/fabric/core/chaincode/shim&quot;
+    pb &quot;github.com/hyperledger/fabric/protos/peer&quot;
+)
+
+// SimpleChaincode example simple Chaincode implementation
+type SimpleChaincode struct {
+}
+
+func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+    fmt.Println(&quot;ex02 Init&quot;)
+    _, args := stub.GetFunctionAndParameters()
+    var A, B string    // Entities
+    var Aval, Bval int // Asset holdings
+    var err error
+
+    if len(args) != 4 {
+        return shim.Error(&quot;Incorrect number of arguments. Expecting 4&quot;)
+    }
+
+    // Initialize the chaincode
+    A = args[0]
+    Aval, err = strconv.Atoi(args[1])
+    if err != nil {
+        return shim.Error(&quot;Expecting integer value for asset holding&quot;)
+    }
+    B = args[2]
+    Bval, err = strconv.Atoi(args[3])
+    if err != nil {
+        return shim.Error(&quot;Expecting integer value for asset holding&quot;)
+    }
+    fmt.Printf(&quot;Aval = %d, Bval = %d\n&quot;, Aval, Bval)
+
+    // Write the state to the ledger
+    err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
+    if err != nil {
+        return shim.Error(err.Error())
+    }
+
+    err = stub.PutState(B, []byte(strconv.Itoa(Bval)))
+    if err != nil {
+        return shim.Error(err.Error())
+    }
+
+    return shim.Success(nil)
+}
+
+func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+    fmt.Println(&quot;ex02 Invoke&quot;)
+    function, args := stub.GetFunctionAndParameters()
+    if function == &quot;invoke&quot; {
+        // Make payment of X units from A to B
+        return t.invoke(stub, args)
+    } else if function == &quot;delete&quot; {
+        // Deletes an entity from its state
+        return t.delete(stub, args)
+    } else if function == &quot;query&quot; {
+        // the old &quot;Query&quot; is now implemtned in invoke
+        return t.query(stub, args)
+    }
+
+    return shim.Error(&quot;Invalid invoke function name. Expecting \&quot;invoke\&quot; \&quot;delete\&quot; \&quot;query\&quot;&quot;)
+}
+
+// Transaction makes payment of X units from A to B
+func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+    var A, B string    // Entities
+    var Aval, Bval int // Asset holdings
+    var X int          // Transaction value
+    var err error
+
+    if len(args) != 3 {
+        return shim.Error(&quot;Incorrect number of arguments. Expecting 3&quot;)
+    }
+
+    A = args[0]
+    B = args[1]
+
+    // Get the state from the ledger
+    // TODO: will be nice to have a GetAllState call to ledger
+    Avalbytes, err := stub.GetState(A)
+    if err != nil {
+        return shim.Error(&quot;Failed to get state&quot;)
+    }
+    if Avalbytes == nil {
+        return shim.Error(&quot;Entity not found&quot;)
+    }
+    Aval, _ = strconv.Atoi(string(Avalbytes))
+
+    Bvalbytes, err := stub.GetState(B)
+    if err != nil {
+        return shim.Error(&quot;Failed to get state&quot;)
+    }
+    if Bvalbytes == nil {
+        return shim.Error(&quot;Entity not found&quot;)
+    }
+    Bval, _ = strconv.Atoi(string(Bvalbytes))
+
+    // Perform the execution
+    X, err = strconv.Atoi(args[2])
+    if err != nil {
+        return shim.Error(&quot;Invalid transaction amount, expecting a integer value&quot;)
+    }
+    Aval = Aval - X
+    Bval = Bval + X
+    fmt.Printf(&quot;Aval = %d, Bval = %d\n&quot;, Aval, Bval)
+
+    // Write the state back to the ledger
+    err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
+    if err != nil {
+        return shim.Error(err.Error())
+    }
+
+    err = stub.PutState(B, []byte(strconv.Itoa(Bval)))
+    if err != nil {
+        return shim.Error(err.Error())
+    }
+
+    return shim.Success(nil)
+}
+
+// Deletes an entity from state
+func (t *SimpleChaincode) delete(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+    if len(args) != 1 {
+        return shim.Error(&quot;Incorrect number of arguments. Expecting 1&quot;)
+    }
+
+    A := args[0]
+
+    // Delete the key from the state in ledger
+    err := stub.DelState(A)
+    if err != nil {
+        return shim.Error(&quot;Failed to delete state&quot;)
+    }
+
+    return shim.Success(nil)
+}
+
+// query callback representing the query of a chaincode
+func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+    var A string // Entities
+    var err error
+
+    if len(args) != 1 {
+        return shim.Error(&quot;Incorrect number of arguments. Expecting name of the person to query&quot;)
+    }
+
+    A = args[0]
+
+    // Get the state from the ledger
+    Avalbytes, err := stub.GetState(A)
+    if err != nil {
+        jsonResp := &quot;{\&quot;Error\&quot;:\&quot;Failed to get state for &quot; + A + &quot;\&quot;}&quot;
+        return shim.Error(jsonResp)
+    }
+
+    if Avalbytes == nil {
+        jsonResp := &quot;{\&quot;Error\&quot;:\&quot;Nil amount for &quot; + A + &quot;\&quot;}&quot;
+        return shim.Error(jsonResp)
+    }
+
+    jsonResp := &quot;{\&quot;Name\&quot;:\&quot;&quot; + A + &quot;\&quot;,\&quot;Amount\&quot;:\&quot;&quot; + string(Avalbytes) + &quot;\&quot;}&quot;
+    fmt.Printf(&quot;Query Response:%s\n&quot;, jsonResp)
+    return shim.Success(Avalbytes)
+}
+
+func main() {
+    err := shim.Start(new(SimpleChaincode))
+    if err != nil {
+        fmt.Printf(&quot;Error starting Simple chaincode: %s&quot;, err)
+    }
+}
+</code></pre><p>安装</p>
+<pre><code>peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go/
+
+2018-10-29 03:20:15.434 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 001 Using default escc
+2018-10-29 03:20:15.434 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 002 Using default vscc
+2018-10-29 03:20:16.800 UTC [chaincodeCmd] install -&gt; INFO 003 Installed remotely response:&lt;status:200 payload:&quot;OK&quot; &gt; 
+</code></pre><p>接下来需要初始化链码，虽然安装了链码，但是这个链码只是在节点<code>peer0.org1.example.com</code>上安装了，并没有初始化到对应某一个通道中，因此需要初始化。在初始化过程中，会定一个背书策略，背书策略规定了我们之后的链码调用需要得到对应节点的背书才能通过。比如策略<code>-P &quot;AND (&#39;Org1MSP.peer&#39;,&#39;Org2MSP.peer&#39;)&quot;</code>意味着需要来自<code>Org1</code>和<code>Org2</code>两个组织中的节点背书才能将对应的交易通过。</p>
+<pre><code>peer chaincode instantiate -o orderer.example.com:7050 --tls -C $CHANNEL_NAME -n mycc -v 1.0 -c &#39;{&quot;Args&quot;:[&quot;init&quot;,&quot;a&quot;, &quot;100&quot;, &quot;b&quot;,&quot;200&quot;]}&#39; -P &quot;AND (&#39;Org1MSP.peer&#39;,&#39;Org2MSP.peer&#39;)&quot; \
+--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-10-29 03:25:22.427 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 001 Using default escc
+2018-10-29 03:25:22.432 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 002 Using default vscc
+
+
+</code></pre><p>执行过程会消耗一点时间，因为这个过程中需要启动一个<code>dev-peer0.org1.example.com-mycc-1.0</code>的容器，这个容器便是我们链码初始化之后生成的。可以通过<code>docker ps -a</code>查看</p>
+<pre><code>CONTAINER ID        IMAGE                                                                                                      COMMAND                                    NAMES
+3e63a59498b3        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9   &quot;chaincode -peer.a...&quot;      dev-peer0.org1.example.com-mycc-1.0
+</code></pre><p>如果想要更多的节点和账本交互，则需要将不同的节点都加入到<code>channel</code>中，然后使用同一个链码名称、版本和语言安装链码。</p>
+<p>比如在节点<code>peer0.org2.example.com</code>上执行</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/chaincode_example02/go/
+
+2018-10-29 09:24:52.104 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 001 Using default escc
+2018-10-29 09:24:52.105 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 002 Using default vscc
+
+2018-10-29 09:24:55.047 UTC [chaincodeCmd] install -&gt; INFO 003 Installed remotely response:&lt;status:200 payload:&quot;OK&quot; &gt; 
+</code></pre><p>安装好之后在<code>Org2</code>上的<code>peer0</code>便可以执行账本交互</p>
+<h4 id="调用链码"><a href="#调用链码" class="headerlink" title="调用链码"></a>调用链码</h4><p>执行查询</p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;, &quot;a&quot;]}&#39;
+
+100
+</code></pre><p>在<code>peer0.org2.example.com</code>上执行查询</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer chaincode query -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;, &quot;a&quot;]}&#39;
+</code></pre><p>执行<code>invoke</code>方法，修改账本状态</p>
+<pre><code>peer chaincode invoke -o orderer.example.com:7050 --tls true -C $CHANNEL_NAME -n mycc \
+--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+--peerAddresses peer0.org1.example.com:7051 \
+--tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+--peerAddresses peer0.org2.example.com:7051 \
+--tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+-c &#39;{&quot;Args&quot;:[&quot;invoke&quot;,&quot;a&quot;,&quot;b&quot;,&quot;10&quot;]}&#39;
+
+2018-10-29 11:08:21.386 UTC [chaincodeCmd] chaincodeInvokeOrQuery -&gt; INFO 001 Chaincode invoke successful. result: status:200 
+</code></pre><p>执行完成之后观察账本中<code>A</code>的资产</p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;, &quot;a&quot;]}&#39;
+
+90
+</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>first-network</code>拓扑比较简单，暂时还没有涉及到太多的节点，也没有涉及到共识机制的部分，是一个相对比较简单的入门级别的网络。对于理解一个<code>fabric</code>网络中包含什么内容有很大的帮助。</p>
+<p>链码部分包含了<code>golang</code>、<code>nodejs</code>、<code>java</code>等，目前比较成熟的是<code>golang</code>和<code>nodejs</code>的链码，建议使用<code>golang</code>。</p>
+<p>手动启动网络并且使用<code>fabric-tools</code>的内容比较重要，在将来进行多节点部署的时候会再次用到。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/09/28/essay/vpn/" data-toggle="tooltip" data-placement="top" title="使用SSR搭建梯子">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/25/docker/docker-installation/" data-toggle="tooltip" data-placement="top" title="Docker 安装">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#环境准备"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">环境准备</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">安装docker</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装docker-compose"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">安装docker-compose</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装go"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">安装go</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Nodejs"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Nodejs</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#下载代码"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">下载代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#安装fabric-tools及下载fabric-images"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">安装fabric-tools及下载fabric-images</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#通过脚本启动fabirc-first-network网络"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">通过脚本启动fabirc-first-network网络</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#生成认证密钥"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">生成认证密钥</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#启动fabric-sample网络"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">启动fabric-sample网络</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#查询链上信息"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">查询链上信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#关闭fabric-sample网络"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">关闭fabric-sample网络</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#手动启动first-network"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">手动启动first-network</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#fabric-tool介绍"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">fabric-tool介绍</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Crypto-Generator"><span class="toc-nav-number">5.1.1.</span> <span class="toc-nav-text">Crypto Generator</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Configuration-Transaction-Generator"><span class="toc-nav-number">5.1.2.</span> <span class="toc-nav-text">Configuration Transaction Generator</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#使用fabric-tools构建first-network"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">使用fabric-tools构建first-network</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#手动生成证书"><span class="toc-nav-number">5.2.1.</span> <span class="toc-nav-text">手动生成证书</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#创建channel的锚节点"><span class="toc-nav-number">5.2.2.</span> <span class="toc-nav-text">创建channel的锚节点</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#启动network"><span class="toc-nav-number">5.2.3.</span> <span class="toc-nav-text">启动network</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#环境变量"><span class="toc-nav-number">5.2.4.</span> <span class="toc-nav-text">环境变量</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#创建并加入Channel"><span class="toc-nav-number">5.2.5.</span> <span class="toc-nav-text">创建并加入Channel</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#更新锚节点"><span class="toc-nav-number">5.2.6.</span> <span class="toc-nav-text">更新锚节点</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#安装并初始化链码"><span class="toc-nav-number">5.2.7.</span> <span class="toc-nav-text">安装并初始化链码</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#调用链码"><span class="toc-nav-number">5.2.8.</span> <span class="toc-nav-text">调用链码</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">总结</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                        
+                          <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                        
+                          <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/26/hyperledger/fabric-first-network/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/09/26/hyperledger/fabric-first-network/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          小米深度学习平台cloud-ml - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/10/25/ml-plateform/xiaomi-cloud-ml/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/ml-plateform/cloud-ml/bg.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#深度学习平台" title="深度学习平台">深度学习平台</a>
+                            
+                        </div>
+                        <h1>小米深度学习平台cloud-ml</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-10-25
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="Xiaomi-Cloud-ML简介"><a href="#Xiaomi-Cloud-ML简介" class="headerlink" title="Xiaomi Cloud-ML简介"></a>Xiaomi Cloud-ML简介</h2><p>小米云深度学习服务，简称Xiaomi Cloud-ML，是小米生态云针对机器学习优化的高性能、分布式云服务。</p>
+<p>开发者可以在云端使用GPU训练模型，秒级启动分布式训练任务，兼容TensorFlow等深度学习框架，也可以一键部署训练好的模型，或者创建基于GPU的开发环境，提供模型开发、训练、调优、测试、部署和预测一站式解决方案。云深度学习服务还开放了API、SDK、命令行和Web控制台等多种访问方式，支持灵活的秒级计费，方便人工智能专家使用。</p>
+<h2 id="Xiaomi-Cloud-ML特性"><a href="#Xiaomi-Cloud-ML特性" class="headerlink" title="Xiaomi Cloud-ML特性"></a>Xiaomi Cloud-ML特性</h2><p><strong>易用性</strong></p>
+<p>支持简单易用的命令行工具，可在Linux/Mac/Windows操作系统或者Docker中运行，也可以通过API、SDK或者Web控制台使用云深度学习服务。</p>
+<p><strong>兼容性</strong></p>
+<p>支持TensorFlow等深度学习框架的标准API，兼容Google CloudML的samples代码，相同模型代码可在不同云平台上训练，避免厂商绑定。</p>
+<p><strong>高性能</strong></p>
+<p>支持超高性能GPU运算，最大可支持56核CPU和128G内存，支持数据并行和模型并行、单机多卡和多机多卡的分布式训练。</p>
+<p><strong>灵活性</strong></p>
+<p>支持按需申请和分配CPU、内存和GPU资源，可根据任务运行时间实现秒级别的计量计费功能。</p>
+<p><strong>安全性</strong></p>
+<p>支持基于Access key/Secret key的多租户认证授权机制，可在线动态调整用户Quota配额。</p>
+<p><strong>完整性</strong></p>
+<p>支持云端训练，用户编写好代码一键提交到云端训练，支持基于CPU或GPU训练，支持17个主流深度学习框架和超参数自动调优等功能。</p>
+<p>支持模型服务，用户训练好的模型可以一键部署到云平台，对外提供通用的高性能gRPC服务，支持模型在线升级和多实例负载均衡等功能。</p>
+<p>支持开发环境，用户可以在平台创建TensorFlow等深度学习开发环境，自动分配CPU、内存和GPU资源，支持Notebook和密码加密等功能。</p>
+<h2 id="一个基于云构建深度学习平台的基本特性"><a href="#一个基于云构建深度学习平台的基本特性" class="headerlink" title="一个基于云构建深度学习平台的基本特性"></a>一个基于云构建深度学习平台的基本特性</h2><ul>
+<li><p>屏蔽硬件资源保证开箱即用</p>
+</li>
+<li><p>缩短业务环境部署和启动时间</p>
+</li>
+<li><p>提供“无限”的存储和计算能力</p>
+</li>
+<li><p>实现多租户隔离保证数据安全</p>
+</li>
+<li><p>实现错误容忍和自动故障迁移</p>
+</li>
+<li><p>提高集群利用率和降低性能损耗</p>
+</li>
+<li><p>支持通用GPU等异构化硬件</p>
+</li>
+<li><p>支持主流的深度学习框架接口</p>
+</li>
+<li><p>支持无人值守的超参数自动调优</p>
+</li>
+<li><p>支持从模型训练到上线的工作流</p>
+</li>
+</ul>
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><ul>
+<li>多租户</li>
+<li>任务隔离</li>
+<li>资源共享</li>
+<li>支持多框架</li>
+<li>支持GPU</li>
+</ul>
+<h2 id="cloud-ml平台特点"><a href="#cloud-ml平台特点" class="headerlink" title="cloud-ml平台特点"></a>cloud-ml平台特点</h2><ul>
+<li>任务调度和物理机管理基于多节点的分布式Kubernetes集群</li>
+<li>对于OpenStack、Yarn和Mesos保留了实现接口</li>
+<li>支持17个主流的深度学习框架</li>
+<li>实现了分布式训练</li>
+<li>超参数自动调优</li>
+<li>前置命令</li>
+<li>NodeSelector</li>
+<li>Bring Your Own Image</li>
+<li>FUSE集成</li>
+<li>自定义了API server实现授权认证和Quota功能</li>
+</ul>
+<h2 id="平台整体架构"><a href="#平台整体架构" class="headerlink" title="平台整体架构"></a>平台整体架构</h2><p><img src="/images/ml-plateform/cloud-ml/cloud-ml-arch.png" alt="image"></p>
+<h2 id="深度学习功能主要包含"><a href="#深度学习功能主要包含" class="headerlink" title="深度学习功能主要包含"></a>深度学习功能主要包含</h2><ul>
+<li>开发</li>
+<li>训练</li>
+<li>调优</li>
+<li>测试</li>
+<li>部署</li>
+<li>预测</li>
+</ul>
+<h2 id="用户输入"><a href="#用户输入" class="headerlink" title="用户输入"></a>用户输入</h2><ul>
+<li>ps参数服务器个数</li>
+<li>worker个数</li>
+<li>tensorflow编写的代码</li>
+</ul>
+<p>例如下面的云深度学习平台分布式训练</p>
+<p><img src="/images/ml-plateform/cloud-ml/cloud-ml-arch-2.png" alt="image">    </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了实现企业级云深度学习平台需要的概念和知识，基于小米cloud-ml服务探讨了云平台的设计、架构、实现以及实践这四方面的内容。</p>
+<p>小米的cloud-ml主要实现的功能包含</p>
+<ul>
+<li><p>顶层通过API、SDK的形式提供深度学习资源调度服务、模型训练服务等，用户只需要通过提交ps/worker/Tensorflow code既可实现分布式深度学习，简单易用</p>
+</li>
+<li><p>在认证和配额上面，cloud-ml自定设计了API Server，采用了AKSK的签名机制，保证认证授权，同时参考OpenStack的多租户和Quata配额机制，实现了Kubernetes上的配额机制</p>
+</li>
+<li><p>cloud-ml采用Kubernetes集群实现容器资源/GPU等异构计算资源的调度，同时设计了NodeSelector模块进行GPU粒度调度</p>
+</li>
+<li><p>高可用方面cloud-ml采用了Etcd，能够实现训练过程中出现异常或者错误，能够及时恢复训练任务。同时实现在分布式环境下各个深度学习组件不会出现单点故障</p>
+</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://juejin.im/entry/594a2a69ac502e5490f95740" target="_blank" rel="noopener"><strong>小米云深度学习平台的架构设计与实现</strong></a>   </p>
+<p><a href="http://docs.api.xiaomi.com/cloud-ml/" target="_blank" rel="noopener"><strong>cloud-ml官方文档</strong></a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/10/30/hyperledger/fabric-couchdb/" data-toggle="tooltip" data-placement="top" title="Hyperledger Fabric (三) — CouchDB替换Fabric-LevelDB">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/10/19/hyperledger/fabric-fabcar/" data-toggle="tooltip" data-placement="top" title="Hyperledger Fabric (二) — fabric-fabcar, 从部署到开发">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Xiaomi-Cloud-ML简介"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Xiaomi Cloud-ML简介</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Xiaomi-Cloud-ML特性"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Xiaomi Cloud-ML特性</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一个基于云构建深度学习平台的基本特性"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">一个基于云构建深度学习平台的基本特性</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#需求"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">需求</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#cloud-ml平台特点"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">cloud-ml平台特点</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#平台整体架构"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">平台整体架构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#深度学习功能主要包含"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">深度学习功能主要包含</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#用户输入"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">用户输入</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考文献"><span class="toc-nav-number">10.</span> <span class="toc-nav-text">参考文献</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#深度学习平台" title="深度学习平台">深度学习平台</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/10/25/ml-plateform/xiaomi-cloud-ml/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/10/25/ml-plateform/xiaomi-cloud-ml/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

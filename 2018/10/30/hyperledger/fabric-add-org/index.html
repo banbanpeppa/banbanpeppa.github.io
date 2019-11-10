@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hyperledger Fabric (四) — Fabric添加Org - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/10/30/hyperledger/fabric-add-org/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/blockchain/hyperledger/bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                            
+                              <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                            
+                              <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                            
+                        </div>
+                        <h1>Hyperledger Fabric (四) — Fabric添加Org</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-10-30
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="脚本添加Org"><a href="#脚本添加Org" class="headerlink" title="脚本添加Org"></a>脚本添加Org</h2><p>添加一个<code>Org</code>到<code>first-network</code>网络中，官方提供了一个<code>eyfn.sh</code>脚本，<code>eyfn</code>意为<code>Extending Your First Network</code>。添加Org的过程很方便</p>
+<pre><code>echo y | ./byfn.sh down
+echo y | ./byfn.sh generate
+echo y | ./byfn.sh up
+echo y | ./eyfn.sh up
+</code></pre><p>执行完成之后</p>
+<pre><code>docker ps -a
+
+CONTAINER ID        IMAGE                                       PORTS                                                      NAMES
+b16edd07769b        dev-peer0.org2.example.com-mycc-2.0-c7aee9ad18dddc18319f5f00199f05d866f9e61dca40c9af3e226d434ac4a63c       dev-peer0.org2.example.com-mycc-2.0
+0ded8b49c160        dev-peer0.org3.example.com-mycc-2.0-156223788c3ef42ff3094c6cf1d2f71284c36f2074cc4d1f09a7065cb903d192       dev-peer0.org3.example.com-mycc-2.0
+202a09c6b3d1        dev-peer0.org1.example.com-mycc-2.0-2732cd4d96a0b88594aefca15581eaa0fb481ad15beeb86cc79931b2a90ee621       dev-peer0.org1.example.com-mycc-2.0
+6c0572ac8646        hyperledger/fabric-tools:latest                                                                Org3cli
+5ce62cc58a1a        hyperledger/fabric-peer:latest              0.0.0.0:11051-&gt;7051/tcp, 0.0.0.0:11053-&gt;7053/tcp   peer0.org3.example.com
+b10e64ea4d33        hyperledger/fabric-peer:latest              0.0.0.0:12051-&gt;7051/tcp, 0.0.0.0:12053-&gt;7053/tcp   peer1.org3.example.com
+ce64075e99bc        dev-peer1.org2.example.com-mycc-1.0-26c2ef32838554aac4f7ad6f100aca865e87959c9a126e86d764c8d01f8346ab       dev-peer1.org2.example.com-mycc-1.0
+d826287326db        dev-peer0.org1.example.com-mycc-1.0-384f11f484b9302df90b453200cfb25174305fce8f53f4e94d45ee3b6cab0ce9       dev-peer0.org1.example.com-mycc-1.0
+ad0f7383a1af        dev-peer0.org2.example.com-mycc-1.0-15b571b3ce849066b7ec74497da3b27e54e0df1345daff3951b94245ce09c42b       dev-peer0.org2.example.com-mycc-1.0
+984f8fed77ed        hyperledger/fabric-tools:latest                                                                cli
+0e944a79c929        hyperledger/fabric-peer:latest              0.0.0.0:8051-&gt;7051/tcp, 0.0.0.0:8053-&gt;7053/tcp     peer1.org1.example.com
+b176ea926c3e        hyperledger/fabric-peer:latest              0.0.0.0:9051-&gt;7051/tcp, 0.0.0.0:9053-&gt;7053/tcp     peer0.org2.example.com
+174543ea3455        hyperledger/fabric-peer:latest              0.0.0.0:10051-&gt;7051/tcp, 0.0.0.0:10053-&gt;7053/tcp   peer1.org2.example.com
+f4ed208868d7        hyperledger/fabric-peer:latest              0.0.0.0:7051-&gt;7051/tcp, 0.0.0.0:7053-&gt;7053/tcp     peer0.org1.example.com
+eb245da30739        hyperledger/fabric-orderer:latest           0.0.0.0:7050-&gt;7050/tcp                             orderer.example.com
+</code></pre><p>看到多了一个组织<code>org3</code>，两个<code>peer</code>节点：<code>peer0.org3.example.com</code>、<code>peer1.org3.example.com</code>，一个<code>cli</code>容器<code>Org3cli</code>，一个<code>dev</code>容器<code>dev-peer0.org3.example.com-mycc-2.0</code>。</p>
+<p>进入到容器<code>Org3cli</code></p>
+<pre><code>docker exec -it Org3cli bash
+</code></pre><p>查询<code>channel</code></p>
+<pre><code>peer channel list
+
+2018-10-30 10:56:09.995 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+Channels peers has joined: 
+mychannel
+</code></pre><p>查询安装好的链码</p>
+<pre><code>peer chaincode list --installed
+
+Get installed chaincodes on peer:
+Name: mycc, Version: 2.0, Path: github.com/chaincode/chaincode_example02/go/, Id: 46c85746ea21c801decec963f4b6b8787fa379ce1d7c536a19a4a97a49ada9ed
+</code></pre><p>查询已经实例化的链码</p>
+<pre><code>peer chaincode list --instantiated -C mychannel
+
+Get instantiated chaincodes on channel mychannel:
+Name: mycc, Version: 2.0, Path: github.com/chaincode/chaincode_example02/go/, Escc: escc, Vscc: vscc
+</code></pre><p>查询账本</p>
+<pre><code>peer chaincode query -n mycc -C mychannel -c &#39;{&quot;Args&quot;:[&quot;query&quot;, &quot;a&quot;]}&#39; 
+
+80
+</code></pre><p>执行invoke</p>
+<pre><code>export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem &amp;&amp; \
+export CHANNEL_NAME=mychannel &amp;&amp; \
+peer chaincode invoke -o orderer.example.com:7050  --tls true --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;invoke&quot;,&quot;a&quot;,&quot;b&quot;,&quot;10&quot;]}&#39;
+
+2018-10-30 11:38:26.218 UTC [chaincodeCmd] chaincodeInvokeOrQuery -&gt; INFO 001 Chaincode invoke successful. result: status:200 
+</code></pre><p>这条命令虽然返回了执行成功的代码，但是却没有生效，通过查看各个节点的日志</p>
+<pre><code>2018-11-02 02:25:29.114 UTC [gossip/privdata] StoreBlock -&gt; INFO 071 [mychannel] Received block [8] from buffer
+2018-11-02 02:25:29.114 UTC [vscc] Validate -&gt; WARN 072 Endorsement policy failure for transaction txid=fadbd9afe70a407c16b78bdb06cb6f3947b0e368e570e812fdbd4ad33723cd66, err: signature set did not satisfy policy
+2018-11-02 02:25:29.115 UTC [committer/txvalidator] validateTx -&gt; ERRO 073 VSCCValidateTx for transaction txId = fadbd9afe70a407c16b78bdb06cb6f3947b0e368e570e812fdbd4ad33723cd66 returned error: VSCC error: endorsement policy failure, err: signature set did not satisfy policy
+2018-11-02 02:25:29.115 UTC [committer/txvalidator] Validate -&gt; INFO 074 [mychannel] Validated block [8] in 0ms
+2018-11-02 02:25:29.115 UTC [valimpl] preprocessProtoBlock -&gt; WARN 075 Channel [mychannel]: Block [8] Transaction index [0] TxId [fadbd9afe70a407c16b78bdb06cb6f3947b0e368e570e812fdbd4ad33723cd66] marked as invalid by committer. Reason code [ENDORSEMENT_POLICY_FAILURE]
+2018-11-02 02:25:29.142 UTC [kvledger] CommitWithPvtData -&gt; INFO 076 [mychannel] Committed block [8] with 1 transaction(s) in 27ms (state_validation=0ms block_commit=20ms state_commit=2ms)
+</code></pre><p>会发现错误内容<code>err: signature set did not satisfy policy</code>，应该是签名没有成功的原因，这个问题经过验证，手动添加Org过程不会出现，应该是<code>eyfn.sh</code>脚本里面存在一些问题。</p>
+<h2 id="手动添加Org"><a href="#手动添加Org" class="headerlink" title="手动添加Org"></a>手动添加Org</h2><p>手动配置添加<code>org</code>基于<code>first-network</code>基础上，则删除环境之后重启网络</p>
+<pre><code>echo y | ./eyfn.sh down
+echo y | ./byfn.sh generate
+echo y | ./byfn.sh up
+</code></pre><h3 id="生成Org3需要的加密材料"><a href="#生成Org3需要的加密材料" class="headerlink" title="生成Org3需要的加密材料"></a>生成Org3需要的加密材料</h3><p>进入到<code>org3-artifacts</code>中</p>
+<pre><code>cd org3-artifacts &amp;&amp; ls -a
+
+.  ..  configtx.yaml  org3-crypto.yaml
+</code></pre><p><code>configtx.yaml</code></p>
+<pre><code>Organizations:
+    - &amp;Org3
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: Org3MSP
+
+        # ID to load the MSP definition as
+        ID: Org3MSP
+
+        MSPDir: crypto-config/peerOrganizations/org3.example.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.org3.example.com
+              Port: 7051
+</code></pre><p><code>org3-crypto.yaml</code></p>
+<pre><code>PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Org3
+  # ---------------------------------------------------------------------------
+  - Name: Org3
+    Domain: org3.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+</code></pre><p>使用<code>org3-crypto.yaml</code>描述文件生成<code>org3</code>需要的证书和密钥</p>
+<pre><code>cryptogen generate --config=./org3-crypto.yaml
+</code></pre><p>会在<code>org3-artifacts</code>目录下会生成一个<code>crypto-config</code>目录</p>
+<pre><code>ls crypto-config
+
+peerOrganizations
+</code></pre><p>会看到<code>org3</code>的证书和密钥目录</p>
+<pre><code>tree crypto-config/peerOrganizations
+
+crypto-config/peerOrganizations
+└── org3.example.com
+    ├── ca
+    │   ├── 0b65ed62cb975a49000d691f3e3bc377a6e40d9e175286b2ff57c86ce3379cc7_sk
+    │   └── ca.org3.example.com-cert.pem
+    ├── msp
+    │   ├── admincerts
+    │   │   └── Admin@org3.example.com-cert.pem
+    │   ├── cacerts
+    │   │   └── ca.org3.example.com-cert.pem
+    │   ├── config.yaml
+    │   └── tlscacerts
+    │       └── tlsca.org3.example.com-cert.pem
+    ├── peers
+    │   ├── peer0.org3.example.com
+    │   │   ├── msp
+    │   │   │   ├── admincerts
+    │   │   │   │   └── Admin@org3.example.com-cert.pem
+    │   │   │   ├── cacerts
+    │   │   │   │   └── ca.org3.example.com-cert.pem
+    │   │   │   ├── config.yaml
+    │   │   │   ├── keystore
+    │   │   │   │   └── 3ecc6f20267c176e5393e3df720e76b9513463735c7be2c614980f163abe4490_sk
+    │   │   │   ├── signcerts
+    │   │   │   │   └── peer0.org3.example.com-cert.pem
+    │   │   │   └── tlscacerts
+    │   │   │       └── tlsca.org3.example.com-cert.pem
+    │   │   └── tls
+    │   │       ├── ca.crt
+    │   │       ├── server.crt
+    │   │       └── server.key
+    │   └── peer1.org3.example.com
+    │       ├── msp
+    │       │   ├── admincerts
+    │       │   │   └── Admin@org3.example.com-cert.pem
+    │       │   ├── cacerts
+    │       │   │   └── ca.org3.example.com-cert.pem
+    │       │   ├── config.yaml
+    │       │   ├── keystore
+    │       │   │   └── 03646845d34d148fc7191223f341c24a79415e639044c1a1a6868a6e0619775d_sk
+    │       │   ├── signcerts
+    │       │   │   └── peer1.org3.example.com-cert.pem
+    │       │   └── tlscacerts
+    │       │       └── tlsca.org3.example.com-cert.pem
+    │       └── tls
+    │           ├── ca.crt
+    │           ├── server.crt
+    │           └── server.key
+    ├── tlsca
+    │   ├── 6848091b60c9faff95db6d57cf834c7fc4fbc189402cae984311fc677573b331_sk
+    │   └── tlsca.org3.example.com-cert.pem
+    └── users
+        ├── Admin@org3.example.com
+        │   ├── msp
+        │   │   ├── admincerts
+        │   │   │   └── Admin@org3.example.com-cert.pem
+        │   │   ├── cacerts
+        │   │   │   └── ca.org3.example.com-cert.pem
+        │   │   ├── keystore
+        │   │   │   └── 670b28e90f29cc2641e98271617c0dcd094e0f1ad90e2d5e76efdd5e366212ac_sk
+        │   │   ├── signcerts
+        │   │   │   └── Admin@org3.example.com-cert.pem
+        │   │   └── tlscacerts
+        │   │       └── tlsca.org3.example.com-cert.pem
+        │   └── tls
+        │       ├── ca.crt
+        │       ├── client.crt
+        │       └── client.key
+        └── User1@org3.example.com
+            ├── msp
+            │   ├── admincerts
+            │   │   └── User1@org3.example.com-cert.pem
+            │   ├── cacerts
+            │   │   └── ca.org3.example.com-cert.pem
+            │   ├── keystore
+            │   │   └── 6e50f123c27d6ef32d8663f2acc4224988b31d50843da3e3a03d0492aed0e1ce_sk
+            │   ├── signcerts
+            │   │   └── User1@org3.example.com-cert.pem
+            │   └── tlscacerts
+            │       └── tlsca.org3.example.com-cert.pem
+            └── tls
+                ├── ca.crt
+                ├── client.crt
+                └── client.key
+</code></pre><p>使用<code>configtxgen</code>工具将<code>org3</code>的配置信息以JSON的形式保存到<code>first-network</code>目录下的<code>channel-artifacts</code>中，这里需要将对应的环境变量<code>FABRIC_CFG_PATH</code>改成<code>configtx.yaml</code>所在目录</p>
+<pre><code>export FABRIC_CFG_PATH=$PWD &amp;&amp; configtxgen -printOrg Org3MSP &gt; ../channel-artifacts/org3.json
+</code></pre><p>在<code>first-network</code>手动启动网络的部分，我们是将对应的配置输出到<code>genesis.block</code>文件中，这个文件是一个二进制文件，注意区别</p>
+<blockquote>
+<p>configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block </p>
+</blockquote>
+<p>创建好的<code>org3.json</code>文件包含了<code>Org3</code>的策略，以及三个<code>base64</code>的证书：<code>admin</code>用户的证书（之后要给<code>Org3</code>的<code>admin</code>角色使用）、<code>CA</code> 根证书、<code>TLS</code> 根证书。为什么需要以<code>json</code>格式文件导出呢？因为后面需要将<code>org3</code>配置信息追加到<code>channel</code>的配置信息中也就是<code>genesis.block</code>中</p>
+<p>接下来很重要的是需要将排序节点证书信息放到<code>org3</code>的<code>crypto-config</code>中，对应排序节点的根证书给了<code>org3</code>才能使得<code>org3</code>和网络的排序节点进行完全通讯</p>
+<pre><code>cd ../ &amp;&amp; cp -r crypto-config/ordererOrganizations org3-artifacts/crypto-config/
+</code></pre><h3 id="准备CLI环境"><a href="#准备CLI环境" class="headerlink" title="准备CLI环境"></a>准备CLI环境</h3><p>更新组织的过程中会使用到一个配置翻译工具<code>configtxlator</code>，这个工具能够通过命令的方式简化配置工作，这个工具可以很方便进行配置文件的等价转换，转化为类似JSON/Protobuf的格式。同时这个工具还能够计算两个配置文件之间的差异</p>
+<pre><code>$ configtxlator --help
+
+usage: configtxlator [&lt;flags&gt;] &lt;command&gt; [&lt;args&gt; ...]
+
+Utility for generating Hyperledger Fabric channel configurations
+
+Flags:
+  --help  Show context-sensitive help (also try --help-long and --help-man).
+
+Commands:
+  help [&lt;command&gt;...]
+    Show help.
+
+  start [&lt;flags&gt;]
+    Start the configtxlator REST server
+
+  proto_encode --type=TYPE [&lt;flags&gt;]
+    Converts a JSON document to protobuf.
+
+  proto_decode --type=TYPE [&lt;flags&gt;]
+    Converts a proto message to JSON.
+
+  compute_update --channel_id=CHANNEL_ID [&lt;flags&gt;]
+    Takes two marshaled common.Config messages and computes the config update which transitions between the two.
+
+  version
+    Show version information
+</code></pre><p>首先进入到<code>cli</code>容器中</p>
+<pre><code>docker exec -it cli bash
+</code></pre><p>配置环境变量</p>
+<pre><code>export CHANNEL_NAME=mychannel &amp;&amp; \
+export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+</code></pre><p>打印环境变量</p>
+<pre><code>echo $ORDERER_CA &amp;&amp; echo $CHANNEL_NAME
+</code></pre><h3 id="获取配置信息"><a href="#获取配置信息" class="headerlink" title="获取配置信息"></a>获取配置信息</h3><p>获取在<code>mychannel</code>中的最近的<code>block</code>信息，之所以获取最近的，是因为<code>channel</code>的配置都是版本化的，如果在某些时刻调用了旧版本的<code>channel</code>配置会出现一些安全性问题，因此必须要进行版本化，同时版本化的好处是保证并发性，比如当一个节点离开了之后，另一个节点加入，新版本的<code>channel</code>配置能够保证新的节点不会被认为是离开的节点。</p>
+<pre><code>peer channel fetch config config_block.pb -o orderer.example.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+
+2018-11-01 06:42:17.132 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-11-01 06:42:17.134 UTC [cli/common] readBlock -&gt; INFO 002 Received block: 4
+2018-11-01 06:42:17.135 UTC [cli/common] readBlock -&gt; INFO 003 Received block: 2
+</code></pre><p>这条命令会将一个<code>protobuf</code>二进制的区块配置文件存储到文件<code>config_block.pb</code>中，执行完之后的输出中</p>
+<pre><code>2018-11-01 06:42:17.135 UTC [cli/common] readBlock -&gt; INFO 003 Received block: 2
+</code></pre><p>这个是指最近的<code>mychannel</code>配置信息是<code>block 2</code>而不是<code>genesis block</code>，<code>peer channel fetch</code>命令会返回最近的一个配置块，这边是第三块的信息，这是因为我们使用<code>BYFN</code>脚本启动<code>first-network</code>之后，定义了两个锚节点，这个定义过程产生了两个<code>channel</code>更新交易，因此会有如下的配置顺序</p>
+<ul>
+<li>block 0: genesis block</li>
+<li>block 1: Org1 anchor peer update</li>
+<li>block 2: Org2 anchor peer update</li>
+</ul>
+<h3 id="转换配置为JSON"><a href="#转换配置为JSON" class="headerlink" title="转换配置为JSON"></a>转换配置为JSON</h3><p>使用<code>configtxlator</code>工具对解码<code>channel</code>配置块为JSON格式，转化成了JSON格式便可以进行对应的修改了。同时需要使用一个工具<code>jq</code>来对JSON配置文件进行修剪，去除那些<code>headers</code>、元数据、交易创建者签名等等和增加组织<code>ORG3</code>没有关系的信息。</p>
+<pre><code>configtxlator proto_decode --input config_block.pb --type common.Block | jq .data.data[0].payload.data.config &gt; config.json
+</code></pre><p><code>jq</code>工具非常方便，能够结合管道等，使用一系列过滤规则，将JSON文件处理，去除掉或者添加信息，得到新的JSON文件。</p>
+<h3 id="添加Org3的加密材料"><a href="#添加Org3的加密材料" class="headerlink" title="添加Org3的加密材料"></a>添加Org3的加密材料</h3><p>使用<code>jq</code>工具将之前生成的<code>org3.json</code>配置文件追加到<code>config.json</code>中，并保存到<code>modefied_config.json</code>中</p>
+<pre><code>jq -s &#39;.[0] * {&quot;channel_group&quot;:{&quot;groups&quot;:{&quot;Application&quot;:{&quot;groups&quot;: {&quot;Org3MSP&quot;:.[1]}}}}}&#39; config.json ./channel-artifacts/org3.json &gt; modified_config.json
+</code></pre><p>解释一下：<code>jq</code>命令将<code>config.json</code>和<code>org3.json</code>文件进行组合，组合的方式就是将<code>org3.json</code>的内容嵌入到<code>config.json</code>文件的<code>{&quot;channel_group&quot;:{&quot;groups&quot;:{&quot;Application&quot;:{&quot;groups&quot;: {&quot;Org3MSP&quot;:.[1]}}}}}</code>的[1]部分，<code>[0]</code>指的就是<code>config.json</code>，<code>[1]</code>指的就是<code>org3.json</code>，<code>*</code> 号指的是将两部分组合</p>
+<p>这样得到的<code>modified_config.json</code>文件就包含了三个组织的配置信息了，这样之后就可以用<code>modified_config.json</code>文件重新编码为一个二进制文件以供后续使用</p>
+<p>首先将<code>config.json</code>文件转换为二进制<code>protobuf</code>文件</p>
+<pre><code>configtxlator proto_encode --input config.json --type common.Config --output config.pb
+</code></pre><p>然后将<code>modified_config.json</code>文件转化为<code>protobuf</code>二进制文件</p>
+<pre><code>configtxlator proto_encode --input modified_config.json --type common.Config --output modified_config.pb
+</code></pre><p>使用<code>configtxlator</code>工具计算出两个配置文件的差异，得到一个新的用于更新组织结构的<code>protobuf</code>二进制文件</p>
+<pre><code>configtxlator compute_update --channel_id mychannel --original config.pb --updated modified_config.pb --output org3_update.pb
+</code></pre><p>这个<code>org3_update.pb</code>文件包含了而且只包含了<code>Org3</code>的配置信息，可以转化为JSON格式看一下</p>
+<pre><code>configtxlator proto_decode --input org3_update.pb  --type common.ConfigUpdate
+{
+  &quot;channel_id&quot;: &quot;mychannel&quot;,
+  &quot;isolated_data&quot;: {},
+  &quot;read_set&quot;: {
+    &quot;groups&quot;: {
+      &quot;Application&quot;: {
+        &quot;groups&quot;: {
+          &quot;Org1MSP&quot;: {
+            &quot;groups&quot;: {},
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policies&quot;: {},
+            &quot;values&quot;: {},
+            &quot;version&quot;: &quot;1&quot;
+          },
+          &quot;Org2MSP&quot;: {
+            &quot;groups&quot;: {},
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policies&quot;: {},
+            &quot;values&quot;: {},
+            &quot;version&quot;: &quot;1&quot;
+          }
+        },
+        &quot;mod_policy&quot;: &quot;&quot;,
+        &quot;policies&quot;: {
+          &quot;Admins&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policy&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          },
+          &quot;Readers&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policy&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          },
+          &quot;Writers&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policy&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          }
+        },
+        &quot;values&quot;: {
+          &quot;Capabilities&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;value&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          }
+        },
+        &quot;version&quot;: &quot;1&quot;
+      }
+    },
+    &quot;mod_policy&quot;: &quot;&quot;,
+    &quot;policies&quot;: {},
+    &quot;values&quot;: {},
+    &quot;version&quot;: &quot;0&quot;
+  },
+  &quot;write_set&quot;: {
+    &quot;groups&quot;: {
+      &quot;Application&quot;: {
+        &quot;groups&quot;: {
+          &quot;Org1MSP&quot;: {
+            &quot;groups&quot;: {},
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policies&quot;: {},
+            &quot;values&quot;: {},
+            &quot;version&quot;: &quot;1&quot;
+          },
+          &quot;Org2MSP&quot;: {
+            &quot;groups&quot;: {},
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policies&quot;: {},
+            &quot;values&quot;: {},
+            &quot;version&quot;: &quot;1&quot;
+          },
+          &quot;Org3MSP&quot;: {
+            &quot;groups&quot;: {},
+            &quot;mod_policy&quot;: &quot;Admins&quot;,
+            &quot;policies&quot;: {
+              &quot;Admins&quot;: {
+                &quot;mod_policy&quot;: &quot;Admins&quot;,
+                &quot;policy&quot;: {
+                  &quot;type&quot;: 1,
+                  &quot;value&quot;: {
+                    &quot;identities&quot;: [
+                      {
+                        &quot;principal&quot;: {
+                          &quot;msp_identifier&quot;: &quot;Org3MSP&quot;,
+                          &quot;role&quot;: &quot;ADMIN&quot;
+                        },
+                        &quot;principal_classification&quot;: &quot;ROLE&quot;
+                      }
+                    ],
+                    &quot;rule&quot;: {
+                      &quot;n_out_of&quot;: {
+                        &quot;n&quot;: 1,
+                        &quot;rules&quot;: [
+                          {
+                            &quot;signed_by&quot;: 0
+                          }
+                        ]
+                      }
+                    },
+                    &quot;version&quot;: 0
+                  }
+                &quot;policy&quot;: {
+                  &quot;type&quot;: 1,
+                  &quot;value&quot;: {
+                    &quot;identities&quot;: [
+                      {
+                        &quot;principal&quot;: {
+                          &quot;msp_identifier&quot;: &quot;Org3MSP&quot;,
+                      &quot;n_out_of&quot;: {
+                        &quot;n&quot;: 1,
+                        &quot;rules&quot;: [
+                          {
+                  }
+                },
+                &quot;version&quot;: &quot;0&quot;
+              },
+              &quot;Writers&quot;: {
+                &quot;mod_policy&quot;: &quot;Admins&quot;,
+                &quot;policy&quot;: {
+                  &quot;type&quot;: 1,
+                          &quot;role&quot;: &quot;MEMBER&quot;
+                        },
+                        &quot;principal_classification&quot;: &quot;ROLE&quot;
+                      }
+                          {
+                            &quot;signed_by&quot;: 0
+                          }
+                        ]
+                      }
+                    },
+                    &quot;version&quot;: 0
+                  }
+                },
+                &quot;version&quot;: &quot;0&quot;
+              }
+            },
+            &quot;values&quot;: {
+              &quot;MSP&quot;: {
+                &quot;mod_policy&quot;: &quot;Admins&quot;,
+                &quot;value&quot;: {
+                  &quot;config&quot;: {
+                    &quot;admins&quot;: [
+                    ],
+                    &quot;crypto_config&quot;: {
+                      &quot;identity_identifier_hash_function&quot;: &quot;SHA256&quot;,
+                      &quot;signature_hash_family&quot;: &quot;SHA2&quot;
+                    },
+                    &quot;fabric_node_ous&quot;: {
+                      &quot;client_ou_identifier&quot;: {
+                        &quot;organizational_unit_identifier&quot;: &quot;client&quot;
+                      },
+                      &quot;enable&quot;: true,
+                      &quot;peer_ou_identifier&quot;: {
+                        &quot;organizational_unit_identifier&quot;: &quot;peer&quot;
+                      }
+                    },
+                    &quot;intermediate_certs&quot;: [],
+                    &quot;name&quot;: &quot;Org3MSP&quot;,
+                    &quot;organizational_unit_identifiers&quot;: [],
+                    &quot;revocation_list&quot;: [],
+                    &quot;root_certs&quot;: [
+                      &quot;LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNRakNDQWVtZ0F3SUJBZ0lRV29KblBibWMvdmtjV0JIVUpBK0g3akFLQmdncWhrak9QUVFEQWpCek1Rc3cKQ1FZRFZRUUdFd0pWVXpFVE1CRUdBMVVFQ0JNS1EyRnNhV1p2Y201cFlURVdNQlFHQTFVRUJ4TU5VMkZ1SUVaeQpZVzVqYVhOamJ6RVpNQmNHQTFVRUNoTVFiM0puTXk1bGVHRnRjR3hsTG1OdmJURWNNQm9HQTFVRUF4TVRZMkV1CmIzSm5NeTVsZUdGdGNHeGxMbU52YlRBZUZ3MHhPREV3TXpFd09ESTRNemhhRncweU9ERXdNamd3T0RJNE16aGEKTUhNeEN6QUpCZ05WQkFZVEFsVlRNUk13RVFZRFZRUUlFd3BEWVd4cFptOXlibWxoTVJZd0ZBWURWUVFIRXcxVApZVzRnUm5KaGJtTnBjMk52TVJrd0Z3WURWUVFLRXhCdmNtY3pMbVY0WVcxd2JHVXVZMjl0TVJ3d0dnWURWUVFECkV4TmpZUzV2Y21jekxtVjRZVzF3YkdVdVkyOXRNRmt3RXdZSEtvWkl6ajBDQVFZSUtvWkl6ajBEQVFjRFFnQUUKZytoa2FZNlNvWk1rNjNRcVhsUGlZZ3M2Nm4wMEhNSjQ1aGhkYmlRSm5Mc2lmWE83TlhQd3k3UDh0bXd5aHNlOQovU2xGMHVYcGFDZi9XVFYyc2NOZTY2TmZNRjB3RGdZRFZSMFBBUUgvQkFRREFnR21NQThHQTFVZEpRUUlNQVlHCkJGVWRKUUF3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFwQmdOVkhRNEVJZ1FnQzJYdFlzdVhXa2tBRFdrZlBqdkQKZDZia0RaNFhVb2F5LzFmSWJPTTNuTWN3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnWGFicEM1RlZqd3V1R213NApZdElBUTlOWTFLK0V2aXV0dHRzZDdQYmpVTmNDSUVST3p6Q0h1ZDVzaFJ0VGozUWhNSkZBZVBwRGhrWkRSUGRXCnhYOHcwV1pFCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K&quot;
+                    ],
+                    &quot;signing_identity&quot;: null,
+                    &quot;tls_intermediate_certs&quot;: [],
+                    &quot;tls_root_certs&quot;: [
+                      &quot;LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNTakNDQWZDZ0F3SUJBZ0lSQVBrUVNvWlFXQlFtekRyemdpUEQxRk13Q2dZSUtvWkl6ajBFQXdJd2RqRUwKTUFrR0ExVUVCaE1DVlZNeEV6QVJCZ05WQkFnVENrTmhiR2xtYjNKdWFXRXhGakFVQmdOVkJBY1REVk5oYmlCRwpjbUZ1WTJselkyOHhHVEFYQmdOVkJBb1RFRzl5WnpNdVpYaGhiWEJzWlM1amIyMHhIekFkQmdOVkJBTVRGblJzCmMyTmhMbTl5WnpNdVpYaGhiWEJzWlM1amIyMHdIaGNOTVRneE1ETXhNRGd5T0RNNFdoY05Namd4TURJNE1EZ3kKT0RNNFdqQjJNUXN3Q1FZRFZRUUdFd0pWVXpFVE1CRUdBMVVFQ0JNS1EyRnNhV1p2Y201cFlURVdNQlFHQTFVRQpCeE1OVTJGdUlFWnlZVzVqYVhOamJ6RVpNQmNHQTFVRUNoTVFiM0puTXk1bGVHRnRjR3hsTG1OdmJURWZNQjBHCkExVUVBeE1XZEd4elkyRXViM0puTXk1bGVHRnRjR3hsTG1OdmJUQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDkKQXdFSEEwSUFCSkorOTVwbVdTYTNFM09DaThMOEJEeUxJMHJIRE9hZ1U4SW1FL1lpY25lSTN1TmtHb2pQcmViUApkZlJjNjBkRnh3N1kvS0d0Y0hWNUdQeWxBV1ZZT0w2alh6QmRNQTRHQTFVZER3RUIvd1FFQXdJQnBqQVBCZ05WCkhTVUVDREFHQmdSVkhTVUFNQThHQTFVZEV3RUIvd1FGTUFNQkFmOHdLUVlEVlIwT0JDSUVJR2hJQ1J0Z3lmci8KbGR0dFY4K0RUSC9FKzhHSlFDeXVtRU1SL0dkMWM3TXhNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJUURkakMwbQpaNnQycVJZMVNlbklhbVh6cHphRDZ0R0pmK2VyMjZSclNoU0FLQUlnYXZjOHlQT1FtVE9qZTJnMkVNejZzMGNOCkJ2YVhZbytZblpQeSs2dXJTZTg9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K&quot;
+                    ]
+                  },
+                  &quot;type&quot;: 0
+                },
+                &quot;version&quot;: &quot;0&quot;
+              }
+            },
+            &quot;version&quot;: &quot;0&quot;
+          }
+        },
+        &quot;mod_policy&quot;: &quot;Admins&quot;,
+        &quot;policies&quot;: {
+          &quot;Admins&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policy&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          },
+          &quot;Readers&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policy&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          },
+          &quot;Writers&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;policy&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          }
+        },
+        &quot;values&quot;: {
+          &quot;Capabilities&quot;: {
+            &quot;mod_policy&quot;: &quot;&quot;,
+            &quot;value&quot;: null,
+            &quot;version&quot;: &quot;0&quot;
+          }
+        },
+        &quot;version&quot;: &quot;2&quot;
+      }
+    },
+    &quot;mod_policy&quot;: &quot;&quot;,
+    &quot;policies&quot;: {},
+    &quot;values&quot;: {},
+    &quot;version&quot;: &quot;0&quot;
+  }
+}
+</code></pre><p>这个JSON也反映了一个组织对应的区块配置文件是怎样的，这个文件里面在<code>write_set</code>模块里面，只包含了<code>Org3</code>的信息，这边直接去除了<code>org1</code>和<code>org2</code>的信息，是因为这一块内容并不需要更新，我们可以跳过</p>
+<p>最后我们再次将这个处理之后的<code>org3_update.pb</code>文件转化为JSON格式</p>
+<pre><code>configtxlator proto_decode --input org3_update.pb --type common.ConfigUpdate | jq . &gt; org3_update.json
+</code></pre><p>接下来我们再次将之前去除掉的头部信息添加回来作为一个用于包装使用的信封</p>
+<pre><code>echo &#39;{&quot;payload&quot;:{&quot;header&quot;:{&quot;channel_header&quot;:{&quot;channel_id&quot;:&quot;mychannel&quot;, &quot;type&quot;:2}},&quot;data&quot;:{&quot;config_update&quot;:&#39;$(cat org3_update.json)&#39;}}}&#39; | jq . &gt; org3_update_in_envelope.json
+</code></pre><p>最后，我们将这个<code>org3_update_in_envelope.json</code>文件转化成<code>ptotobuf</code>二进制文件，作为加入了新组织之后的区块配置文件</p>
+<pre><code>configtxlator proto_encode --input org3_update_in_envelope.json --type common.Envelope --output org3_update_in_envelope.pb
+</code></pre><h3 id="签名并提交更新配置"><a href="#签名并提交更新配置" class="headerlink" title="签名并提交更新配置"></a>签名并提交更新配置</h3><p>上一个步骤中我们的到了<code>org3_update_in_envelope.pb</code>文件，现在需要使用Admin用户对这个更新进行签名，默认来说对于“修改策略”默认都是”MAJORITY”，只要获得了大多数集群中的ADMIN用户的签名既可以通过更改。因为已经拥有了两个组织<code>org1</code>、<code>org2</code>，所以管理员的“大多数”就是2，接下来就需要这两个组织进行签名。如果没有这两个的签名，我们的更新操作就会被排序节点所拒绝。</p>
+<p>首先使用<code>org1</code>来签名，因为对于<code>cli</code>容器来说环境变量的配置使得自己就是<code>org1</code>，所以直接执行</p>
+<pre><code>peer channel signconfigtx -f org3_update_in_envelope.pb
+
+2018-11-01 10:37:50.232 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+</code></pre><p><del>接下来我们使用<code>org2</code>的环境变量来执行操作，当然在大多数生产环境下是不可能有一个节点能够执行组织1的ADMIN操作又能执行组织2的ADMIN操作，一般都是各个组织各自有执行各自的ADMIN操作的节点。</del></p>
+<p>因为现在是在<code>cli</code>容器里面执行操作，所以没有必要再次对文件进行签名，直接将环境变量切换为<code>org2</code>即可</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; &amp;&amp; \
+export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt &amp;&amp; \
+export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp &amp;&amp; \
+export CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+</code></pre><p>更新组织信息</p>
+<pre><code>peer channel update -f org3_update_in_envelope.pb -c $CHANNEL_NAME -o orderer.example.com:7050 --tls --cafile $ORDERER_CA
+
+2018-11-01 10:49:09.092 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-11-01 10:49:09.105 UTC [channelCmd] update -&gt; INFO 002 Successfully submitted channel update
+</code></pre><p>这个操作成功之后，会返回一个新的<code>block</code> ———— <code>block 5</code>，之前<code>block</code> 0 - 2 是初始化<code>channel</code>的时候产生的，<code>block</code> 3 - 4是因为 <code>install</code> 和 <code>instantiate</code> 链码产生的，现在更新了组织信息，所以会有了第五块区块的信息。</p>
+<p>如果想要查看区块信息，执行</p>
+<pre><code>peer channel fetch config org3config.pb -o orderer.example.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+
+configtxlator proto_decode --input org3config.pb --type common.Block &gt; org3config.json
+</code></pre><h3 id="选主配置"><a href="#选主配置" class="headerlink" title="选主配置"></a>选主配置</h3><p>选主配置主要的配置在<code>first-network/base/peer-base.yaml</code>文件</p>
+<pre><code>version: &#39;2&#39;
+services:
+  peer-base:
+    image: hyperledger/fabric-peer:$IMAGE_TAG
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_byfn
+      - CORE_LOGGING_LEVEL=INFO
+      #- CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_GOSSIP_USELEADERELECTION=true
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_PROFILE_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+</code></pre><p>在添加了一个组织进到网络之后，需要配置对应的选主策略，新加入的节点是根据<code>genesis-block</code>自主启动的，并不包含加入的组织的信息，因此加入的<code>peer</code>节点并不能遵循<code>gossip</code>协议，因此并不能处理来自同一个组织的其他节点的区块信息，除非这些<code>peer</code>节点都获得了组织加入到<code>channel</code>的配置信息。新添加的节点都需要添加如下的配置来获得来自排序节点的<code>blocks</code>信息<br>1 . 使用固定的选主模式</p>
+<pre><code>CORE_PEER_GOSSIP_USELEADERELECTION=false
+CORE_PEER_GOSSIP_ORGLEADER=true
+</code></pre><p>这个配置必须是所有节点都一样</p>
+<p>2 . 使用动态的选主模式</p>
+<pre><code>CORE_PEER_GOSSIP_USELEADERELECTION=true
+CORE_PEER_GOSSIP_ORGLEADER=false
+</code></pre><p>由于新添加的组织中的peers将无法形成成员视图，因此该选项将类似于静态配置，因为每个peer节点一开始回会宣称自己成为leader。但是，一旦更新了将组织添加到channel的配置事务，组织中将只有一个有效的leader。因此，如果希望组织的peers参与到leader选举中，建议使用此选项。</p>
+<h3 id="添加Org3到Channel"><a href="#添加Org3到Channel" class="headerlink" title="添加Org3到Channel"></a>添加Org3到Channel</h3><p>之前的步骤已经使得<code>channel</code>配置完成，接下来就将<code>org3</code>添加到<code>mychannel</code>。启动<code>org3</code>的<code>peers</code>和<code>org3-cli</code></p>
+<pre><code>docker-compose -f docker-compose-org3.yaml up -d
+
+Creating volume &quot;net_peer0.org3.example.com&quot; with default driver
+Creating volume &quot;net_peer1.org3.example.com&quot; with default driver
+WARNING: Found orphan containers (cli, peer1.org1.example.com, peer0.org1.example.com, peer1.org2.example.com, peer0.org2.example.com, orderer.example.com) for this project. If you removed or renamed this service in your compose fileCreating peer1.org3.example.com ... done
+Creating Org3cli ... done
+Creating peer0.org3.example.com ... 
+Creating Org3cli ... 
+</code></pre><p>进入到<code>Org3cli</code>容器</p>
+<pre><code>docker exec -it Org3cli bash
+</code></pre><p>设置环境变量</p>
+<pre><code>export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem &amp;&amp; export CHANNEL_NAME=mychannel
+</code></pre><p>输出环境变量</p>
+<pre><code>echo $ORDERER_CA &amp;&amp; echo $CHANNEL_NAME
+</code></pre><p>接下来向排序节点发送请求获取<code>genesis block</code>，因为之前已经通过别的节点完成了<code>org3</code>的签名配置工作，所以排序节点能够确认我们发起的请求并且返回结果，如果之前的步骤没有完成或者出现了失败的现象，那么这次的请求将会被拒绝</p>
+<pre><code>peer channel fetch 0 mychannel.block -o orderer.example.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+
+2018-11-01 12:07:51.639 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-11-01 12:07:51.642 UTC [cli/common] readBlock -&gt; INFO 002 Received block: 0
+</code></pre><p>这边我们<code>fetch</code>配置的时候传递的是一个<code>0</code>参数，表明我们想要获得第一个区块，如果我们直接执行<code>peer channel fetch config</code>，那么我们就会获得5个区块的信息，但是因为我们不能从下游的区块信息开始构建账本，所以只能传递<code>0</code></p>
+<p>执行完成之后在工作目录下会有一个<code>mychannel.block</code>区块文件</p>
+<p>接下来加入到<code>channel</code></p>
+<pre><code>peer channel join -b mychannel.block
+
+2018-11-01 12:11:57.338 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-11-01 12:11:57.388 UTC [channelCmd] executeJoin -&gt; INFO 002 Successfully submitted proposal to join channel
+</code></pre><p>添加另一个<code>peer1.org3.example.com</code>节点到<code>channel</code>中</p>
+<pre><code>CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/tls/ca.crt \
+CORE_PEER_ADDRESS=peer1.org3.example.com:7051 peer channel join -b mychannel.block
+
+2018-11-01 12:14:51.416 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-11-01 12:14:51.462 UTC [channelCmd] executeJoin -&gt; INFO 002 Successfully submitted proposal to join channel
+</code></pre><h3 id="更新并调用链码"><a href="#更新并调用链码" class="headerlink" title="更新并调用链码"></a>更新并调用链码</h3><p>最后需要完成的就是更新链码并且更新背书策略，在<code>org3-cli</code>中执行</p>
+<pre><code>peer chaincode install -n mycc -v 2.0 -p github.com/chaincode/chaincode_example02/go/
+
+Get installed chaincodes on peer:
+Name: mycc, Version: 2.0, Path: github.com/chaincode/chaincode_example02/go/, Id: 46c85746ea21c801decec963f4b6b8787fa379ce1d7c536a19a4a97a49ada9ed
+</code></pre><p>因为新链码已经在<code>peer0.org3.example.com</code>节点上安装了，接下来需要到<code>cli</code>容器中进行链码更新</p>
+<p>新开一个终端，进入<code>cli</code>容器</p>
+<pre><code>docker exec -it cli bash
+</code></pre><p>首先在<code>org1-peer0</code>上安装新链码</p>
+<pre><code>peer chaincode install -n mycc -v 2.0 -p github.com/chaincode/chaincode_example02/go/
+</code></pre><p>然后修改环境变量安装链码</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer chaincode install -n mycc -v 2.0 -p github.com/chaincode/chaincode_example02/go/
+</code></pre><p>设置环境变量</p>
+<pre><code>export CHANNEL_NAME=mychannel &amp;&amp; \
+export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+</code></pre><p>实例化代码</p>
+<pre><code>peer chaincode upgrade -o orderer.example.com:7050 --tls true --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 2.0 -c &#39;{&quot;Args&quot;:[&quot;init&quot;,&quot;a&quot;,&quot;90&quot;,&quot;b&quot;,&quot;210&quot;]}&#39; -P &quot;OR (&#39;Org1MSP.peer&#39;,&#39;Org2MSP.peer&#39;,&#39;Org3MSP.peer&#39;)&quot;
+
+2018-11-01 15:35:32.123 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 001 Using default escc
+2018-11-01 15:35:32.123 UTC [chaincodeCmd] checkChaincodeCmdParams -&gt; INFO 002 Using default vscc
+</code></pre><p>实例化成功！ 我们会看到实例化的时候对应的背书策略已经改成了<code>OR (&#39;Org1MSP.peer&#39;,&#39;Org2MSP.peer&#39;,&#39;Org3MSP.peer&#39;)</code>，这就意味着之后的交易都需要三个组织中的节点进行背书。</p>
+<p>接下来回到<code>Org3cli</code>中执行查询</p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;,&quot;a&quot;]}&#39;
+
+90
+</code></pre><p>说明链码安装成功并且已经成功实例化，<code>org3</code>中的<code>peer</code>节点能够正常通过自己的证书进行调用链码</p>
+<p>执行<code>invoke</code></p>
+<pre><code>peer chaincode invoke -o orderer.example.com:7050  --tls true --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;invoke&quot;,&quot;a&quot;,&quot;b&quot;,&quot;10&quot;]}&#39;
+
+2018-11-01 15:46:22.601 UTC [chaincodeCmd] chaincodeInvokeOrQuery -&gt; INFO 001 Chaincode invoke successful. result: status:200 
+</code></pre><p>执行成功，查询</p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n mycc -c &#39;{&quot;Args&quot;:[&quot;query&quot;,&quot;a&quot;]}&#39;                                                                        
+
+80
+</code></pre><p>执行完全通过！完全反应了链码的世界状态。</p>
+<p>查看日志</p>
+<pre><code>docker logs -f peer0.org3.example.com
+
+...
+2018-11-02 02:50:51.790 UTC [gossip/privdata] StoreBlock -&gt; INFO 06b [mychannel] Received block [7] from buffer
+2018-11-02 02:50:51.791 UTC [committer/txvalidator] Validate -&gt; INFO 06c [mychannel] Validated block [7] in 1ms
+2018-11-02 02:50:51.814 UTC [kvledger] CommitWithPvtData -&gt; INFO 06d [mychannel] Committed block [7] with 1 transaction(s) in 22ms (state_validation=0ms block_commit=16ms state_commit=3ms)
+</code></pre><p>会看到和脚本启动的日志不同，这个日志表明交易被签名并且被正常打包了！</p>
+<h2 id="结"><a href="#结" class="headerlink" title="结"></a>结</h2><p>添加一个组织到网络总需要在区块链上增加一个新的区块信息，而这个区块就是更具最近的一个区块的配置信息来追加，通过使用<code>jq</code>工具对配置文件进行处理之后，使用<code>configtxlator</code>工具的<code>compute_update</code>对配置进行更新，之后通过网络中原有的组织中的锚节点对更新进行签名，发送给排序节点进行排序，进而上链。</p>
+<p>之后的步骤就是将<code>org</code>加入到<code>channel</code>中，进行链码的更新和实例化 ~</p>
+<p>在执行了<code>docker-compose -f docker-compose-org3.yaml up -d</code>之后，建议执行<code>docker logs -f peer0.org3.example.com</code>实时跟踪日志变化，能够获得对增加组织到网络中的过程的一个更加完整的认识。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/10/31/essay/shengjinyuan_fanjiabi_test/" data-toggle="tooltip" data-placement="top" title="盛金源反假币2018测试题库">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/10/30/hyperledger/fabric-couchdb/" data-toggle="tooltip" data-placement="top" title="Hyperledger Fabric (三) — CouchDB替换Fabric-LevelDB">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#脚本添加Org"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">脚本添加Org</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#手动添加Org"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">手动添加Org</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#生成Org3需要的加密材料"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">生成Org3需要的加密材料</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#准备CLI环境"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">准备CLI环境</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#获取配置信息"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">获取配置信息</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#转换配置为JSON"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">转换配置为JSON</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#添加Org3的加密材料"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">添加Org3的加密材料</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#签名并提交更新配置"><span class="toc-nav-number">2.6.</span> <span class="toc-nav-text">签名并提交更新配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#选主配置"><span class="toc-nav-number">2.7.</span> <span class="toc-nav-text">选主配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#添加Org3到Channel"><span class="toc-nav-number">2.8.</span> <span class="toc-nav-text">添加Org3到Channel</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#更新并调用链码"><span class="toc-nav-number">2.9.</span> <span class="toc-nav-text">更新并调用链码</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#结"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">结</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                        
+                          <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                        
+                          <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/10/30/hyperledger/fabric-add-org/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/10/30/hyperledger/fabric-add-org/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

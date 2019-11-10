@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          搭建v2ray - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/03/29/essay/v2ray/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/essay/vpn-bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
+                            
+                        </div>
+                        <h1>搭建v2ray</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-03-29
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>之前使用vultr的VPS搭建SSR，三天两头被查，出不去的心情非常低落。于是采用另一个工具v2ray，使用之后发现稳定性高了很多。话不多说，搞起！</p>
+<h2 id="什么是V2Ray"><a href="#什么是V2Ray" class="headerlink" title="什么是V2Ray"></a>什么是V2Ray</h2><p>Project V 提供了单一的内核和多种界面操作方式。内核（V2Ray）用于实际的网络交互、路由等针对网络数据的处理，而外围的用户界面程序提供了方便直接的操作流程，简单来说，V2Ray就是一个代理软件，可以用来科学上网学习国外先进科学技术。</p>
+<h2 id="V2Ray与Shadowsocks区别"><a href="#V2Ray与Shadowsocks区别" class="headerlink" title="V2Ray与Shadowsocks区别"></a>V2Ray与Shadowsocks区别</h2><p>V2Ray是在Shadowsocks的作者被请喝茶之后出现的一个开源项目，目的就是为了更好的科学上网。相比于ss，V2Ray的定位是一个平台，任何开发者都可以在这个平台上利用V2Ray开发出一个新的代理软件，简单来说，ss的定位比较简单，功能也比较单一，而V2Ray的功能非常强大，相对的，V2Ray的配置就会复杂很多。</p>
+<h2 id="V2Ray的优势"><a href="#V2Ray的优势" class="headerlink" title="V2Ray的优势"></a>V2Ray的优势</h2><ul>
+<li>更完善的协议: V2Ray 使用了新的自行研发的 VMess 协议，改正了 Shadowsocks 一些已有的缺点，更难被检测到（不保证可靠性）</li>
+<li>更强大的性能: 网络性能更好，具体数据可以看 V2Ray 官方博客</li>
+<li>更丰富的功能: 以下是部分 V2Ray 的功能</li>
+<li>mKCP: KCP 协议在 V2Ray 上的实现，不必另行安装 kcptun</li>
+<li>动态端口：动态改变通信的端口，对抗对长时间大流量端口的限速封锁</li>
+<li>路由功能：可以随意设定指定数据包的流向，去广告、反跟踪都可以</li>
+<li>传出代理：看名字可能不太好理解，其实差不多可以称之为多重代理。类似于 Tor 的代理</li>
+<li>数据包伪装：类似于 Shadowsocks-rss 的混淆，另外对于 mKCP 的数据包也可伪装，伪装常见流量，令识别更困难</li>
+<li>WebSocket 协议：可以 PaaS 平台搭建V2Ray，通过 WebSocket 代理。也可以通过它使用 CDN 中转，抗封锁效果更好</li>
+<li>Mux:多路复用，进一步提高科学上网的并发性能</li>
+</ul>
+<h2 id="一键脚本搭建V2Ray"><a href="#一键脚本搭建V2Ray" class="headerlink" title="一键脚本搭建V2Ray"></a>一键脚本搭建V2Ray</h2><p>直接执行：</p>
+<pre><code>wget https://raw.githubusercontent.com/banbanpeppa/ss-fly/master/v2ray.sh &amp;&amp; chmod +x v2ray.sh &amp;&amp; ./v2ray.sh
+</code></pre><p>执行结果如下</p>
+<pre><code>--2019-03-29 19:31:17--  https://raw.githubusercontent.com/banbanpeppa/ss-fly/master/v2ray.sh
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.108.133
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.108.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2292 (2.2K) [text/plain]
+Saving to: ‘v2ray.sh’
+
+v2ray.sh                                     100%[==============================================================================================&gt;]   2.24K  --.-KB/s    in 0s      
+
+2019-03-29 19:31:18 (50.5 MB/s) - ‘v2ray.sh’ saved [2292/2292]
+
+Installing V2Ray v4.18.0 on x86_64
+Downloading V2Ray: https://github.com/v2ray/v2ray-core/releases/download/v4.18.0/v2ray-linux-64.zip
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   608    0   608    0     0    472      0 --:--:--  0:00:01 --:--:--   473
+100 10.5M  100 10.5M    0     0  1900k      0  0:00:05  0:00:05 --:--:-- 3469k
+Updating software repo
+Installing unzip
+Selecting previously unselected package unzip.
+(Reading database ... 136355 files and directories currently installed.)
+Preparing to unpack .../unzip_6.0-20ubuntu1_amd64.deb ...
+Unpacking unzip (6.0-20ubuntu1) ...
+Processing triggers for mime-support (3.59ubuntu1) ...
+Processing triggers for man-db (2.7.5-1) ...
+Setting up unzip (6.0-20ubuntu1) ...
+Extracting V2Ray package to /tmp/v2ray.
+Archive:  /tmp/v2ray/v2ray.zip
+  inflating: /tmp/v2ray/config.json  
+   creating: /tmp/v2ray/doc/
+  inflating: /tmp/v2ray/doc/readme.md  
+  inflating: /tmp/v2ray/geoip.dat    
+  inflating: /tmp/v2ray/geosite.dat  
+   creating: /tmp/v2ray/systemd/
+  inflating: /tmp/v2ray/systemd/v2ray.service  
+   creating: /tmp/v2ray/systemv/
+  inflating: /tmp/v2ray/systemv/v2ray  
+  inflating: /tmp/v2ray/v2ctl        
+ extracting: /tmp/v2ray/v2ctl.sig    
+  inflating: /tmp/v2ray/v2ray        
+ extracting: /tmp/v2ray/v2ray.sig    
+  inflating: /tmp/v2ray/vpoint_socks_vmess.json  
+  inflating: /tmp/v2ray/vpoint_vmess_freedom.json  
+Shutting down V2Ray service.
+Failed to stop v2ray.service: Unit v2ray.service not loaded.
+Failed to shutdown V2Ray service.
+PORT:16928
+UUID:43d27c77-fd22-47d4-8fb7-93973a56b920
+Created symlink from /etc/systemd/system/multi-user.target.wants/v2ray.service to /etc/systemd/system/v2ray.service.
+Restarting V2Ray service.
+V2Ray v4.18.0 is installed.
+</code></pre><p>此脚本会自动安装以下文件：</p>
+<pre><code>/usr/bin/v2ray/v2ray：V2Ray 程序
+/usr/bin/v2ray/v2ctl：V2Ray 工具
+/etc/v2ray/config.json：配置文件
+/usr/bin/v2ray/geoip.dat：IP 数据文件
+/usr/bin/v2ray/geosite.dat：域名数据文件
+</code></pre><p>用这个一键脚本安装好V2Ray后，可以通过如下命令控制V2Ray的开启、关闭、重启、查看状态等：</p>
+<pre><code>service v2ray start|stop|status|reload|restart|force-reload
+</code></pre><h2 id="配置V2Ray服务器"><a href="#配置V2Ray服务器" class="headerlink" title="配置V2Ray服务器"></a>配置V2Ray服务器</h2><p>V2Ray的配置文件在<code>/etc/v2ray/config.json</code>，先删除这个配置文件</p>
+<pre><code>rm /etc/v2ray/config.json
+</code></pre><p>之后在V2Ray配置<a href="https://intmainreturn0.com/v2ray-config-gen/" target="_blank" rel="noopener">在线生成器</a>生成对应的服务器配置，选择好对应的配置后(取消勾选是否是动态端口和是否是mKCP协议)，其中用户uuid是用来识别用户的，服务器端和客户端要一致，直接点击服务器配置下方的复制配置。也可以用如下的一个模板</p>
+<pre><code>{
+    &quot;log&quot;: {
+        &quot;access&quot;: &quot;/var/log/v2ray/access.log&quot;,
+        &quot;error&quot;: &quot;/var/log/v2ray/error.log&quot;,
+        &quot;loglevel&quot;: &quot;warning&quot;
+    },
+    &quot;inbound&quot;: {
+        &quot;port&quot;: 12345,
+        &quot;protocol&quot;: &quot;vmess&quot;,
+        &quot;settings&quot;: {
+            &quot;clients&quot;: [
+                {
+                    &quot;id&quot;: &quot;aab9c609-44c4-eb73-aa1f-c6611657409c&quot;,
+                    &quot;level&quot;: 1,
+                    &quot;alterId&quot;: 100
+                }
+            ]
+        },
+        &quot;streamSettings&quot;: {
+            &quot;network&quot;: &quot;kcp&quot;
+        },
+        &quot;detour&quot;: {
+            &quot;to&quot;: &quot;vmess-detour-345411&quot;
+        }
+    },
+    &quot;outbound&quot;: {
+        &quot;protocol&quot;: &quot;freedom&quot;,
+        &quot;settings&quot;: {}
+    },
+    &quot;inboundDetour&quot;: [
+        {
+            &quot;protocol&quot;: &quot;vmess&quot;,
+            &quot;port&quot;: &quot;10000-10010&quot;,
+            &quot;tag&quot;: &quot;vmess-detour-345411&quot;,
+            &quot;settings&quot;: {},
+            &quot;allocate&quot;: {
+                &quot;strategy&quot;: &quot;random&quot;,
+                &quot;concurrency&quot;: 5,
+                &quot;refresh&quot;: 5
+            },
+            &quot;streamSettings&quot;: {
+                &quot;network&quot;: &quot;kcp&quot;
+            }
+        }
+    ],
+    &quot;outboundDetour&quot;: [
+        {
+            &quot;protocol&quot;: &quot;blackhole&quot;,
+            &quot;settings&quot;: {},
+            &quot;tag&quot;: &quot;blocked&quot;
+        }
+    ],
+    &quot;routing&quot;: {
+        &quot;strategy&quot;: &quot;rules&quot;,
+        &quot;settings&quot;: {
+            &quot;rules&quot;: [
+                {
+                    &quot;type&quot;: &quot;field&quot;,
+                    &quot;ip&quot;: [
+                        &quot;0.0.0.0/8&quot;,
+                        &quot;10.0.0.0/8&quot;,
+                        &quot;100.64.0.0/10&quot;,
+                        &quot;127.0.0.0/8&quot;,
+                        &quot;169.254.0.0/16&quot;,
+                        &quot;172.16.0.0/12&quot;,
+                        &quot;192.0.0.0/24&quot;,
+                        &quot;192.0.2.0/24&quot;,
+                        &quot;192.168.0.0/16&quot;,
+                        &quot;198.18.0.0/15&quot;,
+                        &quot;198.51.100.0/24&quot;,
+                        &quot;203.0.113.0/24&quot;,
+                        &quot;::1/128&quot;,
+                        &quot;fc00::/7&quot;,
+                        &quot;fe80::/10&quot;
+                    ],
+                    &quot;outboundTag&quot;: &quot;blocked&quot;
+                }
+            ]
+        }
+    }
+}
+</code></pre><blockquote>
+<p>需要修改的参数主要包括以下三个参数<br><code>inbound.port</code> = <code>12345</code><br><code>inbound.settings.clients[0].id</code> = <code>aab9c609-44c4-eb73-aa1f-c6611657409c</code><br><code>inbound.settings.clients[0].alterId</code> = <code>100</code></p>
+</blockquote>
+<p>之后新建一个配置文件：<code>vim /etc/v2ray/config.json</code>，把生成的配置拷贝进去即可。</p>
+<p>最后，启动V2Ray</p>
+<pre><code>service v2ray restart
+</code></pre><p>查看V2Ray的状态</p>
+<pre><code># service v2ray status
+
+● v2ray.service - V2Ray Service
+   Loaded: loaded (/etc/systemd/system/v2ray.service; enabled; vendor preset: enabled)
+   Active: active (running) since Fri 2019-03-29 15:37:10 CST; 4h 17min ago
+ Main PID: 695 (v2ray)
+   CGroup: /system.slice/v2ray.service
+           └─695 /usr/bin/v2ray/v2ray -config /etc/v2ray/config.json
+
+Mar 29 15:37:10 v2ray systemd[1]: Started V2Ray Service.
+Mar 29 15:37:10 v2ray v2ray[695]: V2Ray 4.18.0 (Po) 20190228
+Mar 29 15:37:10 v2ray v2ray[695]: A unified platform for anti-censorship.
+</code></pre><h2 id="配置V2Ray客户端"><a href="#配置V2Ray客户端" class="headerlink" title="配置V2Ray客户端"></a>配置V2Ray客户端</h2><h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><p>windows下面建议使用v2rayN: <a href="https://github.com/2dust/v2rayN/releases，" target="_blank" rel="noopener">https://github.com/2dust/v2rayN/releases，</a> 强大好用，不用配置浏览器。客户端会用到配置文件模板如下：</p>
+<pre><code>{
+    &quot;log&quot;: {
+        &quot;loglevel&quot;: &quot;warning&quot;
+    },
+    &quot;inbound&quot;: {
+        &quot;listen&quot;: &quot;127.0.0.1&quot;,
+        &quot;port&quot;: 1081,
+        &quot;protocol&quot;: &quot;socks&quot;,
+        &quot;settings&quot;: {
+            &quot;auth&quot;: &quot;noauth&quot;,
+            &quot;udp&quot;: true,
+            &quot;ip&quot;: &quot;127.0.0.1&quot;
+        }
+    },
+    &quot;outbound&quot;: {
+        &quot;protocol&quot;: &quot;vmess&quot;,
+        &quot;settings&quot;: {
+            &quot;vnext&quot;: [
+                {
+                    &quot;address&quot;: &quot;192.168.10.1&quot;,
+                    &quot;port&quot;: 12345,
+                    &quot;users&quot;: [
+                        {
+                            &quot;id&quot;: &quot;c383e9af-8d5a-9d58-9c14-9d1bc2363ff9&quot;,
+                            &quot;level&quot;: 1,
+                            &quot;alterId&quot;: 100
+                        }
+                    ]
+                }
+            ]
+        },
+        &quot;streamSettings&quot;: {
+            &quot;network&quot;: &quot;kcp&quot;
+        }
+    },
+    &quot;outboundDetour&quot;: [
+        {
+            &quot;protocol&quot;: &quot;freedom&quot;,
+            &quot;settings&quot;: {},
+            &quot;tag&quot;: &quot;direct&quot;
+        }
+    ],
+    &quot;routing&quot;: {
+        &quot;strategy&quot;: &quot;rules&quot;,
+        &quot;settings&quot;: {
+            &quot;rules&quot;: [
+                {
+                    &quot;type&quot;: &quot;field&quot;,
+                    &quot;port&quot;: &quot;54-79&quot;,
+                    &quot;outboundTag&quot;: &quot;direct&quot;
+                },
+                {
+                    &quot;type&quot;: &quot;field&quot;,
+                    &quot;port&quot;: &quot;81-442&quot;,
+                    &quot;outboundTag&quot;: &quot;direct&quot;
+                },
+                {
+                    &quot;type&quot;: &quot;field&quot;,
+                    &quot;port&quot;: &quot;444-65535&quot;,
+                    &quot;outboundTag&quot;: &quot;direct&quot;
+                },
+                {
+                    &quot;type&quot;: &quot;field&quot;,
+                    &quot;domain&quot;: [
+                        &quot;gc.kis.scr.kaspersky-labs.com&quot;
+                    ],
+                    &quot;outboundTag&quot;: &quot;direct&quot;
+                },
+                {
+                    &quot;type&quot;: &quot;chinasites&quot;,
+                    &quot;outboundTag&quot;: &quot;direct&quot;
+                },
+                {
+                    &quot;type&quot;: &quot;field&quot;,
+                    &quot;ip&quot;: [
+                        &quot;0.0.0.0/8&quot;,
+                        &quot;10.0.0.0/8&quot;,
+                        &quot;100.64.0.0/10&quot;,
+                        &quot;127.0.0.0/8&quot;,
+                        &quot;169.254.0.0/16&quot;,
+                        &quot;172.16.0.0/12&quot;,
+                        &quot;192.0.0.0/24&quot;,
+                        &quot;192.0.2.0/24&quot;,
+                        &quot;192.168.0.0/16&quot;,
+                        &quot;198.18.0.0/15&quot;,
+                        &quot;198.51.100.0/24&quot;,
+                        &quot;203.0.113.0/24&quot;,
+                        &quot;::1/128&quot;,
+                        &quot;fc00::/7&quot;,
+                        &quot;fe80::/10&quot;
+                    ],
+                    &quot;outboundTag&quot;: &quot;direct&quot;
+                },
+                {
+                    &quot;type&quot;: &quot;chinaip&quot;,
+                    &quot;outboundTag&quot;: &quot;direct&quot;
+                }
+            ]
+        }
+    }
+}
+</code></pre><p>其中下面部分需要修改为对应自己搭建的v2ray信息</p>
+<pre><code>&quot;settings&quot;: {
+    &quot;vnext&quot;: [
+        {
+            &quot;address&quot;: &quot;192.168.10.1&quot;,
+            &quot;port&quot;: 12345,
+            &quot;users&quot;: [
+                {
+                    &quot;id&quot;: &quot;c383e9af-8d5a-9d58-9c14-9d1bc2363ff9&quot;,
+                    &quot;level&quot;: 1,
+                    &quot;alterId&quot;: 100
+                }
+            ]
+        }
+    ]
+},
+</code></pre><h3 id="MacOS"><a href="#MacOS" class="headerlink" title="MacOS"></a>MacOS</h3><p>在MacOS下建议使用V2rayX工具，具体可以参考：<a href="https://github.com/Cenmrev/V2RayX，" target="_blank" rel="noopener">https://github.com/Cenmrev/V2RayX，</a> 工具非常便捷强大，配置方式也很简单。</p>
+<h2 id="卸载v2ray服务"><a href="#卸载v2ray服务" class="headerlink" title="卸载v2ray服务"></a>卸载v2ray服务</h2><p>服务端如果要卸载v2ray，直接执行</p>
+<pre><code>wget https://raw.githubusercontent.com/banbanpeppa/ss-fly/master/go.sh &amp;&amp; chmod +x go.sh &amp;&amp; ./go.sh --remove
+</code></pre><p>执行结果</p>
+<pre><code>Shutting down V2Ray service.
+Removed symlink /etc/systemd/system/multi-user.target.wants/v2ray.service.
+Removed V2Ray successfully.
+If necessary, please remove configuration file and log file manually.
+</code></pre><h2 id="V2Ray的优化"><a href="#V2Ray的优化" class="headerlink" title="V2Ray的优化"></a>V2Ray的优化</h2><p>谷歌的BBR加速所有，一键开启方式：</p>
+<pre><code>wget hhttps://raw.githubusercontent.com/banbanpeppa/ss-fly/master/ss-fly.sh &amp;&amp; chmod +x ss-fly.sh &amp;&amp; ./ss-fly.sh -bbr
+</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>V2Ray作为一个新兴的代理工具，好用稳定安全！</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>github：<a href="https://github.com/banbanpeppa/ss-fly" target="_blank" rel="noopener">https://github.com/banbanpeppa/ss-fly</a><br>一键脚本搭建V2Ray &amp; V2Ray配置与优化： <a href="https://www.flyzy2005.com/v2ray/how-to-build-v2ray/" target="_blank" rel="noopener">https://www.flyzy2005.com/v2ray/how-to-build-v2ray/</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/04/28/java/retrofit-https/" data-toggle="tooltip" data-placement="top" title="使用Retrofit访问HTTPS接口">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/03/25/linux/nfs-server-deploy/" data-toggle="tooltip" data-placement="top" title="Linux安装NFS服务">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#什么是V2Ray"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">什么是V2Ray</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#V2Ray与Shadowsocks区别"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">V2Ray与Shadowsocks区别</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#V2Ray的优势"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">V2Ray的优势</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一键脚本搭建V2Ray"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">一键脚本搭建V2Ray</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#配置V2Ray服务器"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">配置V2Ray服务器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#配置V2Ray客户端"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">配置V2Ray客户端</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Windows"><span class="toc-nav-number">6.1.</span> <span class="toc-nav-text">Windows</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#MacOS"><span class="toc-nav-number">6.2.</span> <span class="toc-nav-text">MacOS</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#卸载v2ray服务"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">卸载v2ray服务</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#V2Ray的优化"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">V2Ray的优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-number">10.</span> <span class="toc-nav-text">参考</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/03/29/essay/v2ray/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/03/29/essay/v2ray/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

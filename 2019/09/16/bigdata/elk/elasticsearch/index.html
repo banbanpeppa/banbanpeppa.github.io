@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Elasticsearch的安装与使用 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/09/16/bigdata/elk/elasticsearch/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/bigdata/elk/elk_bg.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Big Data" title="Big Data">Big Data</a>
+                            
+                              <a class="tag" href="/tags/#ELK" title="ELK">ELK</a>
+                            
+                        </div>
+                        <h1>Elasticsearch的安装与使用</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-09-16
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h1><p><img src="/images/bigdata/elk/elk.jpg" alt="image"></p>
+<h2 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a><del>Getting Started</del></h2><p>Elasticsearch是一个高可扩展的开源全文检索和分析引擎。它提供了快速实时进行存储、查询和分析海量数据的功能。这个工具通常用于那些需要复杂查询功能和需求的场景，我们将Elasticsearch作为一个底层引擎技术来驱动顶层应用。</p>
+<p>以下是一些简单的使用Elasticsearch的用例</p>
+<ul>
+<li>在一个在线电商平台中，需要允许用户对不同的商品进行搜索，商品的种类繁多，需要能够及时返回比较精准的结果。这个时候就可以使用Elasticsearch来存储所有商品的分类和清单，之后Elasticsearch来提供其强大的搜索功能。</li>
+<li>在一些场景下，用户想要对大量的日志文件进行分析，从中的得到一些关于产品的使用趋势、统计结果以及一些异常情况，以此来进一步驱动产品进步。在这种情况下，用户可以使用Logstash（ELK的L）来对日志进行采集、聚合和解析，之后Logstash将处理好的日志落到Elasticsearch，只要数据落到了Elasticsearch，用户便可以使用它的强大的搜索和聚合功能来获取自己想要的结果内容。</li>
+<li>在用户使用某一个电商平台的过程中，可能用户对某一个商品感兴趣，但是可能用户暂时不能接受当前价格，这时候用户可能希望设置一个阈值，在商品价格降低到对应这个价格的时候就通过某种方式通知用户，用户能够在第一时间获取得到该商品降价的信息。这个可以通过Elasticsearch来实现，Elasticsearch通过其反向查询的能力，对商品价格进行查询，当价格满足了条件既可以通过告警系统将消息发送给用户。</li>
+<li>在一些场景下，用户会需要对大量的数据进行快速审查、分析以及获取数据的可视化结果，可以使用Elasticsearch进行数据存储，使用Kibana来对数据进行显示，Kibana是一个数据可视化的dashboard，它可以展示一系列对用户来说很重要的数据，用户可以定制对应显示的数据内容。另一方变，用户还可以使用Elasticsearch强大的聚合能力来进行复杂得多商业数据查询。</li>
+</ul>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Elasticsearch是Elastic Stack（简称ES）的核心分布式检索和分析组件，Logstash和Beats主要用于将数据进行采集、聚合以及处理数据，然后将数据存储到Elasticsearch，Kibana则将处理好的数据进行可视化，并且对数据进行一些操作与监控。而那些索引、检索以及分析的核心功能都是在Elasticsearch中完成的。</p>
+<p>Elasticsearch提供了实时检索与分析数据的能力，不管是结构化的数据还是非结构化的数据、数字化数据、地理数据等，Elasticsearch都能够高效地进行存储并建立索引，同时实现高效检索能力。用户可以远远超出简单的检索和聚合信息，以发现数据中的趋势和模式，达到数据分析的目的。随着数据和查询量的增长，Elasticsearch的分布式特性使得部署能够随之无缝增长，实现动态扩展的能力。</p>
+<p>在现实业务中，显然不是每一个问题都是搜索问题，但是Elasticsearch提供了处理各种数据的速度和灵活性，以下是一些用例：</p>
+<ul>
+<li>将搜索框添加到应用或者网站中，这个时候可以使用ES</li>
+<li>存储和分析日志、指标和安全事件数据</li>
+<li>使用机器学习手段来自动模型化实时数据的行为</li>
+<li>只用Elasticsearch作为全自动化商务流程的引擎</li>
+<li>把Elasticsearch作为GIS来管理、集成和分析地理数据</li>
+</ul>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>在Elasticsearch中有一些核心概念，掌握这些概念有助于对Elasticsearch的理解。</p>
+<h3 id="NRT（Near-Realtime）近实时"><a href="#NRT（Near-Realtime）近实时" class="headerlink" title="NRT（Near Realtime）近实时"></a>NRT（Near Realtime）近实时</h3><p>Elasticsearch是一个近实时的搜索平台，也就是说Elasticsearch在对某一个文档建立好index之后到进入可搜索阶段会有一个时延（通常是一秒钟）。</p>
+<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><p>集群通常指的是由一台或者多台服务节点组成的节点，这些节点存储了完整的数据内容，并且对这些数据提供了联合索引，用户可以通过所有的节点进行数据检索。一个集群通常会由一个独一的名称进行标识（默认使用“elasticsearch”），这个名称很重要，一个节点在加入了某一个名称的集群之后，只能属于某一个集群。</p>
+<p>所以在一些环境下，要确保针对不同的集群没有使用相同的名称，否则可能就会出现一些节点加入错误的情况。例如，用户可以定义名为<code>logging-dev</code>、 <code>logging-stage</code>或者<code>logging-prod</code>的名字来区分不同的es集群。</p>
+<p>需要注意的是，一个集群是完全支持只存在一个节点的情况的。</p>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>一个节点就是一个集群的一部分，节点存储了数据，参与到一个集群中提供其索引和搜索的能力。同集群有点类似，一个节点由一个UUID来标识，如果不想使用UUID，用户可以自顶一个名称来标识节点。</p>
+<p>一个节点可以通过配置加入到某一个特定的集群中，默认一个节点直接加入到名为”elasticsearch“集群中。假设在一个分布式环境下，有一些es节点启动并且能够相互发现，他们会自组织形成一个名为<code>elasticsearch</code>的集群，并加入到这个集群中。</p>
+<p>在一个集群下，可以容纳任意多的节点。</p>
+<h3 id="Index"><a href="#Index" class="headerlink" title="Index"></a>Index</h3><p>Index是一系列有相同或者相似特征的文档，例如对于用户数据，可以为其定义一个<code>customer index</code>，对于商品类目，可以定义另一个index为<code>catagory</code>，一个index由一个名称来表示，而这个index会在后续的索引、检索、更新以及删除文档等操作的时候使用。</p>
+<p>在一个单独的集群中，可以为文档定义任意多的index。</p>
+<h3 id="Type-（6-0-0版本之后弃用"><a href="#Type-（6-0-0版本之后弃用" class="headerlink" title="Type （6.0.0版本之后弃用)"></a><del>Type （6.0.0版本之后弃用)</del></h3><p>在一个index下面的逻辑分区，能够将不同类型的文档归类到同一个index下面。例如，一个文档类型是<code>users</code>的类型，另一类的文档类型是<code>blog posts</code>类型，这两个类型可以放在同一个index的不同分区下面，也就是不同的type下面。</p>
+<p>这个概念在后续的es版本中已经弃用了。具体可以参考<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.0/removal-of-types.html" target="_blank" rel="noopener">Removal of mapping types</a>。</p>
+<h3 id="Document"><a href="#Document" class="headerlink" title="Document"></a>Document</h3><p>在前面有提到文档的概念，一个文档是一个能够被index的最小单元，例如可以为一个单独的顾客定义一个文档，也可以为一个单独的商品定义一个文档。这个文档通常是用JSON来表示。</p>
+<p>在一个index或者type下，可以存储任意多的文档，需要注意的是，一个文档虽然物理位置上面来说是在一个index下面的，但是一个文档必须详细分配到index下面的某一个type下。</p>
+<h3 id="Shards-amp-Replicas"><a href="#Shards-amp-Replicas" class="headerlink" title="Shards &amp; Replicas"></a>Shards &amp; Replicas</h3><p>在一个index下面可能会存储非常大量的文档（数据），这些数据有可能会超出一个节点的硬件限制。例如，在一个单独的index下面有超过1TB的文档，这个可能会超过一个节点的磁盘容量或者可能会导致查询的效率非常的慢。</p>
+<p>为了解决这个问题，Elasticsearch将index进行再分割为一个一个shards（分片），当定义了一个index的时候，用户可以指定对应的shards（分片）数，每个分片本身都是一个功能齐全且独立的“索引”，可以托管在集群中的任何节点上。</p>
+<p>分片之所以很重要有两个很重要的原因：</p>
+<ul>
+<li>分片允许用户水平分割或者水平扩展内容卷</li>
+<li>允许用户跨分片（分片可能分布在不同的节点上面）分布和并行化操作，进而提高系统的性能和吞吐量</li>
+</ul>
+<p>在一个复制的分布式环境或者云环境中，不可预期的一些故障是可能出现的，为此强烈建议使用Elasticsearch提出的故障转移机制，以防止某一个节点因为宕机或者其它一些原因不可用而导致数据丢失。Elasticsearch允许对每一个分片都进行副本复制，称为分片副本。</p>
+<p>副本很重要的原因主要有两个：</p>
+<ul>
+<li>可以在分片或者节点出现故障的时候提供系统的可用性，因此需要注意副本分片需要与原始分片分布在不同的节点上面。</li>
+<li>能够实现扩展的搜索量和吞吐量，因为可以在所有的副本上面（包括原始分片）进行并行搜索。</li>
+</ul>
+<p>总而言之，每一个index（索引）的都可以划分为多个分片，同时针对每一个索引都可以为其分片进行副本复制，复制之后，每个索引都将具有朱分片和副本分片。在创建index的时候可以为每一个index定义分片和副本的数目，创建索引之后，用户可以动态地更改副本数，但是不能修改分片数目。</p>
+<p>默认情况下，Elasticsearch中的每个索引都会有5个主分片和一个副本，这就因为这在集群中至少需要两个节点（副本要和主分片在不同节点），即索引会包含5个主分片和5个副本分片，总计每个索引10个分片。</p>
+<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p>本人在进行实验的时候Elasticsearch的最新版本是<code>7.3.2</code>，视情况而定下载对应的镜像，具体镜像在<a href="https://www.docker.elastic.co/" target="_blank" rel="noopener">www.docker.elastic.co</a>。</p>
+<p>设置镜像的版本号</p>
+<pre><code>export ELK_VERSION=7.3.2
+</code></pre><h3 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h3><p>用docker方式来安装会比较快捷方便，接下来主要通过<code>docker run</code>的方式来部署一个ES集群。</p>
+<h4 id="Elasticsearch-1"><a href="#Elasticsearch-1" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h4><p><img src="/images/docker/docker-tiny.png" alt="image"></p>
+<p>下载镜像</p>
+<pre><code class="bash">docker pull docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+</code></pre>
+<p>使用docker run的方式启动</p>
+<pre><code class="bash">docker run -p 9200:9200 -p 9300:9300 -e &quot;discovery.type=single-node&quot; -it -d --name es-node docker.elastic.co/elasticsearch/elasticsearch:7.3.2
+</code></pre>
+<h4 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h4><p>Kibana是ELK的dashboard，可以通过Kibana实现数据的可视化，对数据进一步分析。</p>
+<p>拉取Kibana的镜像</p>
+<pre><code class="bash">docker pull docker.elastic.co/kibana/kibana:${ELK_VERSION}
+</code></pre>
+<p>启动Kibana服务的方式也有两种，一种是通过docker run的方式，另一种是通过docker-compose的方式。</p>
+<p>首先介绍docker run的方式。</p>
+<pre><code class="bash">docker run --link YOUR_ELASTICSEARCH_CONTAINER_NAME_OR_ID:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:${ELK_VERSION}
+</code></pre>
+<p>这里运行成功的前提是elasticsearch容器启动的时候网络用的是default，否则需要制定对应的网络。</p>
+<p>在运行的过程中，由于Kibana服务的启动过程中有很多参数可以设置，为此不建议通过环境变量一个一个写，可以通过挂载的方式将<code>kibana.yaml</code>的配置文件挂载过去，<code>kibana.yaml</code>配置文件(7.3版本)的具体配置要求在这个<a href="https://www.elastic.co/guide/en/kibana/7.3/settings.html" target="_blank" rel="noopener">链接</a></p>
+<p>则启动方式添加参数</p>
+<pre><code class="bash">docker run --link YOUR_ELASTICSEARCH_CONTAINER_NAME_OR_ID:elasticsearch -p 5601:5601 -v ./kibana.yml:/usr/share/kibana/config/kibana.yml docker.elastic.co/kibana/kibana:${ELK_VERSION}
+</code></pre>
+<h3 id="docker-compose"><a href="#docker-compose" class="headerlink" title="docker-compose"></a>docker-compose</h3><h4 id="Elasticsearch-2"><a href="#Elasticsearch-2" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h4><p>可以通过docker-compose的方式启动,docker-compose的yaml文件如下</p>
+<p><code>elasticsearch.yaml</code></p>
+<pre><code class="yaml">version: &#39;3&#39;
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+    container_name: es01
+    environment:
+      - node.name=es01
+      - discovery.seed_hosts=es02
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot;
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+    container_name: es02
+    environment:
+      - node.name=es02
+      - discovery.seed_hosts=es01
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot;
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata02:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+
+volumes:
+  esdata01:
+    driver: local
+  esdata02:
+    driver: local
+
+networks:
+  esnet:
+</code></pre>
+<p>另外将镜像的版本添加到<code>.env</code>文件中（和elasticsearch.yaml文件同一个目录)</p>
+<p><code>.env</code></p>
+<pre><code class="ini">ELK_VERSION=7.3.2
+</code></pre>
+<p>然后直接执行</p>
+<pre><code class="bash">docker-compose -f elasticsearch.yaml up -d
+</code></pre>
+<p>创建好之后查看docker容器运行情况</p>
+<pre><code class="bash"># docker ps -a
+
+CONTAINER ID        IMAGE                                                              COMMAND                  CREATED             STATUS              PORTS                              NAMES
+4b8cc899cb3f        docker.elastic.co/elasticsearch/elasticsearch:7.3.2                &quot;/usr/local/bin/do...&quot;   6 minutes ago       Up 6 minutes        9200/tcp, 9300/tcp                 es02
+992ed17bfeb9        docker.elastic.co/elasticsearch/elasticsearch:7.3.2                &quot;/usr/local/bin/do...&quot;   6 minutes ago       Up 6 minutes        0.0.0.0:9200-&gt;9200/tcp, 9300/tcp   es01
+</code></pre>
+<p>访问Elasticsearch的接口</p>
+<pre><code class="bash">$ curl http://127.0.0.1:9200/_cat/health
+1568624275 08:57:55 docker-cluster green 2 2 0 0 0 0 0 0 - 100.0%
+</code></pre>
+<p>安装成功</p>
+<h4 id="Kibana-1"><a href="#Kibana-1" class="headerlink" title="Kibana"></a>Kibana</h4><p>结合之前的elasticsearch容器启动，追加内容得到</p>
+<p><code>elasticsearch.yaml</code></p>
+<pre><code class="yaml">version: &#39;3&#39;
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+    container_name: es01
+    environment:
+      - node.name=es01
+      - discovery.seed_hosts=es02
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot;
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}
+    container_name: es02
+    environment:
+      - node.name=es02
+      - discovery.seed_hosts=es01
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - &quot;ES_JAVA_OPTS=-Xms512m -Xmx512m&quot;
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata02:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELK_VERSION}
+    container_name: kibana
+    environment:
+      SERVER_NAME: testing-chenzhiling.loghub.netease.com
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    ports:
+      - 5601:5601
+    links:
+      - &#39;es01:es01&#39;
+    networks:
+      - esnet
+
+volumes:
+  esdata01:
+    driver: local
+  esdata02:
+    driver: local
+
+networks:
+  esnet:
+</code></pre>
+<p>然后执行</p>
+<pre><code class="bash">docker-compose -f elacticsearch.yaml up -d
+</code></pre>
+<p>启动成功之后访问 <a href="http://127.0.0.1:5601" target="_blank" rel="noopener">http://127.0.0.1:5601</a> 可以进入Kibana的界面<br><img src="/images/bigdata/elk/kibana_dashboard.png" alt="image"></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/09/16/linux/autojump/" data-toggle="tooltip" data-placement="top" title="懒人神器autojump">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/08/21/linux/holefile/" data-toggle="tooltip" data-placement="top" title="Linux空洞文件">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Elasticsearch"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Elasticsearch</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Getting-Started"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Getting Started</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Introduction"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Introduction</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#基本概念"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">基本概念</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#NRT（Near-Realtime）近实时"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">NRT（Near Realtime）近实时</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Cluster"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">Cluster</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Node"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">Node</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Index"><span class="toc-nav-number">1.3.4.</span> <span class="toc-nav-text">Index</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Type-（6-0-0版本之后弃用"><span class="toc-nav-number">1.3.5.</span> <span class="toc-nav-text">Type （6.0.0版本之后弃用)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Document"><span class="toc-nav-number">1.3.6.</span> <span class="toc-nav-text">Document</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Shards-amp-Replicas"><span class="toc-nav-number">1.3.7.</span> <span class="toc-nav-text">Shards &amp; Replicas</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Installation"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Installation</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#docker-run"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">docker run</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Elasticsearch-1"><span class="toc-nav-number">1.4.1.1.</span> <span class="toc-nav-text">Elasticsearch</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Kibana"><span class="toc-nav-number">1.4.1.2.</span> <span class="toc-nav-text">Kibana</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#docker-compose"><span class="toc-nav-number">1.4.2.</span> <span class="toc-nav-text">docker-compose</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Elasticsearch-2"><span class="toc-nav-number">1.4.2.1.</span> <span class="toc-nav-text">Elasticsearch</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Kibana-1"><span class="toc-nav-number">1.4.2.2.</span> <span class="toc-nav-text">Kibana</span></a></li></ol></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Big Data" title="Big Data">Big Data</a>
+                        
+                          <a class="tag" href="/tags/#ELK" title="ELK">ELK</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/09/16/bigdata/elk/elasticsearch/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/09/16/bigdata/elk/elasticsearch/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

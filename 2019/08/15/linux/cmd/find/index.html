@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Linux命令 - find - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/08/15/linux/cmd/find/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/linux/linux_bg_2.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>Linux命令 - find</h1>
+                        <h2 class="subheading">keep moving ...</h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-08-15
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>find命令让用户能够在系统上根据目录执行文件搜索，同时还可以对结果进行一些后续操作。它是GNU的findutils工具的一个子模块，并且和其他的工具一同形成了强大的文件搜索功能。find工具具有很强的灵活性，可以根据一些特定的条件来搜索文件或者目录，同时还可以根据一些条件参数来处理获取到的结果。</p>
+<h2 id="FindUtils"><a href="#FindUtils" class="headerlink" title="FindUtils"></a>FindUtils</h2><p>GNU Find Utilities是一个在GNU操作系统下基本的文件目录搜索工具集合，这些程式通常用于与其他的一些程式结合一起使用，进而实现模块化的强大的文件目录搜索能力。</p>
+<p>Find Utilities工具主要包含了如下：</p>
+<ul>
+<li>find - 在对应目录下面搜索对应的文件</li>
+<li>locate - 把在数据库中符合一定格式的文件列出来</li>
+<li>updatedb - 更新一个文件名数据库</li>
+<li>xargs - 根据标准输入来构建一个可执行命令</li>
+</ul>
+<p>find工具在一个目录树下去寻找一系列的文件，它会搜寻对应的目录树并且处理得到那些符合用户预设好条件的文件。</p>
+<p>locate工具会搜索一个或者多个文件名的数据库，并且将符合条件的文件名打印出来，通常locate命令会结合updatedb命令使用，updatedb会更新整个系统的文件信息，之后locate命令可以定位到对应的文件内容。locate的查询效率是非常高的，只要对应的database更新了，就能快速定位到文件。</p>
+<p>updatedb程序就是维护一个文件名数据库，这个数据库会被locate程序使用，这个文件名数据库会维护一系列的目录树组成的文件列表，updatedb命令执行的时候会更新对应的目录树，这个程序可以交给cron来做定时更新，每天跟新以此即可。如果再平时使用的时候想要用最新的数据库，手动执行updatedb即可。</p>
+<p>xargs 程序从标准输入流中获取得到一些列内容作为参数，并提供给后续的命令或程序使用，例如一个非常常见的例子就是讲find命令得到的文件名收集在一起作为参数，提供后续的删除操作等等：</p>
+<pre><code>find . -type f | xargs ls -lkh
+</code></pre><p>具体的FileUtils功能可以查看<a href="https://www.gnu.org/software/findutils/" target="_blank" rel="noopener">Findutils</a></p>
+<h2 id="find的使用"><a href="#find的使用" class="headerlink" title="find的使用"></a>find的使用</h2><p>接下来介绍find命令的使用，同时会根据其提供的参数举例子。</p>
+<p>find命令的基础用法是</p>
+<pre><code class="bash">find [paths] [expression] [actions]
+</code></pre>
+<p>find命令允许用户传入多个paths，其会根据不同的path递归的去在每一个path下面寻找用户想要的文件，知道全部找完。默认find命令会把paths下面的所有paths都走一遍因为为了能够寻找对应满足一定要求的path下面的文件，可以使用正则表达式来表示对应的path。</p>
+<p>同时find命令也可以对寻找得到的结果进行一些处理，默认是直接输出找到的所有文件，为了能够根据一定的要求来寻找对应的文件，用户可以使用对应的一些action来过滤或者处理文件。</p>
+<p>接下来根据几个例子来加强对find命令的理解</p>
+<h3 id="find-所有的文件和目录"><a href="#find-所有的文件和目录" class="headerlink" title="find 所有的文件和目录"></a>find 所有的文件和目录</h3><p>有时候用户想要将某一个目录下面的所有文件和目录都显示出来，find命令默认能实现这个功能，例如将/usr/bin下面的所有文件找出来</p>
+<pre><code class="bash">$ find /usr/bin/
+/usr/bin/
+/usr/bin/dpkg
+/usr/bin/dpkg-deb
+/usr/bin/dpkg-divert
+/usr/bin/dpkg-maintscript-helper
+/usr/bin/dpkg-query
+/usr/bin/dpkg-split
+/usr/bin/dpkg-statoverride
+/usr/bin/dpkg-trigger
+/usr/bin/update-alternatives
+/usr/bin/debconf
+/usr/bin/debconf-apt-progress
+/usr/bin/debconf-communicate
+/usr/bin/debconf-copydb
+/usr/bin/debconf-escape
+/usr/bin/debconf-set-selections
+/usr/bin/debconf-show
+/usr/bin/deb-systemd-helper
+/usr/bin/deb-systemd-invoke
+/usr/bin/ischroot
+...
+</code></pre>
+<p>会看到这个文件列表非常大，因为它把<code>/usr/bin</code>目录下面的所有文件和目录都显示出来了，包括<code>/usr/bin</code>目录本身。</p>
+<p>如果想要从一堆的文件目录中寻找出所有的文件，则可以在find后面追加不同的path</p>
+<pre><code class="bash">find /usr/share /bin /usr/lib
+</code></pre>
+<p>如果想要把当前目录的所有文件都找出来</p>
+<pre><code class="bash">find .
+</code></pre>
+<p>或者</p>
+<pre><code class="bash">find
+</code></pre>
+<h3 id="find-by-name"><a href="#find-by-name" class="headerlink" title="find by name"></a>find by name</h3><p>有时候我们只想根据文件的名字来寻找对应的文件，则可以使用<code>-name</code>的action来实现</p>
+<pre><code class="bash">find . -name hello.txt
+</code></pre>
+<p>这种方式是根据文件的全名来寻找的，也就是说<code>-name</code>的默认行为就是根据文件的全名来寻找。</p>
+<p>如果说用户不能确定文件的大小写，可以用<code>-iname</code>来寻找</p>
+<pre><code class="bash">find /usr -iname hello.txt
+</code></pre>
+<p>如果用户连文件的完整名字也无法确定，只想通过模糊匹配的形式来寻找文件，则可以使用正则表达式来寻找</p>
+<pre><code class="bash">find /usr -name &#39;*.txt&#39;
+</code></pre>
+<p>如果想根据文件名的长度来寻找文件，例如想寻找路径下文件的字符数目是4的文件</p>
+<pre><code class="bash">find /usr -name &#39;????&#39;
+</code></pre>
+<p>在一些情况下，用户想要寻找某一个特定的目录下面的符合要求的文件，而不是将整个目录中的所有符合要求的文件都显示出来，则可以使用<code>-path</code>。例如一个目录下面有很多目录，现在想要在tmp目录下面寻找出文件名字符数为3的文件或目录，则可以执行</p>
+<pre><code class="bash">find . -path &#39;*tmp/???&#39;
+</code></pre>
+<p>同时也有一个<code>-ipath</code>的action来忽略掉大小写的操作</p>
+<h3 id="find-文件类型"><a href="#find-文件类型" class="headerlink" title="find 文件类型"></a>find 文件类型</h3><p>在Linux系统下面，所有的东西都是以文件的形式存在。</p>
+<p>在一些情况下，用户不想找出目录，只想找出对应路径下满足条件的文件，这个时候就可以使用<code>-type</code>的action来寻找。</p>
+<p><code>-type</code>的类型比较常见的有</p>
+<ul>
+<li>f: 文件</li>
+<li>d: 目录</li>
+<li>l: 软链接</li>
+</ul>
+<p>例如，找出tmp目录下面出了目录的文件</p>
+<pre><code class="bash">find tmp -type f
+</code></pre>
+<p>自然，用户可组合不同的actions来寻找文件，例如只找出txt后缀的文件</p>
+<pre><code class="bash">find tmp -type f -name &#39;*.txt&#39;
+</code></pre>
+<h3 id="find-空文件或者空目录"><a href="#find-空文件或者空目录" class="headerlink" title="find 空文件或者空目录"></a>find 空文件或者空目录</h3><p>find命令支持寻找空的文件或者空的目录</p>
+<pre><code class="bash">find /tmp -empty
+</code></pre>
+<h3 id="否定action"><a href="#否定action" class="headerlink" title="否定action"></a>否定action</h3><p>find命令可以根据action的否定来处理寻找的文件结果。</p>
+<p>例如可以寻找出了后缀为<code>.txt</code>的文件</p>
+<pre><code class="bash">find . ! -name &#39;*.txt&#39;
+</code></pre>
+<p>或者寻找出了空文件或者空目录以外的文件</p>
+<pre><code class="bash">find . ! -empty
+</code></pre>
+<h3 id="根据文件属主寻找"><a href="#根据文件属主寻找" class="headerlink" title="根据文件属主寻找"></a>根据文件属主寻找</h3><p>find命令可以根据文件的属主来寻找。例如想要寻找文件属主为chenzhiling的文件</p>
+<pre><code class="bash">find . -username chenzhiling
+</code></pre>
+<p><code>-username</code>接受的参数值可以使username或者UID，想要获取对应用户的UID可以通过</p>
+<pre><code class="bash">id -u chenzhiling
+</code></pre>
+<p>同时也可以根据用户所在的组或者GID来寻找对应的文件</p>
+<pre><code class="bash">find . -group root
+</code></pre>
+<p>如果想要使用GID来寻找，可以通过下面的命令获取对应的GID</p>
+<pre><code>id -g chenzhiling
+</code></pre><h3 id="根据文件的时间寻找"><a href="#根据文件的时间寻找" class="headerlink" title="根据文件的时间寻找"></a>根据文件的时间寻找</h3><p>文件在创建之后就会有三个时间跟随着文件。着三个时间分别是mtime、atime、ctime。他们分别表示</p>
+<ul>
+<li>mtime - 文件的内容被修改的时候更新的时间</li>
+<li>atime - 文件被访问的时候被更新的时间</li>
+<li>ctime - 文件的元信息被修改（例如权限）的时候更新的时间</li>
+</ul>
+<p>为此我们可以使用<code>-mtime</code>、<code>-atime</code>、<code>-ctime</code>的action来寻找对应的文件。</p>
+<p>例如寻找在五天内被修改的文件</p>
+<pre><code class="bash">find . -mtime -5 -type f
+</code></pre>
+<p>寻找在五天以前被修改的文件</p>
+<pre><code class="bash">find . -mtime +5 -type f
+</code></pre>
+<p>寻找文件在五天前（就在第五天前）被修改的文件</p>
+<pre><code class="bash">find . -mtime 5 -type f
+</code></pre>
+<p>以此类推另外两个action的用法类似。</p>
+<p>如果觉得使用天来寻找太长了， find还提供了使用<code>mmin</code>、<code>amin</code>、<code>cmin</code>这种分钟级别的action来寻找，例如寻找在5分钟以内被访问的文件</p>
+<pre><code class="bash">find . -type f -amin -5
+</code></pre>
+<h3 id="根据文件大小来寻找"><a href="#根据文件大小来寻找" class="headerlink" title="根据文件大小来寻找"></a>根据文件大小来寻找</h3><p>在一些时候，用户想要寻找一些大于某个大小或者小于某一个大小的文件，这个时候可以使用<code>-size</code>来寻找</p>
+<pre><code>find . -type f -size -10M
+</code></pre><p>以上命令把目录下面小于10MB的文件都找出来。</p>
+<p>文件的大小主要分为了4类</p>
+<ul>
+<li>c - bytes</li>
+<li>k - kb</li>
+<li>M - MB</li>
+<li>G - GB</li>
+</ul>
+<h3 id="根据文件权限来寻找"><a href="#根据文件权限来寻找" class="headerlink" title="根据文件权限来寻找"></a>根据文件权限来寻找</h3><p>根据文件权限来寻找文件使用<code>-perm</code>，他有两种方式来寻找，一种是根据权限的标识，另一种用权限的数字。</p>
+<p>我们知道在Linux系统中，文件的权限主要分为了User、Group和Other级别的权限。如下图所示<br><img src="/images/linux/permissions.jpg" alt="image"></p>
+<p>例如要寻找文件权限为<code>rwxr-xr-x</code>的文件，</p>
+<pre><code class="bash">find . -type f -perm u=rwx,g=rx,o=x
+</code></pre>
+<p>同时为了寻找对于所有的用户权限都是一样的情况，可以使用a来表示，例如寻找文件权限为<code>r-xr-xr-x</code>的文件，这个文件对于所有的用户的权限都是一样的，则可以使用</p>
+<pre><code class="bash">find . -type f -perm a=rx
+</code></pre>
+<p>为了寻找某一类文件，只想关心它有执行权限<code>x</code>，其他的权限可以设置，也可以没有，这个时候不能只是简单的设置<code>-perm a=x</code>，因为这表示的是要寻找的文件对于所有的用户都只有执行权限，即<code>--x--x--x</code>，这时候可以用<code>-perm /a=x</code>的形式来寻找那些包含了执行权限的文件，但是别的权限为可以是有或者无</p>
+<pre><code class="bash">find . -type f -perm /a=x
+</code></pre>
+<p>使用权限数字来寻找文件，则直接在<code>-perm</code>后面追加数字为参数即可。例如某一个文件的权限是<code>rwxr-xr-x</code>，这个权限对应的数字表示模式为644，则寻找文件的时候可以</p>
+<pre><code class="bash">find . -type f -perm 644
+</code></pre>
+<p>同样的，在只想关心某一个权限位的时候，find也有一个表示的方式。例如上面的图中，我们想要找一系列文件，值关心这个文件是否有执行权限<code>x</code>，那么每个权限位置的x位置都设置为1，其它不关心的设置为0，也就是111。这时候在111前面加上<code>-</code>就可以实现只处理权限的子集了。</p>
+<pre><code class="bash">find . -type f -perm -111
+</code></pre>
+<p>那么如果说使用</p>
+<pre><code>find . -type f -perm -000
+</code></pre><p>则其实-perm的效果就失效了。</p>
+<h3 id="寻找SUID文件"><a href="#寻找SUID文件" class="headerlink" title="寻找SUID文件"></a>寻找SUID文件</h3><p>在上面学会了使用数字模式的权限寻找文件了，那么如果想要寻找具有SUID权限的文件，其实就是一样的做法，只关心SUID的权限位置，其余权限都不管</p>
+<pre><code class="bash">find .  -type f -perm -4000
+</code></pre>
+<p>同样的，先刚查看有setuid的权限文件的同时想查看具有执行权限的文件</p>
+<pre><code class="bash">find . -type f -perm -4111
+</code></pre>
+<p>查看设置了setgid的文件</p>
+<pre><code class="bash">find . -type -f -perm -2000
+</code></pre>
+<p>查看设置了粘滞位的文件</p>
+<pre><code class="bash">find . -type -f -perm -1000
+</code></pre>
+<p>这个sticky位比较神奇，有兴趣可以Google一下。</p>
+<p>查看设置了setuid和sticky的该怎么找呢，当然这个属于比较少见到的文件了，权限的格式类似于<code>--s-----t</code>，find命令只要求将这里两个权限数字模式相加即可，也就是5000</p>
+<pre><code class="bash">find . -type f -perm -5000
+</code></pre>
+<p>如果想要使用权限标识来表示，则可以</p>
+<pre><code class="bash">find . -type f -perm /u=s
+
+find . -type f -perm /g=s
+
+find . -type f -perm /o=t
+</code></pre>
+<h3 id="设置查询深度"><a href="#设置查询深度" class="headerlink" title="设置查询深度"></a>设置查询深度</h3><p>前面提到了find寻找文件是通过路径去递归查询的，那么有时候有些目录下面的文件深度非常深，则会导致搜索的结果非常庞大。这时候可以使用<code>-maxdepth</code>来限制搜索的深度</p>
+<pre><code class="bash">find . -type f -maxdepth 3
+</code></pre>
+<p>反过来也可以设置最小的搜索深度</p>
+<pre><code class="bash">find . -type f -mindepth 3
+</code></pre>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.booleanworld.com/guide-linux-find-command/" target="_blank" rel="noopener">A Guide to the Linux “Find” Command</a></li>
+<li><a href="http://man7.org/linux/man-pages/man1/find.1.html" target="_blank" rel="noopener">man find</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/08/15/linux/cmd/grep/" data-toggle="tooltip" data-placement="top" title="Linux命令 — grep">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/08/14/linux/mysql/" data-toggle="tooltip" data-placement="top" title="MySQL杂记">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#FindUtils"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">FindUtils</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#find的使用"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">find的使用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#find-所有的文件和目录"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">find 所有的文件和目录</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#find-by-name"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">find by name</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#find-文件类型"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">find 文件类型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#find-空文件或者空目录"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">find 空文件或者空目录</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#否定action"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">否定action</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#根据文件属主寻找"><span class="toc-nav-number">2.6.</span> <span class="toc-nav-text">根据文件属主寻找</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#根据文件的时间寻找"><span class="toc-nav-number">2.7.</span> <span class="toc-nav-text">根据文件的时间寻找</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#根据文件大小来寻找"><span class="toc-nav-number">2.8.</span> <span class="toc-nav-text">根据文件大小来寻找</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#根据文件权限来寻找"><span class="toc-nav-number">2.9.</span> <span class="toc-nav-text">根据文件权限来寻找</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#寻找SUID文件"><span class="toc-nav-number">2.10.</span> <span class="toc-nav-text">寻找SUID文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#设置查询深度"><span class="toc-nav-number">2.11.</span> <span class="toc-nav-text">设置查询深度</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">参考</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/08/15/linux/cmd/find/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/08/15/linux/cmd/find/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

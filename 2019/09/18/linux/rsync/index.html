@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          rsync - 文件同步与传输神器 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/09/18/linux/rsync/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/linux/linux_bg_2.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>rsync - 文件同步与传输神器</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-09-18
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="文件同步神器-——-Rsync"><a href="#文件同步神器-——-Rsync" class="headerlink" title="文件同步神器 —— Rsync"></a>文件同步神器 —— Rsync</h1><p><img src="/images/linux/rsynclogo.jpg" alt="image"></p>
+<p>Rsync作为文件同步工具，其在许多场景下都提供了便捷。为了实现文件传输，用户会使用<code>scp</code>工具，🤠<code>scp</code>工具是基于ssh协议来设计的，其在安全性上面优势明显，但是如果存在如下场景，<code>scp</code>无疑是一种比较浪费资源并且比较低效的做法：</p>
+<p>当传输的文件经常面临修改或者发生变更，例如代码，使用scp会全量进行覆盖，每一次都会进行所有文件的复制，并且覆盖。</p>
+<p>这个时候通常会采用<code>rsync</code>的方式来同步文件，实现增量式传输文件，这样能够极大提升文件的传输效率。</p>
+<h2 id="scp-vs-rsync"><a href="#scp-vs-rsync" class="headerlink" title="scp vs rsync"></a>scp vs rsync</h2><p>1. 对比默认参数下, 两种方式消耗的系统资源情况</p>
+<ul>
+<li>在都是空目录的情况下同步信息，scp和rsync的执行效率相当，在一个量级，但是当已经同步过一次之后，在后续同步内容的过程中会看到同步的效率rsync快了非常多，这是因为scp是复制，而rsync是覆盖。</li>
+</ul>
+<p>2. 在服务器端存在对应服务的条件下</p>
+<ul>
+<li>scp是加密的</li>
+<li>rsync本身是不加密的，除非配置了使用ssh通道或者vpn通道，为此ysync的传输效率会比较高。</li>
+</ul>
+<p>3. scp和rsync的具体适用场景</p>
+<ul>
+<li>如果是频繁更新的文件并且是小文件，则建议使用rsync</li>
+<li>如果是很少更新的文件，建议使用scp，简单方便快捷，同时还是加密传输</li>
+</ul>
+<h2 id="rsync安装"><a href="#rsync安装" class="headerlink" title="rsync安装"></a>rsync安装</h2><p>rsync 命令在大部分的Unix或者Linux系统上面都预装了，如果没有安装，则可以通过下面的命令来安装。</p>
+<p>在CentOS &amp; RHEL系统上执行</p>
+<pre><code class="sh">yum install rsync -y
+</code></pre>
+<p>在Debian系操作系统中(Ubuntu &amp; Linux Mint)执行</p>
+<pre><code class="sh">apt install rsync -y
+</code></pre>
+<h2 id="rsync命令"><a href="#rsync命令" class="headerlink" title="rsync命令"></a>rsync命令</h2><p><img src="/images/linux/rsync-command-example-linux.jpg" alt="image"></p>
+<p>rsync的命令参数主要包括如下</p>
+<pre><code class="js">rsync  
+    -a  归档模式，表示以递归方式传输文件，并保持所有属性
+    -r  对于目录以递归模式处理，主要针对目录，传输的是目录必须加-r
+    -v  打印一些信息出来，比如速率，文件数量等。
+    -l  保留软连链
+    -L  向对待常规文件一样处理软链接，如果是src(源机)中有软链接文件，刚加上该选项后会把软连接指向的目标文件拷贝到dst（目标机）
+    -p  保持文件权限
+    -o  保持文件属主信息
+    -g  保持文件属组信息
+    -D  保持 设备文件信息
+    -t  保持 文件时间信息
+    --delete 删除那些dst中src没有的文件
+    --exclude=PATTERN指定排除不需要传输的文件，等号后面跟文件名，可以是万用字符模式（如*.txt）
+        PATTERN路径是相对弄要同步的路径如(rsync -avPz --exclude=zabbix /opt/sh 10.8.64.99::backup/tmp/ #排除的是/opt/sh/zabbix)
+    --progress或-P 在同步的过程中可以看到同步的过程状态，比如统计要同步的文件数量，同步的文件传输速度等等。。。
+    --bwlimit=10 （限制传输速度）
+    -u  加上这个选项后将会把DST中比SRC还新的文件排除掉，不会覆盖
+    -z  压缩   传输的过程中会压缩，我们并不会感知。 文件到了目标机器上我们看到的是一样的。
+    （工作中常用的几个 -a  -v  --delete  --exclude）
+</code></pre>
+<p>使用rsync传输文件有两种模式，一种是通过<code>ssh</code>隧道来传输，另一种是通过连接服务端的<code>rsync daemon</code>来传输。</p>
+<p>一下举一些例子来说明两种传输模式。</p>
+<pre><code>rsync同步ssh隧道方式：#后面的目录是目标地址
+    例1：rsync -avPz 192.168.183.109:/tmp/1.txt /tmp/   拉文件：远程到本机
+    例2：rsync -avPz /tmp/1.txt  192.168.183.109:/tmp/   推文件：本机到远程
+    例3：rsync -avPz -e &quot;ssh -p 10022&quot; /tmp/1.txt  192.168.183.109:/tmp/   推文件：本机到远程，端口不是22的情况
+rsync同步daemon方式
+    例1：不需要密码   学ssh免密码登陆
+    rsync -auvPz --bwlimit=10 （限制传输速度） tmp.txt test@&lt;ip&gt;::test --password-file=~/.rsync.password
+    例2：查询rsyncd可用模块   (list参数，yes会显示，no不会显示)
+    rsync -list --port 8873  192.168.186.118::
+</code></pre><h2 id="rsync-daemon"><a href="#rsync-daemon" class="headerlink" title="rsync daemon"></a>rsync daemon</h2><p>rsync通过daemon的方式启动一个服务端，让客户端连接服务端完成文件传输。daemon的可以分不同模块来处理不同的rsync请求。</p>
+<p>为了能够启动一个服务端rsync daemon，需要按照如下例子配置</p>
+<p>创建<code>/etc/rsyncd.conf</code>配置文件，内容如下</p>
+<pre><code class="conf">port=8873
+log file=/var/log/rsync.log
+pid file=/var/run/rsyncd.pid
+address=192.168.0.11 # 本机IP地址
+[mkdocs]
+path=/home/banban/mkdocs
+use chroot=true
+max connections=4
+read only=no
+list=true
+uid=banban
+gid=banban
+auth users=chenzhiling
+secrets file=/etc/rsyncd.passwd
+# pre-xfer exec=/home/banban/deploy.sh
+post-xfer exec=/home/banban/deploy.sh
+hosts allow=192.168.0.1/32
+</code></pre>
+<p>解释一下每一个参数的含义</p>
+<pre><code class="conf">port：说明启动rsyncd服务的端口号，默认是873。
+log file：日志文件位置。
+pid file：服务文件。
+address：启动rsyncd服务的本机IP地址
+[]：rsync的模块
+path：rsync需要同步的目录位置，这里指明为/home/banban/mkdocs
+use chroot true|false：是否需要root权限来同步
+max connections：指定最大的连接数。
+list：当用户查询该服务器上的可用模块时，是否列出这个模块。
+uid/gid：banban
+auth users：banban
+secrets file：指定密码文件，该参数连同上面的参数如果不指定，则不使用密码验证。注意该密码文件的权限一定要是600。
+hosts allow：表示被允许连接该模块的主机，其中前面两个IP是作业给出的另外两台机器的IP，最后一个是通过在办公网下使用dig -x 反解得到的gitlab的ip
+</code></pre>
+<blockquote>
+<p>具体关于<code>rsyncd.conf</code>的配置可以参考: <a href="https://download.samba.org/pub/rsync/rsyncd.conf.html" target="_blank" rel="noopener">https://download.samba.org/pub/rsync/rsyncd.conf.html</a></p>
+</blockquote>
+<p>创建密码文件<code>/etc/rsyncd.passwd</code></p>
+<pre><code class="bash">echo &quot;chenzhiling:xxxxx&quot; &gt; /etc/rsyncd.passwd
+chmod 600 /etc/rsyncd.passwd
+</code></pre>
+<blockquote>
+<p>注意：这个文件的权限一定要设置为600，文件内容格式[rsync-user:password]</p>
+</blockquote>
+<p>启动服务</p>
+<pre><code class="bash">rsync --daemon --config=/etc/rsyncd.conf
+</code></pre>
+<p>为了方便rsync的服务管理，可以使用下面这个脚本</p>
+<pre><code class="bash">#!/bin/bash 
+
+# this script for start|stop rsync daemon service 
+
+status1=$(ps -ef | egrep &quot;rsync --daemon&quot; | grep -v &#39;grep&#39;) 
+pidfile=&quot;/var/run/rsyncd.pid&quot; 
+start_rsync=&quot;rsync --daemon --config=/etc/rsyncd.conf&quot; 
+
+function rsyncstart() { 
+    if [ &quot;${status1}X&quot; == &quot;X&quot; ];then 
+        rm -f $pidfile       
+        ${start_rsync}   
+        status2=$(ps -ef | egrep &quot;rsync --daemon.*rsyncd.conf&quot; | grep -v &#39;grep&#39;) 
+        if [  &quot;${status2}X&quot; != &quot;X&quot;  ];then 
+            echo &quot;rsync service start.......OK&quot;   
+        fi 
+    else 
+        echo &quot;rsync service is running !&quot;    
+    fi 
+} 
+
+function rsyncstop() { 
+    if [ &quot;${status1}X&quot; != &quot;X&quot; ];then 
+        kill -9 $(cat $pidfile) 
+        status2=$(ps -ef | egrep &quot;rsync --daemon&quot; | grep -v &#39;grep&#39;) 
+        if [ &quot;${statusw2}X&quot; == &quot;X&quot; ];then 
+
+            echo &quot;rsync service stop.......OK&quot; 
+        fi 
+    else 
+        echo &quot;rsync service is not running !&quot;    
+    fi 
+} 
+
+
+function rsyncstatus() { 
+    if [ &quot;${status1}X&quot; != &quot;X&quot; ];then 
+        echo &quot;rsync service is running !&quot;   
+    else 
+         echo &quot;rsync service is not running !&quot; 
+    fi 
+
+} 
+
+function rsyncrestart() { 
+
+    if [ &quot;${status1}X&quot; == &quot;X&quot; ];then 
+        echo &quot;rsync service is not running...&quot; 
+        rsyncstart 
+    else 
+        rsyncstop 
+        rsyncstart
+    fi       
+}  
+
+case $1 in 
+    &quot;start&quot;) 
+        rsyncstart 
+        ;; 
+
+    &quot;stop&quot;) 
+        rsyncstop 
+        ;; 
+
+    &quot;status&quot;) 
+        rsyncstatus 
+        ;; 
+
+    &quot;restart&quot;) 
+        rsyncrestart 
+        ;; 
+
+    *)
+        echo 
+            echo  &quot;Usage: `basename $0` start|stop|restart|status&quot; 
+        echo 
+esac
+</code></pre>
+<p>启动了服务之后，便可以通过客户端传输文件</p>
+<pre><code class="bash">rsync -avz --port 8873 ./ chenzhiling@&lt;ip&gt;::mkdocs/
+</code></pre>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/10/09/essay/v2ray_ws/" data-toggle="tooltip" data-placement="top" title="v2ray + websocket + nginx">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/09/16/linux/autojump/" data-toggle="tooltip" data-placement="top" title="懒人神器autojump">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#文件同步神器-——-Rsync"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">文件同步神器 —— Rsync</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#scp-vs-rsync"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">scp vs rsync</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rsync安装"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">rsync安装</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rsync命令"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">rsync命令</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#rsync-daemon"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">rsync daemon</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/09/18/linux/rsync/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/09/18/linux/rsync/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

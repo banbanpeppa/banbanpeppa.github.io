@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          使用JavaPropsMapper实现properties快速转化 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/01/27/java/java-propmap/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/java/java-bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                        </div>
+                        <h1>使用JavaPropsMapper实现properties快速转化</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-01-27
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="使用JavaPropsMapper实现properties快速转化"><a href="#使用JavaPropsMapper实现properties快速转化" class="headerlink" title="使用JavaPropsMapper实现properties快速转化"></a>使用JavaPropsMapper实现properties快速转化</h1><h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>自接触Properties以来，经常面临一个问题，有没有一个工具能够类似于spring-boot中的 <code>@ConfigurationProperties</code> 一样快速映射一个propertios文件到一个类中，如果没有那么就只能自己撸一个。</p>
+<p>调研了一段时间，发现了<a href="https://github.com/FasterXML" target="_blank" rel="noopener"><code>FasterXML</code></a>开源项目组里面有一个<code>jackson-dataformats-text</code>项目，这个项目完全满足了这个需求，里面的<a href="https://github.com/FasterXML/jackson-dataformats-text/tree/master/properties" target="_blank" rel="noopener"><code>properties</code></a>模块包含了如何快速转化一个properties文件到一个类中。</p>
+<p>仔细想想，spring-boot中默认的json序列化工具其实用的就是jackson的工具，所以<code>@ConfigurationProperties</code>应该就是根据这个工具来实现的。</p>
+<h2 id="JavaPropsMapper"><a href="#JavaPropsMapper" class="headerlink" title="JavaPropsMapper"></a>JavaPropsMapper</h2><p>jackson-dataformats-text 是 Jackson（Java）数据格式模块，支持读写 Java Properties 文件，使用命名约定来确定隐含结构，是一个比较灵活的 Java 配置文件读写工具。</p>
+<h3 id="Maven-dependency"><a href="#Maven-dependency" class="headerlink" title="Maven dependency"></a>Maven dependency</h3><p>为了能够使用<code>JavaPropsMapper</code>，需要使用如下依赖，这个版本号是在 2019-01 最新的版本</p>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;com.fasterxml.jackson.dataformat&lt;/groupId&gt;
+  &lt;artifactId&gt;jackson-dataformat-properties&lt;/artifactId&gt;
+  &lt;version&gt;2.9.8&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><h3 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h3><p>以下的例子包含了比较丰富的properties写法，大部分是字符串类型，<code>fabric.orderer.orderers[0]</code>是一个List集合的写法。</p>
+<pre><code>fabric.channel.name=mychannel
+
+fabric.chaincode.name=emall_cc
+fabric.chaincode.path=github.com/chaincode/emall/go
+fabric.chaincode.version=1.0
+
+fabric.orderer.domain-name=example.com
+fabric.orderer.orderers[0]=orderer.example.com-grpc://120.78.160.145:7050
+
+fabric.peer.org=org1
+fabric.peer.org-name=peerOrg1
+fabric.peer.msp-id=Org1MSP
+fabric.peer.org-domain-name=org1.example.com
+fabric.peer.name=peer0.org1.example.com
+fabric.peer.eventhub-name=peer0.org1.example.com
+fabric.peer.location=grpc://120.78.160.145:7051
+fabric.peer.eventhub-location=grpc://120.78.160.145:7053
+fabric.peer.ca-location=http://120.78.160.145:7054
+
+fabric.ca.admin-name=admin
+fabric.ca.admin-password=adminpw
+</code></pre><p>同时直接使用在spring-boot中采用<code>@ConfigurationProperties</code>注解的类，去掉注解，但是需要注意使用jackson的注解<code>@JsonProperty</code>去处理那些本应该驼峰式的 index</p>
+<pre><code>import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
+import com.fasterxml.jackson.dataformat.javaprop.JavaPropsSchema;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class FabricProperties {
+
+    public static class Channel {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return &quot;Channel [name=&quot; + name + &quot;]&quot;;
+        }
+    }
+
+    public static class Chaincode {
+        private String name;
+        private String path;
+        private String version;
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public String getPath() {
+            return path;
+        }
+        public void setPath(String path) {
+            this.path = path;
+        }
+        public String getVersion() {
+            return version;
+        }
+        public void setVersion(String version) {
+            this.version = version;
+        }
+        @Override
+        public String toString() {
+            return &quot;Chaincode [name=&quot; + name + &quot;, path=&quot; + path + &quot;, version=&quot; + version + &quot;]&quot;;
+        }
+    }
+
+    public static class Orderer {
+        @JsonProperty(&quot;domain-name&quot;)
+        private String domainName;
+        private List&lt;String&gt; orderers;
+        public String getDomainName() {
+            return domainName;
+        }
+        public void setDomainName(String domainName) {
+            this.domainName = domainName;
+        }
+        public List&lt;String&gt; getOrderers() {
+            return orderers;
+        }
+        public void setOrderers(List&lt;String&gt; orderers) {
+            this.orderers = orderers;
+        }
+        @Override
+        public String toString() {
+            return &quot;Orderer [domainName=&quot; + domainName + &quot;, orderers=&quot; + orderers + &quot;]&quot;;
+        }
+    }
+
+    public static class Peer {
+        private String org;
+        @JsonProperty(&quot;org-name&quot;)
+        private String orgName;
+        @JsonProperty(&quot;msp-id&quot;)
+        private String mspId;
+        @JsonProperty(&quot;org-domain-name&quot;)
+        private String orgDomainName;
+        private String name;
+        @JsonProperty(&quot;eventhub-name&quot;)
+        private String eventhubName;
+        private String location;
+        @JsonProperty(&quot;eventhub-location&quot;)
+        private String eventhubLocation;
+        @JsonProperty(&quot;ca-location&quot;)
+        private String caLocation;
+        public String getOrg() {
+            return org;
+        }
+        public void setOrg(String org) {
+            this.org = org;
+        }
+        public String getOrgName() {
+            return orgName;
+        }
+        public void setOrgName(String orgName) {
+            this.orgName = orgName;
+        }
+        public String getMspId() {
+            return mspId;
+        }
+        public void setMspId(String mspId) {
+            this.mspId = mspId;
+        }
+        public String getOrgDomainName() {
+            return orgDomainName;
+        }
+        public void setOrgDomainName(String orgDomainName) {
+            this.orgDomainName = orgDomainName;
+        }
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public String getEventhubName() {
+            return eventhubName;
+        }
+        public void setEventhubName(String eventhubName) {
+            this.eventhubName = eventhubName;
+        }
+        public String getLocation() {
+            return location;
+        }
+        public void setLocation(String location) {
+            this.location = location;
+        }
+        public String getEventhubLocation() {
+            return eventhubLocation;
+        }
+        public void setEventhubLocation(String eventhubLocation) {
+            this.eventhubLocation = eventhubLocation;
+        }
+        public String getCaLocation() {
+            return caLocation;
+        }
+        public void setCaLocation(String caLocation) {
+            this.caLocation = caLocation;
+        }
+        @Override
+        public String toString() {
+            return &quot;Peer [org=&quot; + org + &quot;, orgName=&quot; + orgName + &quot;, mspId=&quot; + mspId + &quot;, orgDomainName=&quot; + orgDomainName
+                    + &quot;, name=&quot; + name + &quot;, eventhubName=&quot; + eventhubName + &quot;, location=&quot; + location
+                    + &quot;, eventhubLocation=&quot; + eventhubLocation + &quot;, caLocation=&quot; + caLocation + &quot;]&quot;;
+        }
+
+    }
+
+    public static class Ca {
+        @JsonProperty(&quot;admin-name&quot;)
+        private String adminName;
+        @JsonProperty(&quot;admin-password&quot;)
+        private String adminPassword;
+
+
+        public String getAdminName() {
+            return adminName;
+        }
+
+        public void setAdminName(String adminName) {
+            this.adminName = adminName;
+        }
+
+        public String getAdminPassword() {
+            return adminPassword;
+        }
+
+        public void setAdminPassword(String adminPassword) {
+            this.adminPassword = adminPassword;
+        }
+
+        @Override
+        public String toString() {
+            return &quot;Ca [adminName=&quot; + adminName + &quot;, adminPassword=&quot; + adminPassword + &quot;]&quot;;
+        }
+    }
+
+    private Channel channel;
+    private Chaincode chaincode;
+    private Orderer orderer;
+    private Peer peer;
+    private Ca ca;
+
+    public Channel getChannel() {
+        return channel;
+    }
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+    public Chaincode getChaincode() {
+        return chaincode;
+    }
+    public void setChaincode(Chaincode chaincode) {
+        this.chaincode = chaincode;
+    }
+    public Orderer getOrderer() {
+        return orderer;
+    }
+    public void setOrderer(Orderer orderer) {
+        this.orderer = orderer;
+    }
+    public Peer getPeer() {
+        return peer;
+    }
+    public void setPeer(Peer peer) {
+        this.peer = peer;
+    }
+    public Ca getCa() {
+        return ca;
+    }
+    public void setCa(Ca ca) {
+        this.ca = ca;
+    }
+    @Override
+    public String toString() {
+        return &quot;FabricProperties [channel=&quot; + channel + &quot;, chaincode=&quot; + chaincode + &quot;, orderer=&quot; + orderer + &quot;, peer=&quot;
+                + peer + &quot;, ca=&quot; + ca + &quot;]&quot;;
+    }
+
+    /**
+     * 使用jackson提供的JavaPropsMapper实现properties快速解析
+     * @return
+     */
+    public static FabricProperties load() {
+        JavaPropsMapper mapper = new JavaPropsMapper();
+
+        JavaPropsSchema schema = JavaPropsSchema.emptySchema()
+                .withoutHeader();
+        FabricProperties fabric;
+        try {
+            fabric = mapper.readerFor(FabricProperties.class)
+                .with(schema)
+                .withRootName(&quot;fabric&quot;)
+                .readValue(new File(FabricProperties.class.getClassLoader().getResource(&quot;fabric.properties&quot;).getFile()));
+            return fabric;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new FabricProperties();
+        }
+    }
+}
+</code></pre><p>这边类上面的注解<code>@JsonIgnoreProperties(ignoreUnknown = true)</code>是为了避免在映射的时候出现未知属性的时候出现错误。</p>
+<p>最后<code>load()</code>方法便是使用<code>JavaPropsMapper</code>实现properties文件到配置类的映射。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[Blog] <a href="https://medium.com/@cowtowncoder/reading-writing-java-properties-files-using-jackson-2-8-efd7a8da9d4c" target="_blank" rel="noopener">Reading/writing Java properties files using Jackson (2.8)</a></p>
+<p>[Issues] <a href="https://github.com/FasterXML/jackson-dataformats-text/issues/100" target="_blank" rel="noopener">Add an option to specify properties prefix</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/02/18/essay/vpn-1/" data-toggle="tooltip" data-placement="top" title="一键脚本搭建SS/搭建SSR服务并开启BBR加速">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/01/25/java/spring/spring-jpa-muti-query/" data-toggle="tooltip" data-placement="top" title="Spring-boot + JPA 实现组合查询">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#使用JavaPropsMapper实现properties快速转化"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">使用JavaPropsMapper实现properties快速转化</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Overview"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Overview</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#JavaPropsMapper"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">JavaPropsMapper</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Maven-dependency"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">Maven dependency</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#一个例子"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">一个例子</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#参考"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">参考</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/01/27/java/java-propmap/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/01/27/java/java-propmap/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

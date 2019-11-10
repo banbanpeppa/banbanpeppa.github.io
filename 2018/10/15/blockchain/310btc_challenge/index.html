@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          310 BITCOIN CHALLENGE - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/10/15/blockchain/310btc_challenge/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/blockchain/bitcoin/challenge/bg.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                            
+                              <a class="tag" href="/tags/#Bitcoin" title="Bitcoin">Bitcoin</a>
+                            
+                        </div>
+                        <h1>310 BITCOIN CHALLENGE</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-10-15
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>区块链已经进入了发展的蓬勃期，公有链项目不管是欺骗人的或者是真正在做事的，已经越来越多了，虽然有很多“跑路”项目割了很多韭菜，但是目前以<code>BTC</code>带头的主流项目仍在不断发展。而区块链也被认为是黑客的“提款机”，不断爆出的黑客盗币时间让很多交易所、持币者战战兢兢。</p>
+<p>曾经，智力超群的黑客们在搞破坏之余也爱玩些行为艺术。可当互联网被垄断后，黑客们捧起了保温杯，去500强上班领工资，就这样，我们失去了古典互联网和极客艺术家。十几年过去，他们又以另一种姿态重新在区块链世界登场，秉承极客精神，用财富、艺术和技术挑战编程想象力的极限。他们有了标榜身份的新玩具——加密艺术品。</p>
+<p>近日，链圈又诞生了一条数字锦鲤，一名匿名土豪网友发起了一个游戏，宣布将310枚比特币藏在了下面这幅画中。</p>
+<p><img src="/images/blockchain/bitcoin/challenge/challenge.png" alt=""></p>
+<p>游戏地址：<a href="https://bitcoinchallenge.codes/" target="_blank" rel="noopener">https://bitcoinchallenge.codes/</a></p>
+<p>这款解密游戏共有4关，第一关0.1BTC，第二关0.2BTC，第三关0.31BTC，第四关310BTC按照当前的行情，相当于在这幅灰突突的画上贴了1400万人民币，请诸位玩家凭能力自取。这个游戏的发布者匿名自称为<code>Bip</code>，他是早起比特币的玩家，用家里的台式机挖取了大量的比特币，数量未知。</p>
+<p>所有的奖励的存币地址如下<br>310 BTC<br><a href="https://blockexplorer.com/address/39uAUwEFDi5bBbdBm5ViD8sxDBBrz7SUP4" target="_blank" rel="noopener">https://blockexplorer.com/address/39uAUwEFDi5bBbdBm5ViD8sxDBBrz7SUP4</a><br>0.31 BTC<br><a href="https://blockexplorer.com/address/3NPZiNWiD7cCfXZa1D8tnEZBPgQ884cVw7" target="_blank" rel="noopener">https://blockexplorer.com/address/3NPZiNWiD7cCfXZa1D8tnEZBPgQ884cVw7</a><br>0.2 BTC<br><a href="https://blockexplorer.com/address/1G7qsUy5x9bUd1pRfhVZ7cuB5cMUP4hsfR" target="_blank" rel="noopener">https://blockexplorer.com/address/1G7qsUy5x9bUd1pRfhVZ7cuB5cMUP4hsfR</a><br>0.1 BTC<br><a href="https://blockexplorer.com/address/1446C8HqMtvWtEgu1JnjwLcPESSruhzkmV" target="_blank" rel="noopener">https://blockexplorer.com/address/1446C8HqMtvWtEgu1JnjwLcPESSruhzkmV</a></p>
+<h2 id="0-1-BTC-破解"><a href="#0-1-BTC-破解" class="headerlink" title="0.1 BTC 破解"></a>0.1 BTC 破解</h2><p>游戏在<code>2018-10-02</code>发布，很快在<code>2018-10-04</code>就有玩家破解了第一关，这一关玩家能够赢取0.1BTC，那么是怎么破解的呢？</p>
+<p>其实整张图最明显的地方就是这个位置<br><img src="/images/blockchain/bitcoin/challenge/01btc.jpg" alt=""></p>
+<p>这是一个 <code>3*6</code>的表格，看起来是一些16进制的数字，而且表格右下角也有一个模糊的16，应该是提示这个是16进制的。在表格的正上方，我们会发现又一个灰色的日期“OCT 2 2018”，根据解密的经验，从最简单的移位密码开始，因此把<code>20181002</code>作为<code>shift key</code>，发现能够得到表格数字如下</p>
+<pre><code>310 310 310 310 310 310
+1AA 0FC 32D 5FF 78F 643
+42C 5C7 490 2F4 36E 43B
+</code></pre><p>第一行全部是<code>310</code>!</p>
+<p>这个和大奖的金额完全相同，可以理解我们这个是正确的解法的一个小提示。那么剩下的12个16进制的数字表示什么呢？</p>
+<p>这边解释一下这个移位密码是怎么做的，并且贴上python代码，一目了然</p>
+<pre><code>  511 B20 332 328 410 530
+- 201 810 022 018 100 220
+-------------------------
+  310 310 310 310 310 310
+</code></pre><p>移位解密程序</p>
+<pre><code># coding:utf-8
+__author__ = &#39;banban&#39;
+
+import sys
+
+string = &#39;511b2033232841053022b0fe52ed0f7a165b52c7e75112f656fc4b&#39;
+key = &#39;20181002&#39;
+hexadecimal = &#39;0123456789abcdef&#39;
+
+new_string = []
+for i in range(len(string)):
+    string_char = string[i]
+    key_char = key[i % len(key)]
+    string_index = hexadecimal.index(string_char)
+    key_index = hexadecimal.index(key_char)
+
+    new_char_index = (string_index - key_index) % len(hexadecimal)
+    new_char = hexadecimal[new_char_index]
+    new_string.append(new_char)
+
+new_string = &quot;&quot;.join(new_string)
+
+new_list = []
+
+for i in range(0, len(new_string), 3):
+    new_list.append(new_string[i : i+3])
+
+print(&quot; &quot;.join(new_list))
+
+print(new_list[6:])
+
+print([int(x, 16) for x in new_list[6:]])
+</code></pre><p>将上面得到的12位16进制转化成10进制试试吧</p>
+<pre><code>426 252 813 1535 1935 1603
+1068 1479 1168 756 878 1083
+</code></pre><p>这12个数字代表什么呢？这边就需要说一下BTC里面的<code>bip</code>标准了，为了让一个用户的钱包私钥有另一种存储形式，BTC引入了助记词，助记词一般就是12个常见单词，这些单词可以在bitcoin的代码里面找到</p>
+<p><a href="https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt" target="_blank" rel="noopener">https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt</a></p>
+<p>这里面有2048个助记词，可以认为是一个字典。而我们刚得到的12为数字都没有超过2048，可以认为这个其实就是助记词的序号。</p>
+<p>进而可以得到助记词如下：</p>
+<pre><code>cry buyer grain save vault sign lyrics rhythm music fury horror mansion
+</code></pre><p>其实这个时候机已经获得了这个钱包的所有权了，只需要将这个助记词复制到<code>imToken</code> 钱包中导入BTC钱包即可转走0.1BTC</p>
+<p>同时我们也可以用一些工具转化得到这个钱包的私钥</p>
+<p><a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">https://iancoleman.io/bip39/</a></p>
+<p>这个工具用于从助记词获得私钥，适用于非常多的Coin比如：BTC、ETH、ZEN等等。最终私钥就是</p>
+<pre><code>KzkZxdhRGxB7eX4u1skXkfJ7VB8JfPp7Nfos3jiF7PQUNMh2SHDE
+</code></pre><p><img src="/images/blockchain/bitcoin/challenge/01btcgot.png" alt=""></p>
+<p>从该地址我们可以看到 0.1BTC 已经在10月4日被 1AuSap3Z9NhmhQEe3y1ByxuNFY1S35YtZ3 这一位解密高手领走。具体可以查看 </p>
+<p><a href="https://blockexplorer.com/address/1446C8HqMtvWtEgu1JnjwLcPESSruhzkmV" target="_blank" rel="noopener">https://blockexplorer.com/address/1446C8HqMtvWtEgu1JnjwLcPESSruhzkmV</a></p>
+<p><strong>到此为止，以上就是0.1BTC谜题的解密过程</strong></p>
+<h2 id="魔牛财经50ETH"><a href="#魔牛财经50ETH" class="headerlink" title="魔牛财经50ETH"></a>魔牛财经50ETH</h2><p>既然掀起了这么一股热潮，国内一家初创公司魔牛财经也发起了类似310BTC的挑战，这个挑战的图如下</p>
+<p><img src="/images/blockchain/bitcoin/challenge/moniu_challenge.jpg" alt=""></p>
+<p>这张图是直接通过公众号以及微信群转发的，我们知道微信转发过程是会导致图片损失的，而且图片以jpg的格式呈现，因此图片在清晰度上比 310BTC 挑战差很多</p>
+<p>本人就着 310BTC 挑战的方式去解密这张图</p>
+<p>首先是这个最显眼的就是告诉我们这个ETH的区块链浏览器链接：<a href="https://etherscan.io/address/0xbf0aa38b0199eb2a6a9ffaa10e93d5811538bb1d" target="_blank" rel="noopener">https://etherscan.io/address/0xbf0aa38b0199eb2a6a9ffaa10e93d5811538bb1d</a></p>
+<p>打开之后会看到这次的挑战奖池有50个ETH，虽然没有310BTC那么诱人，但是也不失为一个很有意思的挑战</p>
+<p>放大图片我们会发现在图片的右边有一个网址： <a href="http://www.moniu.com/" target="_blank" rel="noopener">http://www.moniu.com/</a></p>
+<p>我们打开这个网址发现是魔牛财经的官方网站，而其中包含了一个<code>Bitcoin whitepaper&#39;s 10th Anniversary</code>的推荐，本着好奇点击开来，发现这个跳转到了 BTC 的行情监控页面。这太奇怪了！欲盖弥彰的感觉。</p>
+<p><img src="/images/blockchain/bitcoin/challenge/moniu_tuijian.png" alt=""></p>
+<p>回到挑战图我们仔细看刚刚那个网址旁边，有一个人头，虽然有点模糊，但是回到魔牛财经的官方首页会发现那个推荐的配图其实右下角也有一个类似的人，因而仔细观察挑战图会发现上方有THE TIMES的字眼，那张图的原图应该就是这张配图</p>
+<p><img src="/images/blockchain/bitcoin/challenge/moniu_fenxi1.png" alt=""></p>
+<p>于是我们的任务就是得到这张配图，使用浏览器的“审查元素”工具，直接按 F12 回去图片的资源链接，于是能得到图片链接为：<a href="http://res.moniu.com/home/ad/btc_bannerhot.jpg" target="_blank" rel="noopener">http://res.moniu.com/home/ad/btc_bannerhot.jpg</a><br><img src="/images/blockchain/bitcoin/challenge/btc_bannerhot.jpg" alt=""></p>
+<p>That’s it!</p>
+<p>由于这张报纸其实是非常有名的一张报纸，是来自于2009年1月3日英国《泰晤士报》，其中一篇报道标题 <code>Chancellot on brink of second bailout for banks</code>直译为“财政大臣正处于实施第二轮银行紧急援助的边缘”。同时献上原图</p>
+<p><img src="/images/blockchain/bitcoin/challenge/taiwushibao.jpg" alt=""></p>
+<p>这段历史发生在08年全球金融危机的背景下，大量的银行因为次级抵押贷款的滥用受到损失甚至破产，而中本聪在创世区块留下这一段信息可以解读为是“讽刺中心化的金融机构，在经济危机之下，银行失去了信用”。</p>
+<p>而我们对比原图和魔牛财经官方网站首页的那张隐藏图，会发现有一个地方被修改了</p>
+<p><img src="/images/blockchain/bitcoin/challenge/moniu_fenxi2.png" alt=""></p>
+<p>这个套路不就是<code>310BTC</code>中的类似吗？是的，而且这边有一个有趣的现象就是好像并不需要移位, 因为魔牛的隐藏图中的18个16进制如下</p>
+<pre><code>32  32  32  32  32  32
+295 39c 2f  3c  50  5a
+8   af  3d  261 ea  7f
+</code></pre><p>转化为10进制为</p>
+<pre><code>50  50  50  50  50  50
+661 924 47  60  80  90
+8   175 61  609 34  127
+</code></pre><p>会看到第一行全是50，是不是我们就找到了答案呢？使用后面12为数字得到的助记词组合是</p>
+<pre><code>family inflict alarm alter antique arctic abstract beyond always equal brush average
+</code></pre><p>我们放到校验平台 <a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">https://iancoleman.io/bip39/</a></p>
+<p>无效的助记词！Invalid mnemonic！</p>
+<p>显然不可能这么简单就得到答案。本人还没有寻找到最终的解，这边也po出一些自己的破解过程，同时我在破解过程中竟然得到了好几组有效的助记词</p>
+<h3 id="破解思路1"><a href="#破解思路1" class="headerlink" title="破解思路1"></a>破解思路1</h3><p>将上面解答得到的无效助记词进行整体后移，与计算机里面的<code>mod</code>类似，超过范围的就<code>mod 12</code>，会得到两个有效的助记词，但是并不是答案，而且这种做法比较没有根据，属于一种尝试！因此这种做法是不可取的</p>
+<pre><code>antique arctic abstract beyond family inflict alarm alter always equal brush average
+
+abstract beyond always equal brush average family inflict alarm alter antique arctic
+</code></pre><p>这两个助记词对应的<code>address</code>分别是</p>
+<p><code>0x8E5bacFed41a88D2Fa95CD1eF9Fbccc23132352c</code></p>
+<p><code>0xa2859bfccE5df7b9A92F474CfE72fBdceB1BB99A</code></p>
+<h3 id="破解思路2"><a href="#破解思路2" class="headerlink" title="破解思路2"></a>破解思路2</h3><p>由于挑战图里面有几个非常清晰的数字<code>09</code>、<code>01</code>、<code>03</code>，这个其实就是这张报纸的发布日期，会想到和<code>BTC310</code>中<code>0.1BTC</code>哪一关的挑战类似，因为已经得到了包含<code>50</code>的结果了，因此考虑使用20190103作为一个整体移动的<code>key</code>，超出部分<code>mod 2048</code>即可，代码如下</p>
+<pre><code># coding:utf-8
+__author__ = &#39;banban&#39;
+
+import sys
+
+moniu = [&#39;32&#39;, &#39;32&#39;, &#39;32&#39;, &#39;32&#39;, &#39;32&#39;, &#39;32&#39;, &#39;295&#39;, &#39;39c&#39;, &#39;2f&#39;, &#39;3c&#39;, &#39;50&#39;, &#39;5a&#39;, &#39;8&#39;, &#39;af&#39;, &#39;3d&#39;, &#39;261&#39;, &#39;ea&#39;, &#39;7f&#39;]
+
+index = [int(x, 16) for x in moniu[6:]]
+
+index2 = []
+for i in range(len(index)):
+    a = (index[i] + 20090103) % 2048
+    index2.append(a)
+
+result=[]
+with open(&#39;english.txt&#39;,&#39;r&#39;) as f:
+    for line in f:
+        result.append(line.strip(&#39;\n&#39;))
+
+seeds = []
+for i in range(len(index2)):
+    seeds.append(result[index2[i] - 1])
+
+print(index)
+print(index2)
+print(&quot; &quot;.join(seeds))
+</code></pre><p>我们可以得到有效助记词</p>
+<pre><code>vapor banner pigeon play potato present panther regret please turtle rose push
+</code></pre><p>这个助记词对应的私钥是</p>
+<pre><code>0x67c15375d3698582015289969f6b32f95d18566713ed0e919870e5a471ceefd2
+</code></pre><p>钱包地址</p>
+<pre><code>0x153Fd090b27e898A599010aeD8e881E7b39538A8
+</code></pre><p>不是正解！</p>
+<h3 id="破解思路3"><a href="#破解思路3" class="headerlink" title="破解思路3"></a>破解思路3</h3><p>接下来这个助记词的破解我没有记录过程，但是这个有效助记词对应的地址也不是正解，因此可以忽略</p>
+<pre><code>fabric inch again alien angle anxiety zone believe all enough bright attitude
+</code></pre><p>对应的钱包地址是</p>
+<pre><code>0x2f4591A729614831445BaA3Fe74E24Dd701822e9
+</code></pre><h3 id="破解思路4"><a href="#破解思路4" class="headerlink" title="破解思路4"></a>破解思路4</h3><p>使用<code>20090103</code>进行移位</p>
+<p>移位做法如下</p>
+<pre><code>  295 39c 2f 3c 50 5a 8 af 3d 261 ea 7f
+- 200 901 03 20 09 01 0 32 00 901 03 20
+---------------------------------------
+  095 99b 2c 1c 5f 59 8 7d 3d 860 e7 5f
+to dec
+---------------------------------------
+  149 2459 44 28 95 89 8 125 61 2144 231 95
+% 2048
+---------------------------------------
+  149 411 44 28 95 89 8 125 61 96 231 95
+seeds
+----------------------------------------
+  barely damage air address armed arch abstract auto always armor broom armed
+</code></pre><p>有两个数字都是超过了2048的，所以取模一次2048，但是其实看到有两个一样的单词就知道这种做法肯定是错的，因此移位20090103是不可取的</p>
+<p>当然这个助记词是合法的，得到的<code>address</code>是</p>
+<p><code>0x7A781AA0a2C868bD8C451DCe0956095b677031B2</code></p>
+<h3 id="破解一手资料"><a href="#破解一手资料" class="headerlink" title="破解一手资料"></a>破解一手资料</h3><p>魔牛财经网站：<a href="http://www.moniu.com/" target="_blank" rel="noopener">http://www.moniu.com/</a><br>魔牛隐藏图地址：<a href="http://res.moniu.com/home/ad/btc_bannerhot.jpg" target="_blank" rel="noopener">http://res.moniu.com/home/ad/btc_bannerhot.jpg</a><br>奖金地址：<a href="https://etherscan.io/address/0xbf0aa38b0199eb2a6a9ffaa10e93d5811538bb1d" target="_blank" rel="noopener">https://etherscan.io/address/0xbf0aa38b0199eb2a6a9ffaa10e93d5811538bb1d</a><br>bip39校验：<a href="https://iancoleman.io/bip39/" target="_blank" rel="noopener">https://iancoleman.io/bip39/</a><br>bip32插件 <a href="https://github.com/ranaroussi/pywallet" target="_blank" rel="noopener">Dead-simple BIP32 (HD) wallet creation for BTC</a><br>《泰晤士报》正面原图：<a href="http://i.imgur.com/TZlCjqj.jpg" target="_blank" rel="noopener">http://i.imgur.com/TZlCjqj.jpg</a><br>《泰晤士报》背面原图：<a href="http://i.imgur.com/muK98gm.jpg" target="_blank" rel="noopener">http://i.imgur.com/muK98gm.jpg</a><br>古典密码集合：<a href="https://gist.github.com/0kami/ffd15270914492491e18ff9f070eab2b" target="_blank" rel="noopener">https://gist.github.com/0kami/ffd15270914492491e18ff9f070eab2b</a></p>
+<h3 id="常用密码工具"><a href="#常用密码工具" class="headerlink" title="常用密码工具"></a>常用密码工具</h3><p><a href="https://www.guballa.de/substitution-solver" target="_blank" rel="noopener">Substitution Solver</a><br><a href="http://xor.pw/#" target="_blank" rel="noopener">XOR Calculator</a><br><a href="https://www.dcode.fr/" target="_blank" rel="noopener">dCode.fr</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这种密码挑战破解得到代币的游戏很有趣，但是确实还是难度比较高了，而且破解过程会耗费比较大量的时间，因此建议不要沉迷。有空玩一玩还是可以的，可以趁机学习不少密码学的东西。</p>
+<p>Learn Anytime！</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/10/19/hyperledger/fabric-fabcar/" data-toggle="tooltip" data-placement="top" title="Hyperledger Fabric (二) — fabric-fabcar, 从部署到开发">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/28/essay/vpn/" data-toggle="tooltip" data-placement="top" title="使用SSR搭建梯子">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#前言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0-1-BTC-破解"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">0.1 BTC 破解</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#魔牛财经50ETH"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">魔牛财经50ETH</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#破解思路1"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">破解思路1</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#破解思路2"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">破解思路2</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#破解思路3"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">破解思路3</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#破解思路4"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">破解思路4</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#破解一手资料"><span class="toc-nav-number">3.5.</span> <span class="toc-nav-text">破解一手资料</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#常用密码工具"><span class="toc-nav-number">3.6.</span> <span class="toc-nav-text">常用密码工具</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">总结</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                        
+                          <a class="tag" href="/tags/#Bitcoin" title="Bitcoin">Bitcoin</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/10/15/blockchain/310btc_challenge/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/10/15/blockchain/310btc_challenge/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

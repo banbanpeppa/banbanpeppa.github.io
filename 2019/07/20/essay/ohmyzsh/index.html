@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          MAC终端神器iterm2 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/07/20/essay/ohmyzsh/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/essay/term2bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
+                            
+                        </div>
+                        <h1>MAC终端神器iterm2</h1>
+                        <h2 class="subheading"> &quot;告别黑白&quot;</h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-07-20
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="MAC终端神器iterm2——告别黑白"><a href="#MAC终端神器iterm2——告别黑白" class="headerlink" title="MAC终端神器iterm2——告别黑白"></a>MAC终端神器iterm2——告别黑白</h1><blockquote>
+<p>转载：<a href="https://www.cnblogs.com/soyxiaobi/p/9695931.html" target="_blank" rel="noopener">https://www.cnblogs.com/soyxiaobi/p/9695931.html</a></p>
+</blockquote>
+<h2 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果:"></a>最终效果:</h2><p><img src="/images/essay/ohmyzsh.png" alt="image"></p>
+<h2 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h2><p><strong>1. 下载iTerm2</strong></p>
+<p>官网下载：<a href="https://www.iterm2.com/" target="_blank" rel="noopener">https://www.iterm2.com/</a></p>
+<p>安装完成后，在/bin目录下会多出一个zsh的文件。</p>
+<p>Mac系统默认使用dash作为终端，可以使用命令修改默认使用zsh：</p>
+<pre><code>chsh -s /bin/zsh
+</code></pre><blockquote>
+<p>zsh完美代替bash,具体区别可查看:<a href="https://www.xshell.net/shell/bash_zsh.html" target="_blank" rel="noopener">《Zsh和Bash区别》</a></p>
+</blockquote>
+<p><strong>iterm2的原始界面</strong></p>
+<p><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/1.png" alt="image"></p>
+<p><strong>2. 替换背景图片</strong></p>
+<p>打开路径:iterm2 -&gt; Preferences -&gt; Profiles -&gt; window -&gt; Background Image</p>
+<p>选择一张自己喜欢的壁纸即可</p>
+<p>可以通过Blending调节壁纸的透明度: 透明度为0的时候,背景变为纯色(黑色)</p>
+<p>我个人比较喜欢扁平化的壁纸,喜欢的朋友可以来这里看看:<br><a href="https://www.zhihu.com/question/37811449" target="_blank" rel="noopener">《有哪些优雅的 Windows 10 壁纸？》</a></p>
+<p><strong>3. 安装Oh my zsh</strong></p>
+<p>zsh的功能极其强大，只是配置过于复杂,通过<em>Oh my zsh</em>可以很快配置zsh。</p>
+<p>这里只做简单的配置,如需要深入了解,可以查看:<a href="https://www.jianshu.com/p/d194d29e488c?open_source=weibo_search" target="_blank" rel="noopener">《oh-my-zsh,让你的终端从未这么爽过》</a></p>
+<p>安装方法有两种，可以使用curl或wget，看自己环境或喜好：</p>
+<pre><code># curl 安装方式
+sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&quot;
+</code></pre><pre><code># wget 安装方式
+sh -c &quot;$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)&quot;
+oh-my-zsh开源地址：《oh-my-zsh》
+</code></pre><p><strong>4. 安装PowerLine</strong></p>
+<p>安装powerline:</p>
+<pre><code>pip install powerline-status --user
+</code></pre><p><strong>5. 安装PowerFonts</strong></p>
+<p>在常用的位置新建一个文件夹，如：~/Desktop/OpenSource/</p>
+<p>在OpenSource文件夹下下载PorweFonts:</p>
+<pre><code># git clone
+git clone https://github.com/powerline/fonts.git --depth=1
+
+# cd to folder
+cd fonts
+
+# run install shell
+./install.sh
+</code></pre><p>执行结果如下：<br><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/6.png" alt="image"></p>
+<p>安装好字体库之后，我们来设置iTerm2的字体，具体的操作是:</p>
+<pre><code>iTerm2 -&gt; Preferences -&gt; Profiles -&gt; Text
+</code></pre><p>在Font区域选中Change Font，然后找到Meslo LG字体。<br><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/7.png" alt="image"></p>
+<p><strong>6. 安装配色方案(可跳过)</strong></p>
+<p>在OpenSource目录下执行<code>git clone</code>命令:</p>
+<pre><code>git clone https://github.com/altercation/solarized
+
+cd solarized/iterm2-colors-solarized/
+open .
+</code></pre><p>在打开的finder窗口中，双击Solarized Dark.itermcolors和Solarized Light.itermcolors即可安装明暗两种配色：<br><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/8.png" alt="image"></p>
+<p>再次进入<code>iTerm2 -&gt; Preferences -&gt; Profiles -&gt; Colors -&gt; Color Presets</code>中根据个人喜好选择.</p>
+<p><strong>7. 安装主题</strong></p>
+<p>在OpenSource目录下执行git clone命令:</p>
+<pre><code>git clone https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git
+
+cd oh-my-zsh-agnoster-fcamblor/
+./install
+</code></pre><p>执行上面的命令会将主题拷贝到<code>oh my zsh</code>的themes.</p>
+<p>执行命令打开<code>zshrc</code>配置文件，将ZSH_THEME后面的字段改为agnoster</p>
+<pre><code>vi ~/.zshrc
+</code></pre><p><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/11.png" alt="image"></p>
+<p>此时command+Q或source配置文件后，iTerm2变了模样：<br><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/12.png" alt="image"></p>
+<p><strong>8. 安装高亮插件</strong></p>
+<p>这是oh my zsh的一个插件，安装方式与theme大同小异：</p>
+<pre><code>cd ~/.oh-my-zsh/custom/plugins/
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+vi ~/.zshrc
+</code></pre><p>这时我们再次打开zshrc文件进行编辑。找到plugins，此时plugins中应该已经有了git，我们需要把高亮插件也加上：<br><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/13.png" alt="image"></p>
+<p>请务必保证插件顺序，zsh-syntax-highlighting必须在最后一个。</p>
+<p>然后在文件的最后一行添加：</p>
+<pre><code>source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+</code></pre><p>执行命令使刚才的修改生效：</p>
+<pre><code>source ~/.zshrc
+</code></pre><p><strong>9. 可选择、命令补全</strong></p>
+<p>跟代码高亮的安装方式一样，这也是一个zsh的插件，叫做<code>zsh-autosuggestion</code>，用于命令建议和补全。</p>
+<pre><code>cd ~/.oh-my-zsh/custom/plugins/
+
+git clone https://github.com/zsh-users/zsh-autosuggestions
+vi ~/.zshrc
+</code></pre><p>找到plugins，加上这个插件即可：<br><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/15.png" alt="image"></p>
+<p>插件效果：<br><img src="https://raw.githubusercontent.com/sirius1024/pubimgs/master/blogs/iterm2/16.png" alt="image"></p>
+<p>有同学说补全命令的字体不太清晰，与背景颜色太过相近，其实可以自己调整一下字体颜色。</p>
+<p><code>Preferences -&gt; Profiles -&gt; Colors</code>中有Foreground是标准字体颜色，ANSI Colors中Bright的第一个是补全的字体颜色。</p>
+<h2 id="Logo"><a href="#Logo" class="headerlink" title="Logo"></a>Logo</h2><p>为了能够美化终端，通常会给自己的终端加上一个logo，并且这个logo还会打印一些系统的基本信息。效果如下<br><img src="/images/essay/app_zsh_logo.png" alt="image"></p>
+<p>以下介绍几种终端Logo</p>
+<ul>
+<li>screenfetch</li>
+<li>neofetch</li>
+<li>archey</li>
+</ul>
+<p>安装方法很简单，直接执行</p>
+<pre><code>brew install screenfetch neofetch archey
+</code></pre><p>安装好之后分别执行</p>
+<pre><code>chenzhiling@banban:blog master ✗ 10d ▲ △ ◒ ➜ screenfetch                               
+
+                 -/+:.          chenzhiling@banban
+                :++++.          OS: 64bit Mac OS X 10.14 18A391
+               /+++/.           Kernel: x86_64 Darwin 18.0.0
+       .:-::- .+/:-``.::-       Uptime: 24d 6h 20m
+    .:/++++++/::::/++++++/:`    Packages: 171
+  .:///////////////////////:`   Shell: zsh 5.3
+  ////////////////////////`     Resolution: 2560x1600 ,1920x1080 
+ -+++++++++++++++++++++++`      DE: Aqua
+ /++++++++++++++++++++++/       WM: Quartz Compositor
+ /sssssssssssssssssssssss.      WM Theme: Blue
+ :ssssssssssssssssssssssss-     Disk: 128G / 251G (53%)
+  osssssssssssssssssssssssso/`  CPU: Intel Core i5-8259U @ 2.30GHz
+  `syyyyyyyyyyyyyyyyyyyyyyyy+`  GPU: Intel Iris Plus Graphics 655 
+   `ossssssssssssssssssssss/    RAM: 4622MiB / 8192MiB
+     :ooooooooooooooooooo+.    
+      `:+oo+/:-..-:/+o+/-                             
+</code></pre><p>neofetch</p>
+<pre><code class="bash">chenzhiling@banban:blog master ✗ 10d ▲ △ ◒ ➜ neofetch     
+                    &#39;c.          chenzhiling@banban 
+                 ,xNMM.          ------------------ 
+               .OMMMMo           OS: macOS Mojave 10.14 18A391 x86_64 
+               OMMM0,            Host: MacBookPro15,2 
+     .;loddo:&#39; loolloddol;.      Kernel: 18.0.0 
+   cKMMMMMMMMMMNWMMMMMMMMMM0:    Uptime: 24 days, 6 hours, 21 mins 
+ .KMMMMMMMMMMMMMMMMMMMMMMMWd.    Packages: 103 (brew) 
+ XMMMMMMMMMMMMMMMMMMMMMMMX.      Shell: zsh 5.3 
+;MMMMMMMMMMMMMMMMMMMMMMMM:       Resolution: 1440x900@2x, 1920x1080@2x 
+:MMMMMMMMMMMMMMMMMMMMMMMM:       DE: Aqua 
+.MMMMMMMMMMMMMMMMMMMMMMMMX.      WM: Quartz Compositor 
+ kMMMMMMMMMMMMMMMMMMMMMMMMWd.    WM Theme: Blue (Light) 
+ .XMMMMMMMMMMMMMMMMMMMMMMMMMMk   Terminal: vscode 
+  .XMMMMMMMMMMMMMMMMMMMMMMMMK.   CPU: Intel i5-8259U (8) @ 2.30GHz 
+    kMMMMMMMMMMMMMMMMMMMMMMd     GPU: Intel Iris Plus Graphics 655 
+     ;KMMMMMMMWXXWMMMMMMMk.      Memory: 6238MiB / 8192MiB 
+       .cooc,.    .,coo:.
+
+</code></pre>
+<p>archey</p>
+<pre><code class="bash">chenzhiling@banban:blog master ✗ 10d ▲ △ ◒ ➜ archey
+
+                 ###                  User: chenzhiling
+               ####                   Hostname: banban
+               ###                    Distro: OS X 10.14
+       #######    #######             Kernel: Darwin
+     ######################           Uptime: 24 days
+    #####################             Shell: /bin/zsh
+    ####################              Terminal: xterm-256color vscode
+    ####################              CPU: Intel Core i5-8259U CPU @ 2.30GHz
+    #####################             Memory: 8 GB
+     ######################           Disk: 53%
+      ####################            Battery: 100%
+        ################              IP Address: 218.107.55.252
+         ####     #####               
+</code></pre>
+<p>同样的，也可以在Linux系统上安装上面几种Logo，效果如下<br><img src="/images/essay/debian_bash_log.png" alt="image"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/sirius1024/iterm2-with-oh-my-zsh" target="_blank" rel="noopener">《iTerm2 + Oh My Zsh 打造舒适终端体验》</a></li>
+<li><a href="https://github.com/robbyrussell/oh-my-zsh/wiki/themes" target="_blank" rel="noopener">主题列表</a></li>
+<li><a href="https://fossbytes.com/linux-distribution-logo-ascii-art-terminal/" target="_blank" rel="noopener">4 Best Tools To Display Linux Distribution Logo Art In Terminal</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/08/06/linux/arp-and-attack/" data-toggle="tooltip" data-placement="top" title="ARP的原理与基本流程">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/05/05/java/spring/spring-boot-security-thymeleaf/" data-toggle="tooltip" data-placement="top" title="Spring-Boot + Spring Security + Thymeleaf">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#MAC终端神器iterm2——告别黑白"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">MAC终端神器iterm2——告别黑白</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#最终效果"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">最终效果:</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#实现步骤"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">实现步骤</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Logo"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Logo</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">参考</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#随笔" title="随笔">随笔</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/07/20/essay/ohmyzsh/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/07/20/essay/ohmyzsh/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

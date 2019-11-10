@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Linux命令 — grep - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/08/15/linux/cmd/grep/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/linux/linux_bg_2.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>Linux命令 — grep</h1>
+                        <h2 class="subheading">keep moving ...</h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-08-15
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>在使用Linux的过程中，经常会遇到在大量文件中查找某一些文件是否包含了某些文件内容的情况。例如在一堆的日志文件里面把出现“memory”字眼的文件过滤出来。</p>
+<p>我们知道用find命令可以使用一些正则表达式来寻找某一些文件，但是却不能够用来寻找文件内是否包含某一些内容。</p>
+<p>grep可以帮我们实现这种效果。</p>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p>grep的中文全称是“全面搜索正则表达式并把行打印出来”，它能使用正则表达式来搜索文本并且将匹配的行打出来。</p>
+<h2 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h2><p>首先用grep直接搜索某个文件很简单</p>
+<pre><code>$ grep &quot;import&quot; setup.py
+import io
+import re
+from setuptools import setup
+</code></pre><p>这种输出是最快捷方便的</p>
+<h3 id="r-amp-R"><a href="#r-amp-R" class="headerlink" title="-r &amp; -R"></a>-r &amp; -R</h3><p>如果想再一个目录下搜索所有的包含“import”内容的文件呢？可以使用-r或者-R，当然他们有一点点不一样</p>
+<p>首先在一个独立的测试目录下面创建a、b、c、d文件，这写文件的内容分别如下</p>
+<pre><code>$ for file in {a..d}; do echo &quot;$file:&quot;;cat $file; done
+a:
+import
+b:
+import test
+c:
+import test import
+import
+d:
+IMPORT
+import
+</code></pre><p>现在分别对d文件创建一个硬链接和软链接</p>
+<pre><code>$ ln d e
+$ ln -s d f
+</code></pre><p>于是目录下的文件结构如下</p>
+<pre><code>$ ls -alk
+total 20
+drwxr-xr-x 2 chenzhiling01 root          60 8月  15 17:28 .
+drwxr-xr-x 6 chenzhiling01 chenzhiling01 93 8月  15 17:15 ..
+-rw-r--r-- 1 chenzhiling01 root           7 8月  15 16:55 a
+-rw-r--r-- 1 chenzhiling01 root          12 8月  15 17:27 b
+-rw-r--r-- 1 chenzhiling01 root          26 8月  15 17:28 c
+-rw-r--r-- 2 chenzhiling01 root          14 8月  15 17:19 d
+-rw-r--r-- 2 chenzhiling01 root          14 8月  15 17:19 e
+lrwxrwxrwx 1 chenzhiling01 root           1 8月  15 16:57 f -&gt; d
+</code></pre><p>先来看</p>
+<pre><code>$ grep -r &#39;import&#39; ./
+./a:import
+./b:import test
+./d:import
+./e:import
+./c:import test import
+./c:import
+</code></pre><p>再使用-R</p>
+<pre><code>$ grep -R &#39;import&#39; ./
+./a:import
+./b:import test
+./d:import
+./e:import
+./f:import
+./c:import test import
+./c:import
+</code></pre><p>会看到-R得到的结果会比-r多一个文件，这个文件就是f，这个文件是软链接到d文件的，也就是说-R会递归寻找，同时不会忽略掉软链接的文件。</p>
+<h3 id="h-amp-H"><a href="#h-amp-H" class="headerlink" title="-h &amp; -H"></a>-h &amp; -H</h3><p>如果只想看看对应某一个文件内容出现的具体行，而不像要看到对应的文件名，则可以使用-h，而-H则是输出文件名</p>
+<pre><code>$ grep -r -h &quot;import&quot; ./
+import
+import test
+import
+import
+import test import
+import
+</code></pre><pre><code>$ grep -r -H &quot;import&quot; ./
+./a:import
+./b:import test
+./d:import
+./e:import
+./c:import test import
+./c:import
+</code></pre><p>所以如果想值看到文件名，可以结合管道和cut</p>
+<pre><code>$ grep -r -H &quot;import&quot; ./ | cut -d: -f1
+./a
+./b
+./d
+./e
+./c
+./c
+</code></pre><h3 id="egrep查找"><a href="#egrep查找" class="headerlink" title="egrep查找"></a>egrep查找</h3><p>在一些情况下可能会想找多个内容，则可以使用egrep</p>
+<pre><code>egrep -w -R &#39;word1|word2&#39; ./
+</code></pre><h3 id="解决错误"><a href="#解决错误" class="headerlink" title="解决错误"></a>解决错误</h3><p>在一些时候可能会出现权限问题或者文件不存在等问题，但是grep默认是不会处理这个错误信息的，可以将错误信息通过重定向或者抑制（-s）的方式</p>
+<pre><code>grep -r -H &quot;import&quot; ./ 2&gt;/dev/null
+
+grep -r -H -s &quot;import&quot; ./
+</code></pre><h2 id="参数列表"><a href="#参数列表" class="headerlink" title="参数列表"></a>参数列表</h2><p>grep很强大，我们可以用来过滤自己想要的信息，很多人最常用的就是<code>ps -aux | grep xxx</code>，在日常工作中可以尽可能挖掘他的功能。</p>
+<p>grep的常用参数</p>
+<pre><code>-r – 递归搜索
+-R – 在每一个目录下面递归搜索，同时会搜索链接的文件。
+-n – 打印出搜索到的内容在文件中的行
+-s – 抑制错误的信息，包括文件不存在或者不可读的文件
+-w – 只根据整个搜索词汇的值来搜索，而不是以正则表达式匹配的形式
+-i – 忽略大小写去搜索
+-a - 将 binary 文件以 text 文件的方式搜寻数据
+-c - 计算找到 &#39;搜寻字符串&#39; 的次数
+-v - 反向选择，亦即显示出没有 &#39;搜寻字符串&#39; 内容的那一行
+-E - 使用正则表达式
+
+-A - 后面跟数字n，表示显示搜索得到的结果以及前n行
+-B - 后面跟数字n，表示显示搜索得到的结果以及后n行
+-C - 后面跟数字n，表示显示搜索得到的结果以及前后n行
+
+--color - 对grep出的结果进行颜色区分
+</code></pre>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/08/21/linux/holefile/" data-toggle="tooltip" data-placement="top" title="Linux空洞文件">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/08/15/linux/cmd/find/" data-toggle="tooltip" data-placement="top" title="Linux命令 - find">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#grep"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">grep</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#常用参数"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">常用参数</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#r-amp-R"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">-r &amp; -R</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#h-amp-H"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">-h &amp; -H</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#egrep查找"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">egrep查找</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#解决错误"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">解决错误</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参数列表"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">参数列表</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/08/15/linux/cmd/grep/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/08/15/linux/cmd/grep/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

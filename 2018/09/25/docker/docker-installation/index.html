@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Docker 安装 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/docker/bg.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Docker" title="Docker">Docker</a>
+                            
+                        </div>
+                        <h1>Docker 安装</h1>
+                        <h2 class="subheading">&quot;不同操作系统&quot;</h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-09-25
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="Debian9"><a href="#Debian9" class="headerlink" title="Debian9"></a>Debian9</h2><h3 id="移除旧的docker相关软件"><a href="#移除旧的docker相关软件" class="headerlink" title="移除旧的docker相关软件"></a>移除旧的docker相关软件</h3><pre><code># apt-get remove docker docker-engine docker.io
+</code></pre><pre><code># apt-get update
+</code></pre><h3 id="安装基本软件"><a href="#安装基本软件" class="headerlink" title="安装基本软件"></a>安装基本软件</h3><pre><code># sudo apt-get install -y \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+</code></pre><h3 id="添加docker安装源"><a href="#添加docker安装源" class="headerlink" title="添加docker安装源"></a>添加docker安装源</h3><pre><code># curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+</code></pre><pre><code># apt-key fingerprint 0EBFCD88
+</code></pre><pre><code># add-apt-repository \
+   &quot;deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable&quot;
+</code></pre><p>如果国外源实在是太慢了，用清华源</p>
+<pre><code># add-apt-repository \
+   &quot;deb [arch=amd64] http://mirrors.ustc.edu.cn/docker-ce/linux/debian \
+   $(lsb_release -cs) \
+   stable&quot;
+</code></pre><pre><code># apt-get update
+</code></pre><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code># apt-get install -y docker-ce
+</code></pre><h3 id="更改国内源"><a href="#更改国内源" class="headerlink" title="更改国内源"></a>更改国内源</h3><pre><code>vim /etc/docker/daemon.json
+</code></pre><p>更改内容</p>
+<pre><code>{
+    &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;],
+    &quot;graph&quot;: &quot;/home/chenzhiling/docker/lib&quot;
+}
+</code></pre><p>修改好之后重启服务</p>
+<pre><code># sudo service docker restart
+</code></pre><p>查看是否生效</p>
+<pre><code># docker info
+Client:
+ Debug Mode: false
+
+Server:
+ Containers: 0
+  Running: 0
+  Paused: 0
+  Stopped: 0
+ Images: 4
+ Server Version: 19.03.1
+ Storage Driver: overlay2
+  Backing Filesystem: xfs
+  Supports d_type: true
+  Native Overlay Diff: true
+ Logging Driver: json-file
+ Cgroup Driver: cgroupfs
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+ Swarm: inactive
+ Runtimes: runc
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: 894b81a4b802e4eb2a91d1ce216b8817763c29fb
+ runc version: 425e105d5a03fabd737a126ad93d62a9eeede87f
+ init version: fec3683
+ Security Options:
+  seccomp
+   Profile: default
+ Kernel Version: 4.9.0-6-amd64
+ Operating System: Debian GNU/Linux 9 (stretch)
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 2
+ Total Memory: 3.863GiB
+ Name: ********
+ ID: LVR2:QPFQ:3P2Z:LCND:2XZE:TRJX:M534:DL5X:ME76:QZAL:2UTR:OIFJ
+ Docker Root Dir: /home/chenzhiling/docker/lib
+ Debug Mode: false
+ Registry: https://index.docker.io/v1/
+ Labels:
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Registry Mirrors:
+  https://registry.docker-cn.com/
+ Live Restore Enabled: false
+</code></pre><h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><pre><code>apt-get update
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository &quot;deb https://download.docker.com/linux/$(. /etc/os-release; echo &quot;$ID&quot;) $(lsb_release -cs) stable&quot;
+apt-get update &amp;&amp; apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk &#39;{print $3}&#39;)
+</code></pre><h2 id="Deepin"><a href="#Deepin" class="headerlink" title="Deepin"></a>Deepin</h2><pre><code>apt-get update
+apt-get install -y docker.io
+systemctl enable docker.service
+</code></pre><h2 id="CentOS7"><a href="#CentOS7" class="headerlink" title="CentOS7"></a>CentOS7</h2><p>1、使用 root 权限登录 Centos。确保 yum 包更新到最新。</p>
+<pre><code># yum update
+</code></pre><p>2、卸载旧版本(如果安装过旧版本的话)</p>
+<pre><code># yum remove docker  docker-common docker-selinux docker-engine
+</code></pre><p>3、安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</p>
+<pre><code># yum install -y yum-utils device-mapper-persistent-data lvm2
+</code></pre><p>4、设置yum源</p>
+<pre><code># yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+</code></pre><p>5、可以查看所有仓库中所有docker版本，并选择特定版本安装</p>
+<pre><code># yum list docker-ce --showduplicates | sort -r
+
+http://ftp.cuhk.edu.hk/pub/linux/fedora-epel/7/x86_64/repodata/repomd.xml: [Errno -1] repomd.xml does not match metalink for epel
+Trying other mirror.
+http://mirror.horizon.vn/epel/7/x86_64/repodata/repomd.xml: [Errno -1] repomd.xml does not match metalink for epel
+Trying other mirror.
+ * updates: mirrors.aliyun.com
+Loading mirror speeds from cached hostfile
+Loaded plugins: fastestmirror, langpacks
+ * extras: mirrors.aliyun.com
+ * epel: ftp.cuhk.edu.hk
+docker-ce.x86_64            3:18.09.0-3.el7                     docker-ce-stable
+docker-ce.x86_64            18.06.1.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.06.0.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.03.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            18.03.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.12.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.12.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.09.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.09.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.2.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.3.ce-1.el7                    docker-ce-stable
+docker-ce.x86_64            17.03.2.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.0.ce-1.el7.centos             docker-ce-stable
+ * base: mirrors.aliyun.com
+Available Packages
+</code></pre><p>6、安装docker</p>
+<pre><code># yum install docker-ce  # 由于repo中默认只开启stable仓库
+# yum install &lt;FQPN&gt;     # 例如：sudo yum install docker-ce-17.12.0.ce
+</code></pre><p>7、启动并加入开机启动</p>
+<pre><code># systemctl enable docker
+# systemctl start docker
+</code></pre><p>8、验证安装是否成功(有client和service两部分表示docker安装启动都成功了)</p>
+<pre><code># docker version
+</code></pre><h3 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h3><p>如果遇到docker服务启动不起来</p>
+<pre><code>systemctl start docker
+
+Job for docker.service failed because the control process exited with error code. See &quot;systemctl status docker.service&quot; and &quot;journalctl -xe&quot; for details.
+</code></pre><p>则查看错误日志</p>
+<pre><code>journalctl -xe
+
+Dec 04 10:31:33 blockchain dockerd[100248]: time=&quot;2018-12-04T10:31:33.152263785+08:00&quot; level=info msg=&quot;pickfirstBalancer: HandleSubConnStateChange: 0xc4201758d0, CONNECTING&quot;
+Dec 04 10:31:33 blockchain dockerd[100248]: time=&quot;2018-12-04T10:31:33.155043419+08:00&quot; level=info msg=&quot;pickfirstBalancer: HandleSubConnStateChange: 0xc4201758d0, READY&quot; modu
+Dec 04 10:31:33 blockchain kernel: overlayfs: failed to resolve &#39;/var/lib/docker/overlay2/multiple-lowerdir-check856558933/lower2:/var/lib/docker/overlay2/multiple-lowerdir-
+Dec 04 10:31:33 blockchain dockerd[100248]: time=&quot;2018-12-04T10:31:33.155594196+08:00&quot; level=info msg=&quot;pickfirstBalancer: HandleSubConnStateChange: 0xc42016ac00, READY&quot; modu
+Dec 04 10:31:33 blockchain dockerd[100248]: time=&quot;2018-12-04T10:31:33.156174381+08:00&quot; level=error msg=&quot;[graphdriver] prior storage driver overlay2 failed: driver not suppor
+Dec 04 10:31:33 blockchain dockerd[100248]: Error starting daemon: error initializing graphdriver: driver not supported
+Dec 04 10:31:33 blockchain systemd[1]: docker.service: main process exited, code=exited, status=1/FAILURE
+Dec 04 10:31:33 blockchain systemd[1]: Failed to start Docker Application Container Engine.
+-- Subject: Unit docker.service has failed
+-- Defined-By: systemd
+-- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
+-- 
+-- Unit docker.service has failed.
+...
+</code></pre><p>会看到是因为错误<code>Error starting daemon: error initializing graphdriver: driver not supported</code></p>
+<p>解决办法： 在 /etc/docker 目录下创建daemon.json文件，并且加入以下配置(可以先尝试重启)</p>
+<pre><code>mkdir /etc/docker &amp;&amp; cd /etc/docker &amp;&amp; vim daemon.json
+
+{
+  &quot;storage-driver&quot;: &quot;overlay2&quot;,
+  &quot;storage-opts&quot;: [
+    &quot;overlay2.override_kernel_check=true&quot;
+  ]
+}
+</code></pre><p>重启服务</p>
+<pre><code>systemctl daemon-reload
+systemctl start docker
+</code></pre><h3 id="修改源"><a href="#修改源" class="headerlink" title="修改源"></a>修改源</h3><p>配置国内源，在<code>/etc/docker/daemon.json</code>下配置</p>
+<pre><code>{
+  &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]
+}
+</code></pre><p>如果原来已经有内容，则可以类似如下添加配置</p>
+<pre><code>{
+  &quot;storage-driver&quot;: &quot;overlay2&quot;,
+  &quot;storage-opts&quot;: [
+    &quot;overlay2.override_kernel_check=true&quot;
+  ],
+  &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]
+}
+</code></pre><p>重启服务</p>
+<pre><code>systemctl daemon-reload
+systemctl start docker
+</code></pre><p>查看是否已经添加了镜像源</p>
+<pre><code>docker info 
+
+...
+Registry Mirrors:
+ https://registry.docker-cn.com/
+...
+</code></pre><h2 id="安装docker-compose"><a href="#安装docker-compose" class="headerlink" title="安装docker-compose"></a>安装docker-compose</h2><pre><code>curl -L --fail https://github.com/docker/compose/releases/download/1.19.0/run.sh -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose &amp;&amp; sudo cp /usr/local/bin/docker-compose /usr/bin
+docker-compose --version
+</code></pre>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/09/26/hyperledger/fabric-first-network/" data-toggle="tooltip" data-placement="top" title="Hyperledger Fabric (一) — 超级账本使用fabric-first-network">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/09/25/kubernetes/installation/" data-toggle="tooltip" data-placement="top" title="Kubernetes 集群安装(使用kubeadm)">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Debian9"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Debian9</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#移除旧的docker相关软件"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">移除旧的docker相关软件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装基本软件"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">安装基本软件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#添加docker安装源"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">添加docker安装源</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">安装</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#更改国内源"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">更改国内源</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Ubuntu"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Ubuntu</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Deepin"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Deepin</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CentOS7"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">CentOS7</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#错误"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">错误</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#修改源"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">修改源</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#安装docker-compose"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">安装docker-compose</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Docker" title="Docker">Docker</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/09/25/docker/docker-installation/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

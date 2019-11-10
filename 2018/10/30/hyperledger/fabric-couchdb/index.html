@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hyperledger Fabric (三) — CouchDB替换Fabric-LevelDB - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/10/30/hyperledger/fabric-couchdb/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/blockchain/hyperledger/bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                            
+                              <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                            
+                              <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                            
+                        </div>
+                        <h1>Hyperledger Fabric (三) — CouchDB替换Fabric-LevelDB</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-10-30
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="CouchDB"><a href="#CouchDB" class="headerlink" title="CouchDB"></a>CouchDB</h2><p><code>CouchDB</code>是一种<code>NoSQL</code>解决方案。它是一个面向文档的数据库，其中文档字段存储为键值映射。字段可以是简单的键值对，列表或映射。除了<code>LevelDB</code>支持的键值查询/复合键查询/范围查询外，<code>CouchDB</code>还支持数据的完全查询功能，例如对整个区块链数据的非键值查询，因为<code>CouchDB</code>的数据是以<code>JSON</code>存储的，所以可以实现完全查询。<code>CouchDB</code>可以支持许多<code>LevelDB</code>不支持的链码审计、报告的要求。</p>
+<p><code>CouchDB</code>还可以增强区块链中的合规性和数据保护的安全性。因为它能够通过过滤和屏蔽事务中的各个属性来实现字段级安全性，并且只在需要时授权只读权限。</p>
+<p>此外，<code>CouchDB</code>属于<code>CAP</code>定理的<code>AP</code>类型（可用性和分区容差）。它使用<code>master-master</code>高可用模型。在每一个<code>fabric</code>节点中，不会有数据库的副本，因此写入到数据库操作需要确保一致性和持久性，它是不能确保最终一致性的数据库。</p>
+<p><code>CouchDB</code>是<code>Fabric</code>的第一个外部可插拔的状态数据库，未来会支持更多的数据库。IBM内部支持了关系型数据库。同时在某些场景下也需要一些能够支持<code>C-P</code>类型的（一致性、分区容忍性）的数据！</p>
+<h2 id="替换LevelDB"><a href="#替换LevelDB" class="headerlink" title="替换LevelDB"></a>替换LevelDB</h2><p><code>first-network</code>网络默认使用的数据库方案是<code>go-leveldb</code>，替换为<code>CouchDB</code>。<code>CouchDB</code>除了能支持<code>leveldb</code>的方法，还能实现丰富而又复杂的查询，数据库的序列化采用<code>JSON</code>。</p>
+<p>首先清理原有网络</p>
+<pre><code>echo y | ./byfn.sh down
+
+docker rm -f $(docker ps -aq)
+</code></pre><p>接下来需要首先生成证书等，由于<code>byfn.sh</code>脚本更加方便，我们直接使用它</p>
+<pre><code>echo y | ./byfn.sh -m generate
+</code></pre><p>启动网络</p>
+<pre><code>docker-compose -f docker-compose-cli.yaml -f docker-compose-couch.yaml up -d
+</code></pre><p>启动网络之后看到网络中添加了<code>couchdb</code>的容器</p>
+<pre><code>docker ps -a
+
+CONTAINER ID        IMAGE                               COMMAND                  CREATED                            PORTS                                         NAMES
+60285f9fcf93        hyperledger/fabric-tools:latest     &quot;/bin/bash&quot;              About a minute ago                                                         cli
+0e50ff0569b3        hyperledger/fabric-peer:latest      &quot;peer node start&quot;        About a minute ago      0.0.0.0:8051-&gt;7051/tcp, 0.0.0.0:8053-&gt;7053/tcp     peer1.org1.example.com
+fded9f702e7b        hyperledger/fabric-peer:latest      &quot;peer node start&quot;        About a minute ago      0.0.0.0:9051-&gt;7051/tcp, 0.0.0.0:9053-&gt;7053/tcp     peer0.org2.example.com
+31f3134bfce3        hyperledger/fabric-peer:latest      &quot;peer node start&quot;        About a minute ago      0.0.0.0:10051-&gt;7051/tcp, 0.0.0.0:10053-&gt;7053/tcp   peer1.org2.example.com
+6c11075f9d35        hyperledger/fabric-peer:latest      &quot;peer node start&quot;        About a minute ago      0.0.0.0:7051-&gt;7051/tcp, 0.0.0.0:7053-&gt;7053/tcp     peer0.org1.example.com
+c78e46e749f6        hyperledger/fabric-couchdb          &quot;tini -- /docker-e...&quot;   2 minutes ago           4369/tcp, 9100/tcp, 0.0.0.0:8984-&gt;5984/tcp         couchdb3
+a29280255587        hyperledger/fabric-couchdb          &quot;tini -- /docker-e...&quot;   2 minutes ago           4369/tcp, 9100/tcp, 0.0.0.0:6984-&gt;5984/tcp         couchdb1
+a93bd7270c34        hyperledger/fabric-orderer:latest   &quot;orderer&quot;                2 minutes ago           0.0.0.0:7050-&gt;7050/tcp                             orderer.example.com
+38f0b7d00e47        hyperledger/fabric-couchdb          &quot;tini -- /docker-e...&quot;   2 minutes ago           4369/tcp, 9100/tcp, 0.0.0.0:5984-&gt;5984/tcp         couchdb0
+b9870083a99a        hyperledger/fabric-couchdb          &quot;tini -- /docker-e...&quot;   2 minutes ago           4369/tcp, 9100/tcp, 0.0.0.0:7984-&gt;5984/tcp         couchdb2
+</code></pre><p>就是在启动的时候添加了<code>docker-compose-couch.yaml</code>的描述文件</p>
+<p>进入到<code>cli</code>容器中</p>
+<pre><code>docker exec -it cli bash
+</code></pre><p>创建<code>channel</code></p>
+<pre><code>export CHANNEL_NAME=mychannel &amp;&amp; peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx \
+--tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+
+2018-10-30 02:27:21.940 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-10-30 02:27:22.013 UTC [cli/common] readBlock -&gt; INFO 002 Received block: 0
+</code></pre><p>将节点<code>peer0.org1.example.com</code>和<code>peer0.org2.example.com</code>分别加入到<code>channel</code>中</p>
+<p><code>peer0.org1.example.com</code></p>
+<pre><code>peer channel join -b mychannel.block
+
+2018-10-30 02:27:47.240 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-10-30 02:27:47.488 UTC [channelCmd] executeJoin -&gt; INFO 002 Successfully submitted proposal to join channel
+</code></pre><p><code>peer0.org2.example.com</code></p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer channel join -b mychannel.block
+
+2018-10-30 02:28:03.189 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-10-30 02:28:03.433 UTC [channelCmd] executeJoin -&gt; INFO 002 Successfully submitted proposal to join channel
+</code></pre><p>指定锚节点<br><code>peer0.org1.example.com</code></p>
+<pre><code>peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org1MSPanchors.tx --tls \
+--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+</code></pre><p><code>peer0.org2.example.com</code></p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org2MSPanchors.tx --tls \
+--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+</code></pre><p>查看是否有安装链码</p>
+<pre><code>peer chaincode list --installed
+
+Get installed chaincodes on peer:
+</code></pre><p>目前没有任何链码安装好，接下来我们使用<code>github.com/chaincode/marbles02/go</code>中的<code>marbles_chaincode.go</code>链码。</p>
+<h3 id="marbles-chaincode-go"><a href="#marbles-chaincode-go" class="headerlink" title="marbles_chaincode.go"></a>marbles_chaincode.go</h3><p>执行</p>
+<pre><code>peer chaincode install -n marbles -v 1.0 -p github.com/chaincode/marbles02/go
+</code></pre><p>实例化链码</p>
+<pre><code>peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -v 1.0 -c &#39;{&quot;Args&quot;:[&quot;init&quot;]}&#39; -P &quot;OR (&#39;Org0MSP.peer&#39;,&#39;Org1MSP.peer&#39;)&quot;
+</code></pre><p>创建一些<code>marbles</code></p>
+<pre><code>peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;initMarble&quot;,&quot;marble1&quot;,&quot;blue&quot;,&quot;35&quot;,&quot;tom&quot;]}&#39; &amp;&amp; \
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;initMarble&quot;,&quot;marble2&quot;,&quot;red&quot;,&quot;50&quot;,&quot;tom&quot;]}&#39; &amp;&amp; \
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;initMarble&quot;,&quot;marble3&quot;,&quot;blue&quot;,&quot;70&quot;,&quot;tom&quot;]}&#39; &amp;&amp; \
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;transferMarble&quot;,&quot;marble2&quot;,&quot;jerry&quot;]}&#39; &amp;&amp; \
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;transferMarblesBasedOnColor&quot;,&quot;blue&quot;,&quot;jerry&quot;]}&#39; &amp;&amp; \
+peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;delete&quot;,&quot;marble1&quot;]}&#39;
+</code></pre><p>在<code>docker-compose</code>描述文件<code>docker-compose-couch.yaml</code>文件中</p>
+<pre><code>services:
+  couchdb0:
+    container_name: couchdb0
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an &quot;Admin Party&quot; mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - &quot;5984:5984&quot;
+</code></pre><p>指明了<code>couchdb</code>容器对应的端口映射，因此我们可以通过外部网络访问<code>couchdb</code>的<code>web</code>接口<code>Fauxton</code>，但是这个操作在生产环境中是不建议的，会出现安全问题<br><code>http://localhost:5984/_utils</code><br><img src="/images/blockchain/hyperledger/fabric-couchdb.png" alt="image"></p>
+<p>查询<code>marble2</code></p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;readMarble&quot;,&quot;marble2&quot;]}&#39;
+
+{
+  &quot;color&quot;: &quot;red&quot;,
+  &quot;docType&quot;: &quot;marble&quot;,
+  &quot;name&quot;: &quot;marble2&quot;,
+  &quot;owner&quot;: &quot;jerry&quot;,
+  &quot;size&quot;: 50
+}
+</code></pre><p>查询<code>marble1</code>的历史记录</p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;getHistoryForMarble&quot;,&quot;marble1&quot;]}&#39;
+
+[
+  {
+    &quot;TxId&quot;: &quot;d351f7c4f61e669cc0f254844a268b015941241d6aaf63981bad090ab064761d&quot;,
+    &quot;Value&quot;: {
+      &quot;docType&quot;: &quot;marble&quot;,
+      &quot;name&quot;: &quot;marble1&quot;,
+      &quot;color&quot;: &quot;blue&quot;,
+      &quot;size&quot;: 35,
+      &quot;owner&quot;: &quot;tom&quot;
+    },
+    &quot;Timestamp&quot;: &quot;2018-10-30 06:18:52.643796107 +0000 UTC&quot;,
+    &quot;IsDelete&quot;: &quot;false&quot;
+  },
+  {
+    &quot;TxId&quot;: &quot;0411b642b0db5bd8075260f980ac977e6da066188b59f833d5ff8aba8cdb6abb&quot;,
+    &quot;Value&quot;: {
+      &quot;docType&quot;: &quot;marble&quot;,
+      &quot;name&quot;: &quot;marble1&quot;,
+      &quot;color&quot;: &quot;blue&quot;,
+      &quot;size&quot;: 35,
+      &quot;owner&quot;: &quot;jerry&quot;
+    },
+    &quot;Timestamp&quot;: &quot;2018-10-30 06:19:23.043823665 +0000 UTC&quot;,
+    &quot;IsDelete&quot;: &quot;false&quot;
+  },
+  {
+    &quot;TxId&quot;: &quot;f94737b23a19215be035d651fa470b3a8e8dfd2c5b6c7bb54d72c3242d50ced6&quot;,
+    &quot;Value&quot;: null,
+    &quot;Timestamp&quot;: &quot;2018-10-30 06:19:28.865157343 +0000 UTC&quot;,
+    &quot;IsDelete&quot;: &quot;true&quot;
+  },
+  {
+    &quot;TxId&quot;: &quot;e131b63ce74e964b9cbc95ac0bdb5bd45ef2d412e46953499ea2d1ab2d847560&quot;,
+    &quot;Value&quot;: {
+      &quot;docType&quot;: &quot;marble&quot;,
+      &quot;name&quot;: &quot;marble1&quot;,
+      &quot;color&quot;: &quot;blue&quot;,
+      &quot;size&quot;: 35,
+      &quot;owner&quot;: &quot;tom&quot;
+    },
+    &quot;Timestamp&quot;: &quot;2018-10-30 06:46:10.905922106 +0000 UTC&quot;,
+    &quot;IsDelete&quot;: &quot;false&quot;
+  }
+]
+</code></pre><p>同样还可以根据作者查询<code>marble</code></p>
+<pre><code>peer chaincode query -C $CHANNEL_NAME -n marbles -c &#39;{&quot;Args&quot;:[&quot;queryMarblesByOwner&quot;,&quot;jerry&quot;]}&#39;
+
+[
+  {
+    &quot;Key&quot;: &quot;marble2&quot;,
+    &quot;Record&quot;: {
+      &quot;color&quot;: &quot;red&quot;,
+      &quot;docType&quot;: &quot;marble&quot;,
+      &quot;name&quot;: &quot;marble2&quot;,
+      &quot;owner&quot;: &quot;jerry&quot;,
+      &quot;size&quot;: 50
+    }
+  },
+  {
+    &quot;Key&quot;: &quot;marble3&quot;,
+    &quot;Record&quot;: {
+      &quot;color&quot;: &quot;blue&quot;,
+      &quot;docType&quot;: &quot;marble&quot;,
+      &quot;name&quot;: &quot;marble3&quot;,
+      &quot;owner&quot;: &quot;jerry&quot;,
+      &quot;size&quot;: 70
+    }
+  }
+]
+</code></pre><h2 id="结"><a href="#结" class="headerlink" title="结"></a>结</h2><p><code>CouchDB</code>能够带来更加丰富的查询操作，相比于<code>LevelDB</code>来说更加适合作为<code>Fabric</code>底层的数据库。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/10/30/hyperledger/fabric-add-org/" data-toggle="tooltip" data-placement="top" title="Hyperledger Fabric (四) — Fabric添加Org">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/10/25/ml-plateform/xiaomi-cloud-ml/" data-toggle="tooltip" data-placement="top" title="小米深度学习平台cloud-ml">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CouchDB"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">CouchDB</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#替换LevelDB"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">替换LevelDB</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#marbles-chaincode-go"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">marbles_chaincode.go</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#结"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">结</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                        
+                          <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                        
+                          <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/10/30/hyperledger/fabric-couchdb/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/10/30/hyperledger/fabric-couchdb/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

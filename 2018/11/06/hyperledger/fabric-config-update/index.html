@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hyperledger Fabric (五) — Fabric更新配置 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/11/06/hyperledger/fabric-config-update/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/blockchain/hyperledger/bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                            
+                              <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                            
+                              <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                            
+                        </div>
+                        <h1>Hyperledger Fabric (五) — Fabric更新配置</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-11-06
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="Fabric更新频道配置"><a href="#Fabric更新频道配置" class="headerlink" title="Fabric更新频道配置"></a>Fabric更新频道配置</h1><h2 id="什么是channel配置"><a href="#什么是channel配置" class="headerlink" title="什么是channel配置"></a>什么是channel配置</h2><p>channel配置包含了所有管理channel的配置信息，同时也说明了对应channel的成员有哪些、访问的权限控制、区块大小配置等内容，这些配置信息都会存储在区块链上，被称为配置区块，第一个配置区块被称为<code>genesis block</code>， 它包含了Fabric网络启动的所有基本配置。而在之后的区块链更新中，所有的排序节点和<code>peer</code>节点都在自己的内存中保存了最新的配置区块内容，这样才能够保证产生的区块的合法性和正确可靠性。</p>
+<h2 id="更新channel配置示例"><a href="#更新channel配置示例" class="headerlink" title="更新channel配置示例"></a>更新channel配置示例</h2><p>频道是高度可配置的，但是也不是没有限制的，不同的配置项有不同的配置规则，在Fabric网络中一般是将二进制格式的pb文件转化为JSON格式，方便修改配置，然后再转化为二进制文件，交给不同的组织锚节点进行签名，最后打包好发送给排序节点进行排序，使得配置生效。在Fabric中，区块一般是分为普通区块和配置区块，创世块就是一个配置区块。</p>
+<p>在《Fabric添加Org》一文中有提到如何通过提交更新配置区块来添加<code>org3</code>，其实更新<code>channel</code>的配置工作大致也就是这些工作。</p>
+<p>首先介绍一下Fabric网络中几个常用配置项。</p>
+<ul>
+<li><p><em>Batch Size</em> 这个参数主要表示一个区块里面包含的交易数目和交易的大小，所有的区块都不会超过配置项<code>absolute_max_bytes</code>，同时交易的数量也不会超过配置项<code>max_message_count</code>，如果说在打包交易的过程中能够满足将区块打包大小在<code>preferred_max_bytes</code>以内，则在打包区块前会提前进行修剪区块里面的交易，超过这个大小限制的交易会放置在后续的区块中打包。这个配置项内容如下</p>
+<pre><code>  {
+    &quot;absolute_max_bytes&quot;: 102760448,
+    &quot;max_message_count&quot;: 10,
+    &quot;preferred_max_bytes&quot;: 524288
+  }
+</code></pre></li>
+<li><p><em>Batch Timeout</em> 该配置主要用于配置批处理超时，在创建批处理之前的等待时间，超过这个时间的交易将放置到后续区块打包。这个配置项主要用于配置吞吐量，对于即时性要求比较高的联盟来说可以将这个配置降低，这样响应一个区块的时间会提升，但是同时也会降低一定的吞吐量，因为一次打包的交易量因为时间原因会变少。这个配置要视需求而定，配置项</p>
+<pre><code>  { &quot;timeout&quot;: &quot;2s&quot; }
+</code></pre></li>
+<li><p><em>Channel Restrictions</em> 一个Orderer节点会分配的最大频道数目。</p>
+<pre><code>  {
+   &quot;max_count&quot;:1000
+  }
+</code></pre></li>
+<li><p><em>Channel Creation Policy</em> 定义了频道创建的规则，这个配置只能在排序节点中的<code>channel</code>中进行配置。</p>
+<pre><code>  {
+  &quot;type&quot;: 3,
+  &quot;value&quot;: {
+    &quot;rule&quot;: &quot;ANY&quot;,
+    &quot;sub_policy&quot;: &quot;Admins&quot;
+    }
+  }
+</code></pre></li>
+<li><p><em>Kafka brokers</em> 当一致性类型<code>ConsensusType</code>设置为<code>kafka</code>的时候需要设置该配置，但是这边需要注意当初始区块已经设置了该配置之后，后续是没有办法修改的。</p>
+<pre><code>  {
+    &quot;brokers&quot;: [
+      &quot;kafka0:9092&quot;,
+      &quot;kafka1:9092&quot;,
+      &quot;kafka2:9092&quot;,
+      &quot;kafka3:9092&quot;
+    ]
+  }
+</code></pre></li>
+<li><p><em>Anchor Peers Definition</em> 定义每个Org的锚节点的位置。</p>
+<pre><code>  {
+    &quot;host&quot;: &quot;peer0.org2.example.com&quot;,
+      &quot;port&quot;: 7051
+  }
+</code></pre></li>
+<li><p><em>Hashing Structure</em> 配置每个区块通过<code>Merkle</code>树格式构建之后得到的<code>hash</code>值。具体感兴趣可以看<code>hash</code>算法。</p>
+<pre><code>  { &quot;width&quot;: 4294967295 }
+</code></pre></li>
+<li><p><em>Hashing Algorithm</em> 配置区块<code>hash</code>的算法</p>
+<pre><code>  { &quot;name&quot;: &quot;SHA256&quot; }
+</code></pre></li>
+<li><p><em>Block Validation</em> 这个配置指明区块确认过程中需要哪些签名，默认需要获得来自一些排序组织的成员的签名。</p>
+<pre><code>  {
+    &quot;type&quot;: 3,
+    &quot;value&quot;: {
+      &quot;rule&quot;: &quot;ANY&quot;,
+      &quot;sub_policy&quot;: &quot;Writers&quot;
+    }
+  }
+</code></pre></li>
+<li><p><em>Orderer Address</em> 一个排序节点的列表，客户端可以通过这个配置找到对应的排序节点来获得对应的配置信息和区块信息.</p>
+<pre><code>  {
+    &quot;addresses&quot;: [
+      &quot;orderer.example.com:7050&quot;
+    ]
+  }
+</code></pre></li>
+</ul>
+<h3 id="修改batch-size配置"><a href="#修改batch-size配置" class="headerlink" title="修改batch-size配置"></a>修改batch-size配置</h3><p>接下来修改batch size。还是以<code>first-network</code>网络为例子，如果没有构建<code>first-network</code>，可以参考《超级账本使用fabric-sample》一文。</p>
+<p>进入到<code>cli</code>容器</p>
+<pre><code>docker exec -it cli bash
+</code></pre><p>配置环境变量</p>
+<pre><code>export CHANNEL_NAME=mychannel &amp;&amp; \
+export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+</code></pre><p>获取目前的配置信息</p>
+<pre><code>peer channel fetch config config_block.pb -o orderer.example.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+</code></pre><p>将获得的二进制配置文件转化为json，并且去除对应的头部信息</p>
+<pre><code>configtxlator proto_decode --input config_block.pb --type common.Block | jq .data.data[0].payload.data.config &gt; config.json
+</code></pre><p>将batch-size的属性路径配置到环境变量中</p>
+<pre><code>export MAXBATCHSIZEPATH=&quot;.channel_group.groups.Orderer.values.BatchSize.value.max_message_count&quot;
+</code></pre><p>查看当前的batch-size的配置值</p>
+<pre><code>jq &quot;$MAXBATCHSIZEPATH&quot; config.json
+
+10
+</code></pre><p>接下来就修改这个值为20</p>
+<pre><code>jq &quot;$MAXBATCHSIZEPATH = 20&quot; config.json &gt; modified_config.json
+</code></pre><p>查看修改后的值</p>
+<pre><code>jq &quot;$MAXBATCHSIZEPATH&quot; modified_config.json
+
+20
+</code></pre><p>接下来将<code>config.json</code>文件转换为二进制<code>protobuf</code>文件</p>
+<pre><code>configtxlator proto_encode --input config.json --type common.Config --output config.pb
+</code></pre><p>然后将<code>modified_config.jso</code>文件转化为<code>protobuf</code>二进制文件</p>
+<pre><code>configtxlator proto_encode --input modified_config.json --type common.Config --output modified_config.pb
+</code></pre><p>使用<code>configtxlator</code>工具计算出两个配置文件的差异，得到一个新的用于更新组织结构的<code>protobuf</code>二进制文件</p>
+<pre><code>configtxlator compute_update --channel_id mychannel --original config.pb --updated modified_config.pb --output batch_size_update.pb
+</code></pre><p>查看处理之后的<code>json</code>格式信息</p>
+<pre><code>configtxlator proto_decode --input batch_size_update.pb  --type common.ConfigUpdate
+
+{
+  &quot;channel_id&quot;: &quot;mychannel&quot;,
+  &quot;read_set&quot;: {
+    &quot;groups&quot;: {
+      &quot;Orderer&quot;: {
+        &quot;mod_policy&quot;: &quot;&quot;,
+        &quot;version&quot;: &quot;0&quot;
+      }
+    },
+    &quot;mod_policy&quot;: &quot;&quot;,
+    &quot;version&quot;: &quot;0&quot;
+  },
+  &quot;write_set&quot;: {
+    &quot;groups&quot;: {
+      &quot;Orderer&quot;: {
+        &quot;mod_policy&quot;: &quot;&quot;,
+        &quot;values&quot;: {
+          &quot;BatchSize&quot;: {
+            &quot;mod_policy&quot;: &quot;Admins&quot;,
+            &quot;value&quot;: {
+              &quot;absolute_max_bytes&quot;: 103809024,
+              &quot;max_message_count&quot;: 20,
+              &quot;preferred_max_bytes&quot;: 524288
+            },
+            &quot;version&quot;: &quot;1&quot;
+          }
+        },
+        &quot;version&quot;: &quot;0&quot;
+      }
+    },
+    &quot;mod_policy&quot;: &quot;&quot;,
+    &quot;version&quot;: &quot;0&quot;
+  }
+}
+</code></pre><p>将计算求得的差异二进制文件转化为JSON格式文件</p>
+<pre><code>configtxlator proto_decode --input batch_size_update.pb --type common.ConfigUpdate | jq . &gt; batch_size_update.json
+</code></pre><p>包装成更新配置的信封</p>
+<pre><code>echo &#39;{&quot;payload&quot;:{&quot;header&quot;:{&quot;channel_header&quot;:{&quot;channel_id&quot;:&quot;mychannel&quot;, &quot;type&quot;:2}},&quot;data&quot;:{&quot;config_update&quot;:&#39;$(cat batch_size_update.json)&#39;}}}&#39; | jq . &gt; batch_size_update_in_envelope.json
+</code></pre><p>得到信封</p>
+<pre><code>cat batch_size_update_in_envelope.json
+
+{
+  &quot;payload&quot;: {
+    &quot;header&quot;: {
+      &quot;channel_header&quot;: {
+        &quot;channel_id&quot;: &quot;mychannel&quot;,
+        &quot;type&quot;: 2
+      }
+    },
+    &quot;data&quot;: {
+      &quot;config_update&quot;: {
+        &quot;channel_id&quot;: &quot;mychannel&quot;,
+        &quot;read_set&quot;: {
+          &quot;groups&quot;: {
+            &quot;Orderer&quot;: {
+              &quot;mod_policy&quot;: &quot;&quot;,
+              &quot;version&quot;: &quot;0&quot;
+            }
+          },
+          &quot;mod_policy&quot;: &quot;&quot;,
+          &quot;version&quot;: &quot;0&quot;
+        },
+        &quot;write_set&quot;: {
+          &quot;groups&quot;: {
+            &quot;Orderer&quot;: {
+              &quot;mod_policy&quot;: &quot;&quot;,
+              &quot;values&quot;: {
+                &quot;BatchSize&quot;: {
+                  &quot;mod_policy&quot;: &quot;Admins&quot;,
+                  &quot;value&quot;: {
+                    &quot;absolute_max_bytes&quot;: 103809024,
+                    &quot;max_message_count&quot;: 20,
+                    &quot;preferred_max_bytes&quot;: 524288
+                  },
+                  &quot;version&quot;: &quot;1&quot;
+                }
+              },
+              &quot;version&quot;: &quot;0&quot;
+            }
+          },
+          &quot;mod_policy&quot;: &quot;&quot;,
+          &quot;version&quot;: &quot;0&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre><p>将信封转化为二进制文件</p>
+<pre><code>configtxlator proto_encode --input batch_size_update_in_envelope.json --type common.Envelope --output batch_size_update_in_envelope.pb
+</code></pre><h3 id="签名信封文件并提交更新"><a href="#签名信封文件并提交更新" class="headerlink" title="签名信封文件并提交更新"></a>签名信封文件并提交更新</h3><p>需要注意的是，目前更新的内容是<code>Orderer</code>模块的配置内容，因此这个更新必须是获得<code>orderer</code>节点中的<code>Admin</code>的签名，Fabric规定的是需要获得大多数的排序节点的签名，默认是需要1个以上。</p>
+<p>如果我们用和添加组织一样的方式，使用多个组织的Admin对这个信封进行签名，最后提交更新交易的时候会发生如下错误</p>
+<pre><code>2018-11-06 08:42:43.761 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+Error: got unexpected status: BAD_REQUEST -- error authorizing update: error validating DeltaSet: policy for [Value]  /Channel/Orderer/BatchSize not satisfied: Failed to reach implicit threshold of 1 sub-policies, required 1 remaining
+</code></pre><p>这个错误的解决可<a href="https://lists.hyperledger.org/g/fabric/topic/error_executing_peer_channel/17549272?p=,,,20,0,0,0::recentpostdate%2Fsticky,,,20,1,460,17549272" target="_blank" rel="noopener">参考</a>，也就是使用<code>orderer</code>节点进行签名，如下</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/users/Admin\@example.com/msp \
+CORE_PEER_LOCALMSPID=OrdererMSP \
+peer channel update -f batch_size_update_in_envelope.pb -c $CHANNEL_NAME -o orderer.example.com:7050 --tls --cafile $ORDERER_CA
+
+2018-11-06 08:49:53.026 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+2018-11-06 08:49:53.038 UTC [channelCmd] update -&gt; INFO 002 Successfully submitted channel update
+</code></pre><p>检查是否更新配置成功</p>
+<pre><code>peer channel fetch config check_config_block.pb -o orderer.example.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA &amp;&amp; \
+configtxlator proto_decode --input check_config_block.pb --type common.Block | jq .data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchSize.value.max_message_count
+
+2018-11-06 09:15:02.905 UTC [cli/common] readBlock -&gt; INFO 002 Received block: 5
+2018-11-06 09:15:02.906 UTC [cli/common] readBlock -&gt; INFO 003 Received block: 5
+20
+</code></pre><p>会看到配置已经变成20了，说明配置更新成功！</p>
+<h2 id="获得必要的签名"><a href="#获得必要的签名" class="headerlink" title="获得必要的签名"></a>获得必要的签名</h2><p>当获得对应的二进制配置更新信封之后，需要适当地进行签名，而不同的配置需要不同的签名要求。一下列出不同的签名要求</p>
+<h3 id="A-particular-org"><a href="#A-particular-org" class="headerlink" title="A particular org"></a>A particular org</h3><p>这个只需要得到这个组织的Admin签名即可。例如，修改锚节点:</p>
+<pre><code>CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org2MSPanchors.tx --tls \
+--cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+</code></pre><h3 id="The-application"><a href="#The-application" class="headerlink" title="The application"></a>The application</h3><p>需要大部分的组织中的Admin的签名，例如现在有一个添加节点的配置更新的二进制信封<code>org4_update_in_envelope.pb</code>，首先是<code>org1</code>的锚节点签名信封<code>org4_update_in_envelope.pb</code></p>
+<pre><code>peer channel signconfigtx -f org4_update_in_envelope.pb
+
+2018-11-06 08:11:49.103 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+</code></pre><p>接下来是<code>org2</code>为信封签名</p>
+<pre><code>CORE_PEER_LOCALMSPID=&quot;Org2MSP&quot; &amp;&amp; \
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt &amp;&amp; \
+CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp &amp;&amp; \
+CORE_PEER_ADDRESS=peer0.org2.example.com:7051 \
+peer channel signconfigtx -f org4_update_in_envelope.pb
+
+2018-11-06 08:12:56.437 UTC [channelCmd] InitCmdFactory -&gt; INFO 001 Endorser and orderer connections initialized
+</code></pre><p>如果有<code>org3</code>则让<code>org3</code>为信封签名，以此类推，由于<code>org3cli</code>容器里面才有这个组织对应的证书文件和密钥文件，因此需要进入到<code>org3cli</code>容器中进行操作，首先将<code>cli</code>容器里面的二进制信封复制到<code>channel-artifacts</code>中</p>
+<pre><code>cp org4_update_in_envelope.pb channel-artifacts/
+</code></pre><p>进入到宿主机器中的<code>$FABRIC_SAMPLE=$GOPATH/src/github.com/hyperledger/fabric-samples/first-network</code>中</p>
+<pre><code>cp channel-artifacts/org4_update_in_envelope.pb org3-artifacts/crypto-config/
+</code></pre><p>进入到<code>org3cli</code>容器中</p>
+<pre><code>docker exec -it Org3cli bash
+</code></pre><p>然后执行</p>
+<pre><code>peer channel signconfigtx -f org4_update_in_envelope.pb
+</code></pre><p>最后在<code>orgcli3</code>中提交配置更新信息到排序节点</p>
+<pre><code>export CHANNEL_NAME=mychannel &amp;&amp; \
+export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem &amp;&amp; \
+peer channel update -f org4_update_in_envelope.pb -c $CHANNEL_NAME -o orderer.example.com:7050 --tls --cafile $ORDERER_CA
+</code></pre><h3 id="The-orderer"><a href="#The-orderer" class="headerlink" title="The orderer"></a>The orderer</h3><p>这个情况需要获得绝大多数的排序节点的Admin的签名，之前的示例就是这种情况</p>
+<h3 id="The-top-level-channel-group"><a href="#The-top-level-channel-group" class="headerlink" title="The top level channel group"></a>The top level channel group</h3><p>这是最高层的配置更新，需要获得绝大多数的组织Admin签名和绝大多数的排序节点的Admin签名。</p>
+<h2 id="结"><a href="#结" class="headerlink" title="结"></a>结</h2><p>配置更新只要针对当前的区块配置文件进行修改即可，使用<code>configtxlator</code>工具进行转化，得到最终需要提交的二进制文件。之后签名的时候需要注意不同的签名有不同的签名要求。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/11/08/java/java-8-installation/" data-toggle="tooltip" data-placement="top" title="Linux系统安装JDK8">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/10/31/essay/shengjinyuan_fanjiabi_test/" data-toggle="tooltip" data-placement="top" title="盛金源反假币2018测试题库">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Fabric更新频道配置"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Fabric更新频道配置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#什么是channel配置"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">什么是channel配置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#更新channel配置示例"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">更新channel配置示例</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#修改batch-size配置"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">修改batch-size配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#签名信封文件并提交更新"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">签名信封文件并提交更新</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#获得必要的签名"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">获得必要的签名</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#A-particular-org"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">A particular org</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#The-application"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">The application</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#The-orderer"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">The orderer</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#The-top-level-channel-group"><span class="toc-nav-number">1.3.4.</span> <span class="toc-nav-text">The top level channel group</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#结"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">结</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                        
+                          <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                        
+                          <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/11/06/hyperledger/fabric-config-update/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/11/06/hyperledger/fabric-config-update/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

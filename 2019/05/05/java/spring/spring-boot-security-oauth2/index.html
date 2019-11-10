@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Spring-Boot + Spring Security + Oauth2 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/05/05/java/spring/spring-boot-security-oauth2/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/java/spring-boot.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                            
+                              <a class="tag" href="/tags/#Spring Boot" title="Spring Boot">Spring Boot</a>
+                            
+                        </div>
+                        <h1>Spring-Boot + Spring Security + Oauth2</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-05-05
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="Spring-Boot2-0-Spring-Security-Oauth2"><a href="#Spring-Boot2-0-Spring-Security-Oauth2" class="headerlink" title="Spring-Boot2.0 + Spring Security + Oauth2"></a>Spring-Boot2.0 + Spring Security + Oauth2</h1><p>如果对Spring Security和Oauth2比较熟悉，可以直接跳过第1、2部分，直接到第三部分。</p>
+<h2 id="Spring-Security"><a href="#Spring-Security" class="headerlink" title="Spring Security"></a>Spring Security</h2><p>Spring Security是一个强大的高度可定制化的身份认证与访问控制框架，它用于为Spring框架开发的应用提供标准的安全保障。Spring Security这个框架专注于为应用提供授权和认证服务，它的强大在于用户可以非常灵活地自定义权限访问。</p>
+<p>Spring Security的特性</p>
+<ul>
+<li>全面可扩展地支持了认证和授权</li>
+<li>对抗Session固定攻击、点击劫持、伪装跨站访问等</li>
+<li>整合Servlet API</li>
+<li>可自由选择是否与Spring MVC集成</li>
+</ul>
+<h2 id="Oauth2-0"><a href="#Oauth2-0" class="headerlink" title="Oauth2.0"></a>Oauth2.0</h2><p>Oauth2很显然是Oauth协议的版本2，Oauth也可以称为是框架，其允许用户授权第三方的应用接入到某一个应用中访问自己的信息，并授权一定的HTTP服务访问能力，而不需要将自己的用户名和密码提供给第三方应用或者分享他们数据的全部内容。Oauth2则是Oauth的改进版本，其简化了Oauth的一些机制，让不同应用之间的交互更加安全方便。Oauth2.0主要关注客户端开发者的简易性，要么通过组织在资源拥有者和HTTP服务商之间的被批准的交互动作代表用户，要么允许第三方应用代表用户获得访问的权限。</p>
+<p>Oauth2目前来说在各个厂商的各大应用中获得了比较好的效果，例如Google和Facebook。</p>
+<h3 id="Roles"><a href="#Roles" class="headerlink" title="Roles"></a>Roles</h3><p>Oauth2包含了4个角色</p>
+<ul>
+<li>Resource Owner: 资源拥有者，通常就是用户你自己；</li>
+<li>Resource Server: 那些保管了你个人资源信息的服务器，例如Google会管理你的个人资料和信息；</li>
+<li>Client: 需要访问Resource Server的那些应用，例如可以是一个PHP网站、安卓客户端、或者JavaScript应用等；</li>
+<li>Authorization Server: 为Client应用提供访问token的服务者，这些token会用于Client访问Resource Server中对应用户的资源信息。认证服务通常会和资源服务(Resource Server)部署在一起，只是角色分开。</li>
+</ul>
+<h3 id="Tokens"><a href="#Tokens" class="headerlink" title="Tokens"></a>Tokens</h3><p>Tokens 是一系列由认证服务器生成的随机字符，每当客户端请求获取对应的用户的token时认证服务器会下发对应的Token给客户端，通常又两种Token类型</p>
+<ul>
+<li>Access Token: 这种Token是最常用的Token，第三方用户通常都是用这个Token作为自己访问用户资源的钥匙，通常Client客户端会将这个Token追加到请求的参数中或者添加到请求的Header中来请求资源服务器，这种Token通常会有一定的时效，资源服务器会设置这个时效，一旦过期了对应的Token将不再可用，客户端必须重新获取新的Token进行资源访问。</li>
+<li>Refresh Token: 刷新Token是相对于Access Token而提出的，由于Access Token一般都会有时效，那么当某一个Access Token不可用的时候便可以用刷新Token获取一个新的Access Token。为了安全起见，客户端并不是总能获取得到这个刷新Token的。</li>
+</ul>
+<h3 id="Access-token-scope"><a href="#Access-token-scope" class="headerlink" title="Access token scope"></a>Access token scope</h3><p>scope是一个对客户端访问资源的权限限制的参数，授权服务器Authorization Server会定义一个scope列表，客户端在请求获取Token的时候需要将scope作为一个参数提交，这个scope参数的内容越多，那么获得的资源访问能力就越多，这个通常都是用户授权给客户端的。</p>
+<h3 id="Register-as-a-Client"><a href="#Register-as-a-Client" class="headerlink" title="Register as a Client"></a>Register as a Client</h3><p>由于客户端想要通过Oauth2来获得资源服务器中用户的资源内容，因此客户端需要向认证服务器注册一个client，注册client的参数包含如下几个</p>
+<ul>
+<li>Application Name: 应用的名称</li>
+<li>Redirect URLs: 认证码和Access Token所对应client的URLs</li>
+<li>Grant Type(s): 授权的类型，一般有四种</li>
+<li>JavaScript Origin(optional): 设置被允许访问资源服务器的主机名</li>
+</ul>
+<p>资源服务器收到client的注册内容之后返回的内容如下</p>
+<ul>
+<li>Client Id: 一个唯一的随机字符</li>
+<li>Client Secret: 需要秘密保管好的客户端密码</li>
+</ul>
+<h3 id="Authorization-grant-types"><a href="#Authorization-grant-types" class="headerlink" title="Authorization grant types"></a>Authorization grant types</h3><p>Oauth2定义了4中授权类型，这4中授权类型需要根据不同的场景进行使用，下面分别介绍</p>
+<h4 id="Authorization-Code-Grant"><a href="#Authorization-Code-Grant" class="headerlink" title="Authorization Code Grant"></a>Authorization Code Grant</h4><p>授权码适合在Client是一个web服务器的时候，这个方式允许web保持一个长时间的Access Token因为可以通过refresh Token来刷新服务器(只要授权服务器允许这种行为)。</p>
+<p>例子</p>
+<ul>
+<li>资源拥有者: 用户</li>
+<li>Resource Server: Google 服务器</li>
+<li>Client: 任何一个网站</li>
+<li>Authorization Server: Google的认证服务器</li>
+</ul>
+<p>场景</p>
+<ul>
+<li>当一个网站想要获取用户的Google个人信息</li>
+<li>这个网站会重定向到Google的认证服务器</li>
+<li>如果你授权通过了这个访问，认证服务器会给网站回调发送一个认证码</li>
+<li>之后客户端网站便和认真服务器通过认证码来获取Access Token</li>
+<li>之后网站便可以获取到用户在Google上面的个人资源信息</li>
+</ul>
+<p>用户在这个过程中不会看到Access Token，网站会自行存储这个Access Token，Google 认证服务器在下发Access Token的同事一般还会下发Refresh Token</p>
+<p>时序图如下<br><img src="/images/java/oauth/auth_code_flow.png" alt="image"></p>
+<h4 id="Implicit-Grant"><a href="#Implicit-Grant" class="headerlink" title="Implicit Grant"></a>Implicit Grant</h4><p>当网页通过一些脚本语言例如JavaScript作为Client客户端的时候，这种情况不允许脚本获取到Refresh Token。</p>
+<p>例子</p>
+<ul>
+<li>Resource Owner: 用户</li>
+<li>Resource Server: Facebook 服务器</li>
+<li>Client: 使用AngularJS的网站</li>
+<li>Authorization Server: Facebook 服务器</li>
+</ul>
+<p>场景</p>
+<ul>
+<li>AngularJS客户端想要获取用户的Facebook个人信息</li>
+<li>用户会被重定位到Facebook的认证服务器</li>
+<li>如果用户授权了访问，认证服务器会重定向到网站，并且在URI中携带Access Token，例如: <a href="http://example.com/oauthcallback#access_token=MzJmNDc3M2VjMmQzN" target="_blank" rel="noopener">http://example.com/oauthcallback#access_token=MzJmNDc3M2VjMmQzN</a></li>
+<li>这个Access Token可以用于客户端请求Facebook的资源，例如: <a href="https://graph.facebook.com/me?access_token=MzJmNDc3M2VjMmQzN" target="_blank" rel="noopener">https://graph.facebook.com/me?access_token=MzJmNDc3M2VjMmQzN</a>.</li>
+</ul>
+<p>也许你会很好奇为什么Facebook允许客户端直接通过添加Access Token而不会被跨域规则所拦截下来。这是可能的也是允许的，因为有CORS(Access-Control-Allow-Origin)的帮助。具体可以查看<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#The_HTTP_response_headers" target="_blank" rel="noopener">Access-Control-Allow-Origin</a></p>
+<blockquote>
+<p>Attention! This type of authorization should only be used if no other type of authorization is available. Indeed, it is the least secure because the access token is exposed (and therefore vulnerable) on the client side.</p>
+</blockquote>
+<p>时序图如下<br><img src="/images/java/oauth/implicit_flow.png" alt="images"></p>
+<h4 id="Resource-Owner-Password-Credentials-Grant"><a href="#Resource-Owner-Password-Credentials-Grant" class="headerlink" title="Resource Owner Password Credentials Grant"></a>Resource Owner Password Credentials Grant</h4><p>这种认证方式比较特别，认证的信息(也就是密码)是先传给客户端网站，客户端网站拿着密码去和认证服务器通讯获得对应的Access Token，因此说这两个应用都需要有同等的信任关系，所以一般来说这种方式用于两个应用属于同一个单位或者企业的应用之间使用，例如有一个网站属于<code>example.com</code>，现在它需要授权访问<code>api.example.com</code>下面所保护的资源，那么用户自然会愿意将自己的密码授权给客户端网站，因为他的账号密码就是从<code>example.com</code>所获得的。</p>
+<p>例子</p>
+<ul>
+<li>Resource Owner: 用户在<code>acme.com</code>网站(属于Acme公司)注册了账号</li>
+<li>Resource Server: Acme公司在<code>api.acme.com</code>暴露 API</li>
+<li>Client: Acme公司下的<code>acme.com</code>网站</li>
+<li>Authorization Server: Acme的认证服务器</li>
+</ul>
+<p>场景</p>
+<ul>
+<li>Acme 公司想将自己的REST API提供给第三方应用。</li>
+<li>为了避免重复造轮子，公司觉得用自己的API会很方便</li>
+<li>因此公司需要获得一个Access Token来访问对应的那些API</li>
+<li>为此公司的网站要求用户登录并授权REST API给其他的应用</li>
+<li>服务端应用 (acme.com) 会和认证服务器进行交互获得对应的Access Token</li>
+<li>之后应用便可以使用Access Token访问对应的资源了(api.acme.com).</li>
+</ul>
+<p>时序图<br><img src="/images/java/oauth/password.png" alt="images"></p>
+<h4 id="Client-Credentials-Grant"><a href="#Client-Credentials-Grant" class="headerlink" title="Client Credentials Grant"></a>Client Credentials Grant</h4><p>当客户端Client自己本身就是Resource Owner，那么意味着不用用户为之授权。</p>
+<p>例子</p>
+<ul>
+<li>Resource Owner: 任意一个网站</li>
+<li>Resource Server: Google Cloud Storage</li>
+<li>Client: 同Resource Owner</li>
+<li>Authorization Server: 谷歌的认证服务器</li>
+</ul>
+<p>场景</p>
+<ul>
+<li>一个网站使用Google的存储服务，并存储了一系列的文件</li>
+<li>网站先需要获取文件并且修改文件，则需要向谷歌的认证服务器发起认证请求</li>
+<li>一旦授权成功，网站便可以获取到自己在Google存储上面自己的资源内容</li>
+</ul>
+<p>在这里，网站的使用者就没有必要给网站授权自己的资源内容访问权限给网站。</p>
+<p>时序图<br><img src="/images/java/oauth/client_credentials_flow.png" alt="images"></p>
+<h2 id="配置Spring-Boot-Security-Oauth2"><a href="#配置Spring-Boot-Security-Oauth2" class="headerlink" title="配置Spring Boot + Security + Oauth2"></a>配置Spring Boot + Security + Oauth2</h2><p>本人使用的开发工具是<a href="https://spring.io/tools" target="_blank" rel="noopener">Spring Tool Suite 4</a>，构建项目的时候选择：Web、JPA、Thymeleaf、Security、Oauth2 Resource Server，如下</p>
+<p><img src="/images/java/spring-boot/sso.png" alt="image"></p>
+<p>创建好项目之后，对应的<code>pom.xml</code>文件内容如下</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.1.3.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;org.scut.storic&lt;/groupId&gt;
+    &lt;artifactId&gt;storic-rest&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;name&gt;storic-rest&lt;/name&gt;
+    &lt;description&gt;manager for storest based on fabric&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+        &lt;skipTests&gt;true&lt;/skipTests&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.security.oauth&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-security-oauth2&lt;/artifactId&gt;
+            &lt;version&gt;2.3.3.RELEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-security-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jasypt&lt;/groupId&gt;
+            &lt;artifactId&gt;jasypt&lt;/artifactId&gt;
+            &lt;version&gt;1.9.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+            &lt;artifactId&gt;gson&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.guava&lt;/groupId&gt;
+            &lt;artifactId&gt;guava&lt;/artifactId&gt;
+            &lt;version&gt;24.0-jre&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+            &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</code></pre><h2 id="配置Spring-Security"><a href="#配置Spring-Security" class="headerlink" title="配置Spring Security"></a>配置Spring Security</h2><p>首先配置Spring Security</p>
+<p>CustomSecurityConfiguration.java</p>
+<pre><code>import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
+public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter{
+
+    @Bean
+    @Override
+    protected UserDetailsService userDetailsService(){
+        //采用一个自定义的实现UserDetailsService接口的类
+        return new CustomUserDetailsService();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(new NullAuthenticationProvider());
+        super.configure(auth);
+    }
+
+    /**
+     * Spring Boot 2 配置，这里要bean 注入
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        AuthenticationManager manager = super.authenticationManagerBean();
+        return manager;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        //return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return new CustomPasswordEncoder();
+    }
+}
+</code></pre><p>CustomUserDetailsService.java</p>
+<pre><code>import java.util.ArrayList;
+import java.util.List;
+
+import org.scut.storic.persistent.entity.Account;
+import org.scut.storic.persistent.repository.AccountRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info(&quot;Load UserDetails by username: &quot; + username);
+        Account account = accountRepository.findByName(username);
+        if (account == null) 
+            throw new UsernameNotFoundException(username);
+
+        List&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();
+        for (String permission : account.getPermission().split(&quot; &quot;)) {
+            if (permission.isEmpty()) continue;
+            authorities.add(new SimpleGrantedAuthority(permission));
+        }
+
+        return new CustomUser(username, account.getPassword(), true, true, true, account.isVerified(), authorities);
+    }
+}
+</code></pre><p>其中<code>AccountRepository</code>是为了从Mysql数据库中获取对应账户的权限内容，不再详细描述。</p>
+<p>CustomUser.java</p>
+<pre><code>import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+
+
+public class CustomUser extends User {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1527936124593374191L;
+
+    /**
+     * Construct the &lt;code&gt;User&lt;/code&gt; with the details required by
+     * {@link org.springframework.security.authentication.dao.DaoAuthenticationProvider}.
+     *
+     * @param username the username presented to the
+     * &lt;code&gt;DaoAuthenticationProvider&lt;/code&gt;
+     * @param password the password that should be presented to the
+     * &lt;code&gt;DaoAuthenticationProvider&lt;/code&gt;
+     * @param enabled set to &lt;code&gt;true&lt;/code&gt; if the user is enabled
+     * @param accountNonExpired set to &lt;code&gt;true&lt;/code&gt; if the account has not expired
+     * @param credentialsNonExpired set to &lt;code&gt;true&lt;/code&gt; if the credentials have not
+     * expired
+     * @param accountNonLocked set to &lt;code&gt;true&lt;/code&gt; if the account is not locked
+     * @param authorities the authorities that should be granted to the caller if they
+     * presented the correct username and password and the user is enabled. Not null.
+     *
+     * @throws IllegalArgumentException if a &lt;code&gt;null&lt;/code&gt; value was passed either as
+     * a parameter or as an element in the &lt;code&gt;GrantedAuthority&lt;/code&gt; collection
+     */
+    public CustomUser(String username, String password, boolean enabled, boolean accountNonExpired,
+            boolean credentialsNonExpired, boolean accountNonLocked,
+            Collection&lt;? extends GrantedAuthority&gt; authorities) {
+        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return super.isAccountNonLocked();
+    }
+
+    public boolean isManager() {
+        return this.getAuthorities()
+                .contains(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;));
+    }
+
+    public boolean isSystemManager() {
+        return this.getAuthorities()
+                .contains(new SimpleGrantedAuthority(&quot;ROLE_SYSTEM_ADMIN&quot;));
+    }
+}
+</code></pre><p>CustomPasswordEncoder.java</p>
+<pre><code>import org.springframework.security.crypto.password.PasswordEncoder;
+
+public class CustomPasswordEncoder implements PasswordEncoder {
+
+    @Override
+    public String encode(CharSequence rawPassword) {
+        return PasswordHelper.encryptPassword(rawPassword.toString());
+    }
+
+    @Override
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        return PasswordHelper.checkPassword(rawPassword.toString(),
+                encodedPassword.toString());
+    }
+}
+</code></pre><p>PasswordHelper.java</p>
+<pre><code>import java.util.HashMap;
+import java.util.Map;
+
+import org.jasypt.digest.StandardStringDigester;
+import org.jasypt.util.password.PasswordEncryptor;
+
+public class PasswordHelper {
+    public enum Type{
+        SHA256_BASE64(&quot;SHA-256&quot;, &quot;base64&quot;),
+        SHA256_HEX(&quot;SHA-256&quot;, &quot;hexadecimal&quot;),
+        MD5_BASE64(&quot;MD5&quot;, &quot;base64&quot;),
+        MD5_HEX(&quot;MD5&quot;, &quot;hexadecimal&quot;);
+
+        private String algorithm;
+        private String outputType;
+
+        private Type(String algorithm, String value) {
+            this.algorithm = algorithm;
+            this.outputType = value;
+        }
+
+        public String getAlgorithm() {
+            return algorithm;
+        }
+
+        public String getOutputType() {
+            return outputType;
+        }
+    }
+
+    private final static class MyPasswordEncryptor implements PasswordEncryptor {
+        private final StandardStringDigester digester;
+
+        public MyPasswordEncryptor(String algorithm) {
+            this.digester = new StandardStringDigester();
+            this.digester.setAlgorithm(algorithm);
+            this.digester.setIterations(1000);
+            this.digester.setSaltSizeBytes(8);
+        }
+
+        public void setStringOutputType(final String stringOutputType) {
+            this.digester.setStringOutputType(stringOutputType);
+        }
+
+        public String encryptPassword(final String password) {
+            return this.digester.digest(password);
+        }
+
+        public boolean checkPassword(final String plainPassword,
+                final String encryptedPassword) {
+            return this.digester.matches(plainPassword, encryptedPassword);
+        }
+    }
+
+    private static Map&lt;Type, MyPasswordEncryptor&gt; passwordEncryptors = new HashMap&lt;Type, MyPasswordEncryptor&gt;();
+
+    private PasswordHelper(){}
+
+    private static PasswordEncryptor getPasswordEncryptor(final Type type) {
+        if (passwordEncryptors.get(type) == null) {
+            synchronized (passwordEncryptors) {
+                if (passwordEncryptors.get(type) == null) {
+                    MyPasswordEncryptor passwordEncryptor = new MyPasswordEncryptor(type.getAlgorithm());
+                    passwordEncryptor.setStringOutputType(type.getOutputType());
+                    passwordEncryptors.put(type, passwordEncryptor);
+
+                }
+            }
+        }
+
+        return passwordEncryptors.get(type);
+    }
+
+    public static String encryptPassword(final String password) {
+        return getPasswordEncryptor(Type.SHA256_BASE64).encryptPassword(password);
+    }
+
+    public static String encryptPassword(final String password, final Type type) {
+        return getPasswordEncryptor(type).encryptPassword(password);
+    }
+
+    public static boolean checkPassword(final String plainPassword,
+            final String encryptedPassword) {
+        return getPasswordEncryptor(Type.SHA256_BASE64).checkPassword(plainPassword, encryptedPassword);
+    }
+
+    public static boolean checkPassword(final String plainPassword,
+            final String encryptedPassword, final Type type) {
+        return getPasswordEncryptor(type).checkPassword(plainPassword, encryptedPassword);
+    }
+}
+</code></pre><p>NullAuthenticationProvider.java</p>
+<pre><code>import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+
+public class NullAuthenticationProvider implements AuthenticationProvider {
+
+    @Override
+    public Authentication authenticate(Authentication authentication)
+            throws AuthenticationException {
+        return authentication;
+    }
+
+    @Override
+    public boolean supports(Class&lt;?&gt; authentication) {
+        return (NullAuthenticationToken.class.isAssignableFrom(authentication));
+    }
+}
+</code></pre><p>NullAuthenticationToken.java</p>
+<pre><code>import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
+
+public class NullAuthenticationToken extends AbstractAuthenticationToken {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4544894451246623482L;
+
+    private final Object principal;
+
+    public NullAuthenticationToken(User principal) {
+        super(principal.getAuthorities());
+        this.principal = principal;
+        setAuthenticated(true);
+    }
+
+    @Override
+    public Object getCredentials() {
+        return null;
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return principal;
+    }
+}
+</code></pre><h2 id="配置Oauth2"><a href="#配置Oauth2" class="headerlink" title="配置Oauth2"></a>配置Oauth2</h2><p>Oauth2需要配置一下三项：AuthorizationServer、ClientDetailsService、ResourceServer</p>
+<p>CustomAuthServerConfiguration.java</p>
+<pre><code>import java.util.concurrent.TimeUnit;
+
+import org.scut.storic.utils.PasswordHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+
+@Configuration
+@EnableAuthorizationServer
+public class CustomAuthServerConfiguration extends AuthorizationServerConfigurerAdapter {
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    UserDetailsService userDetailsService;
+
+    private static final String DEMO_RESOURCE_ID = &quot;storicid&quot;;
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        //Oauth2 默认使用BCryptPasswordEncoder作为加密方法，需要在加密之后的字符前加{bcrypt}
+        //String finalSecret = &quot;{bcrypt}&quot; + new BCryptPasswordEncoder().encode(&quot;storic-secret&quot;);
+        String finalSecret = PasswordHelper.encryptPassword(&quot;storic-secret&quot;);
+        //这里通过实现 ClientDetailsService接口 clients.withClientDetails(new BaseClientDetailService());
+        //配置客户端,一个用于password认证一个用于client认证
+        clients
+            .inMemory()
+            .withClient(&quot;client_app&quot;)
+            .resourceIds(DEMO_RESOURCE_ID)
+            .authorizedGrantTypes(&quot;client_credentials&quot;, &quot;refresh_token&quot;, &quot;password&quot;)
+            .scopes(&quot;select&quot;)
+            .authorities(&quot;oauth2&quot;)
+            .secret(finalSecret)
+            .accessTokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(1))
+            .refreshTokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(1))
+        .and()
+            .withClient(&quot;client_web&quot;)
+            .resourceIds(DEMO_RESOURCE_ID)
+            .authorizedGrantTypes(&quot;authorization_code&quot;, &quot;client_credentials&quot;, &quot;refresh_token&quot;,
+                    &quot;password&quot;, &quot;implicit&quot;)
+            .scopes(&quot;read&quot;, &quot;write&quot;, &quot;trust&quot;)
+            .authorities(&quot;oauth2&quot;)
+            .secret(finalSecret)
+            .accessTokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(1))
+            .refreshTokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(1)); 
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints
+            .tokenStore(new InMemoryTokenStore())
+            .authenticationManager(authenticationManager)
+            .userDetailsService(userDetailsService) // 不添加无法正常使用refresh_token
+            .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE);
+    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        //允许表单认证
+        //这里增加拦截器到安全认证链中，实现自定义认证，包括图片验证，短信验证，微信小程序，第三方系统，CAS单点登录
+        //addTokenEndpointAuthenticationFilter(IntegrationAuthenticationFilter())
+        //IntegrationAuthenticationFilter 采用 @Component 注入
+        oauthServer
+            .realm(DEMO_RESOURCE_ID)
+            .tokenKeyAccess(&quot;permitAll()&quot;)
+            .checkTokenAccess(&quot;isAuthenticated()&quot;)
+            .allowFormAuthenticationForClients();
+    }
+
+}
+</code></pre><p>这里ClientDetailService基于内存的方式，是最简单的一种方式，在真是环境中，一般建议结合JDBC或者Redis。为此可以自定义这个ClientDetailService</p>
+<p>CustomClientDetailService.java (可选)</p>
+<pre><code>import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationException;
+import org.springframework.security.oauth2.provider.NoSuchClientException;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+
+/**
+ * 自定义ClientDetailsService，可以灵活定义auth2拦截的接口、权限集合等
+ * @author chenzhiling
+ *
+ */
+public class CustomClientDetailService implements ClientDetailsService {
+
+    private static final Logger log = LoggerFactory.getLogger(CustomClientDetailService.class);
+
+    @Override
+    public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+        BaseClientDetails client = null;
+        //这里可以改为查询数据库
+        if(&quot;client_app&quot;.equals(clientId)) {
+            log.info(&quot;Create a app client detail.&quot;);
+            client = new BaseClientDetails();
+            client.setClientId(clientId);
+            client.setClientSecret(&quot;{noop}123456&quot;);
+            client.setResourceIds(Arrays.asList(&quot;order&quot;));
+            client.setAuthorizedGrantTypes(Arrays.asList(&quot;authorization_code&quot;, 
+                    &quot;client_credentials&quot;, &quot;refresh_token&quot;, &quot;password&quot;, &quot;implicit&quot;));
+            //不同的client可以通过一个scope 对应权限集
+            client.setScope(Arrays.asList(&quot;all&quot;, &quot;select&quot;));
+            client.setAuthorities(AuthorityUtils.createAuthorityList(&quot;ADMIN_ROLE&quot;));
+            client.setAccessTokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(1)); //1天
+            client.setRefreshTokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(1)); //1天
+            Set&lt;String&gt; uris = new HashSet&lt;&gt;();
+            uris.add(&quot;/login&quot;);
+            client.setRegisteredRedirectUri(uris);
+        }
+        if(client == null) {
+            throw new NoSuchClientException(&quot;No client width requested id: &quot; + clientId);
+        }
+        return client;
+    }
+
+}
+</code></pre><p>CustomResServerConfiguration.java</p>
+<pre><code>import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+
+/**
+ * Spring Security 中的ResourceServerConfigurerAdapter配置会覆盖WebSecurityConfigurerAdapter
+ * protected void configure(HttpSecurity http) 中的配置会以ResourceServerConfigurerAdapter为准
+ * @author chenzhiling
+ *
+ */
+@Configuration
+@EnableResourceServer
+public class CustomResServerConfiguration extends ResourceServerConfigurerAdapter {
+
+    private static final String RESOURCE_ID = &quot;storicid&quot;;
+
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) {
+        resources.resourceId(RESOURCE_ID).stateless(true);
+    }
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        // Since we want the protected resources to be accessible in the UI as well we need
+        // session creation to be allowed (it&#39;s disabled by default in 2.0.6)
+        http
+            .httpBasic()
+        .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .and()
+            .authorizeRequests()
+            .antMatchers(&quot;/&quot;)
+            .permitAll()
+        .and()
+            .logout()
+            .permitAll()
+        .and()
+            .authorizeRequests()
+            .antMatchers(&quot;/oauth/*&quot;)
+            .permitAll()
+        .and()
+            .authorizeRequests()
+            .antMatchers(&quot;/v2/api-docs&quot;, &quot;/configuration/**&quot;, &quot;/swagger*/**&quot;, &quot;/webjars/**&quot;, &quot;/**/*.js&quot;, &quot;/**/*.css&quot;, &quot;/**/*.png&quot;)
+            .permitAll()
+        .and()
+            .authorizeRequests()
+            .regexMatchers(HttpMethod.POST, &quot;/user&quot;)
+            .permitAll()
+        .and()
+            .authorizeRequests()
+            .antMatchers(&quot;/admin/**&quot;)
+            .access(&quot;#oauth2.hasScope(&#39;read&#39;)&quot;)
+            .antMatchers(&quot;/admin/**&quot;)
+            .hasAnyAuthority(&quot;ROLE_ADMIN&quot;)
+        .and()
+            .authorizeRequests()
+            .anyRequest()
+            .authenticated()
+        .and()
+            //关闭默认的csrf认证
+            .csrf()
+            .disable();
+    }
+}
+</code></pre><p>对于http的Security拦截可以灵活根据不同的需求定义，这里只是极尽可能列出不同情况。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li><a href="https://spring.io/guides/gs/securing-web/" target="_blank" rel="noopener">Securing a Web Application</a></li>
+<li><a href="https://javadeveloperzone.com/spring/spring-jackson-property-naming-strategy/" target="_blank" rel="noopener">Spring Jackson property naming strategy</a></li>
+<li><a href="https://javadeveloperzone.com/spring-boot/spring-boot-configure-gson/" target="_blank" rel="noopener">Spring boot configure Gson</a></li>
+<li><a href="https://javadeveloperzone.com/spring-boot/change-gson-field-naming-strategy-in-spring/" target="_blank" rel="noopener">Change Gson field naming strategy in Spring</a></li>
+<li><a href="http://www.bubblecode.net/en/2016/01/22/understanding-oauth2/" target="_blank" rel="noopener">Understanding OAuth2</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/05/05/java/spring/spring-boot-security-thymeleaf/" data-toggle="tooltip" data-placement="top" title="Spring-Boot + Spring Security + Thymeleaf">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/04/28/java/spring/spring-boot-https/" data-toggle="tooltip" data-placement="top" title="Spring-Boot + HTTPS">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Spring-Boot2-0-Spring-Security-Oauth2"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Spring-Boot2.0 + Spring Security + Oauth2</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Spring-Security"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Spring Security</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Oauth2-0"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Oauth2.0</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Roles"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">Roles</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Tokens"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">Tokens</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Access-token-scope"><span class="toc-nav-number">1.2.3.</span> <span class="toc-nav-text">Access token scope</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Register-as-a-Client"><span class="toc-nav-number">1.2.4.</span> <span class="toc-nav-text">Register as a Client</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Authorization-grant-types"><span class="toc-nav-number">1.2.5.</span> <span class="toc-nav-text">Authorization grant types</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Authorization-Code-Grant"><span class="toc-nav-number">1.2.5.1.</span> <span class="toc-nav-text">Authorization Code Grant</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Implicit-Grant"><span class="toc-nav-number">1.2.5.2.</span> <span class="toc-nav-text">Implicit Grant</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Resource-Owner-Password-Credentials-Grant"><span class="toc-nav-number">1.2.5.3.</span> <span class="toc-nav-text">Resource Owner Password Credentials Grant</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Client-Credentials-Grant"><span class="toc-nav-number">1.2.5.4.</span> <span class="toc-nav-text">Client Credentials Grant</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#配置Spring-Boot-Security-Oauth2"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">配置Spring Boot + Security + Oauth2</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#配置Spring-Security"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">配置Spring Security</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#配置Oauth2"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">配置Oauth2</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Reference"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Reference</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                          <a class="tag" href="/tags/#Spring Boot" title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/05/05/java/spring/spring-boot-security-oauth2/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/05/05/java/spring/spring-boot-security-oauth2/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

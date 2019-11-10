@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hyperledger Fabric (六) — 使用fabric-sdk-java - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2018/11/12/hyperledger/fabric-java-sdk/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/blockchain/hyperledger/bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                            
+                              <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                            
+                              <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                            
+                        </div>
+                        <h1>Hyperledger Fabric (六) — 使用fabric-sdk-java</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2018-11-12
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p><code>fabric-sdk-java</code>是为了让java应用能够更加方便管理Fabric生态的应用开发工具。用户可以通过<code>fabric-sdk-java</code>的SDK来管理链码、channel等，也可以通过它来执行链码的数据集读写功能。同时还能够监控在channel上面的事件。</p>
+<h2 id="下载sdk代码"><a href="#下载sdk代码" class="headerlink" title="下载sdk代码"></a>下载sdk代码</h2><p>进入到工作目录</p>
+<pre><code>cd $GOPATH/src/github.com/hyperledger/
+</code></pre><p>下载代码</p>
+<pre><code>git clone https://github.com/hyperledger/fabric-sdk-java.git &amp;&amp; cd fabric-sdk-java
+</code></pre><p>查看代码版本</p>
+<pre><code>git branch
+
+*master
+</code></pre><p>目前其实是最新版本的代码，经过测试，选用版本<code>v1.2.2</code>的可以通过测试。</p>
+<pre><code>git fetch origin &amp;&amp; git checkout v1.2.2
+</code></pre><h2 id="启动网络"><a href="#启动网络" class="headerlink" title="启动网络"></a>启动网络</h2><p>首先使用<code>screen</code>工具进入到新的一个终端中，进入到<code>sdkintegration</code>目录中</p>
+<pre><code>cd src/test/fixture/sdkintegration
+</code></pre><p>启动网络</p>
+<pre><code>./fabric.sh up
+</code></pre><p>紧接着按<code>Ctrl</code> + <code>a</code> 键退出<code>screen</code>会话</p>
+<p>查看网络环境是否已经启动</p>
+<pre><code>docker ps -a
+
+CONTAINER ID        IMAGE                              COMMAND                  CREATED              STATUS                          PORTS                                            NAMES
+1dbf2e77cefb        hyperledger/fabric-peer:1.2.1      &quot;peer node start&quot;        About a minute ago   Up About a minute               0.0.0.0:8056-&gt;8056/tcp, 0.0.0.0:8058-&gt;8058/tcp   peer1.org2.example.com
+01e599874f60        hyperledger/fabric-peer:1.2.1      &quot;peer node start&quot;        About a minute ago   Up About a minute               0.0.0.0:7056-&gt;7056/tcp, 0.0.0.0:7058-&gt;7058/tcp   peer1.org1.example.com
+030901df2fdd        hyperledger/fabric-peer:1.2.1      &quot;peer node start&quot;        About a minute ago   Up About a minute               0.0.0.0:8051-&gt;8051/tcp, 0.0.0.0:8053-&gt;8053/tcp   peer0.org2.example.com
+eb02b6d8a1c5        hyperledger/fabric-peer:1.2.1      &quot;peer node start&quot;        About a minute ago   Up About a minute               0.0.0.0:7051-&gt;7051/tcp, 0.0.0.0:7053-&gt;7053/tcp   peer0.org1.example.com
+1c22f5af0f83        hyperledger/fabric-ccenv:1.2.1     &quot;/bin/bash&quot;              About a minute ago   Exited (0) About a minute ago                                                    sdkintegration_ccenv_1
+6720b9a4dac0        hyperledger/fabric-ca:1.2.1        &quot;sh -c &#39;fabric-ca-...&quot;   About a minute ago   Up About a minute               0.0.0.0:7054-&gt;7054/tcp                           ca_peerOrg1
+17dab645cad5        hyperledger/fabric-orderer:1.2.1   &quot;orderer&quot;                About a minute ago   Up About a minute               0.0.0.0:7050-&gt;7050/tcp                           orderer.example.com
+28405e3ac107        hyperledger/fabric-ca:1.2.1        &quot;sh -c &#39;fabric-ca-...&quot;   About a minute ago   Up About a minute               0.0.0.0:8054-&gt;7054/tcp                           ca_peerOrg2
+424773cc950c        hyperledger/fabric-tools:1.2.1     &quot;/usr/local/bin/co...&quot;   About a minute ago   Up About a minute               0.0.0.0:7059-&gt;7059/tcp                           configtxlator
+c0eb9c193cf2        docker/compose:1.19.0              &quot;docker-compose up...&quot;   About a minute ago   Up About a minute                                                                affectionate_beaver
+</code></pre><p>过滤查询</p>
+<pre><code>docker ps --format &quot;table {{.ID}}\t{{.Names}}\t{{.Ports}}&quot;
+
+
+CONTAINER ID        NAMES                                        PORTS
+564c1d67ee05        dev-peer1.org2.example.com-example_cc_go-1   
+4026f5ed2ed2        dev-peer0.org2.example.com-example_cc_go-1   
+bcfd208eff75        dev-peer1.org1.example.com-example_cc_go-1   
+83a7d1d464b5        dev-peer0.org1.example.com-example_cc_go-1   
+9bd77e0bcce7        peer1.org1.example.com                       0.0.0.0:7056-&gt;7056/tcp, 0.0.0.0:7058-&gt;7058/tcp
+a47a91c66686        peer1.org2.example.com                       0.0.0.0:8056-&gt;8056/tcp, 0.0.0.0:8058-&gt;8058/tcp
+4b41f1c868a8        peer0.org2.example.com                       0.0.0.0:8051-&gt;8051/tcp, 0.0.0.0:8053-&gt;8053/tcp
+55851ba45ebe        peer0.org1.example.com                       0.0.0.0:7051-&gt;7051/tcp, 0.0.0.0:7053-&gt;7053/tcp
+cde29d63decd        ca_peerOrg2                                  0.0.0.0:8054-&gt;7054/tcp
+466da500ac91        ca_peerOrg1                                  0.0.0.0:7054-&gt;7054/tcp
+b5ffc617b821        configtxlator                                0.0.0.0:7059-&gt;7059/tcp
+bf21abfb11b9        orderer.example.com                          0.0.0.0:7050-&gt;7050/tcp
+</code></pre><p>如果启动网络成功，以上除了<code>sdkintegration_ccenv_1</code>容器会异常退出意外，其余容器都应该正常工作，接下来进入到根目录进行依赖管理</p>
+<pre><code>cd $GOPATH/src/github.com/hyperledger/fabric-sdk-java &amp;&amp; mvn clean &amp;&amp; mvn compile
+</code></pre><h2 id="运行测试代码"><a href="#运行测试代码" class="headerlink" title="运行测试代码"></a>运行测试代码</h2><pre><code>cd $GOPATH/src/github.com/hyperledger/fabric-sdk-java &amp;&amp; mvn test -Dtest=org.hyperledger.fabric.sdkintegration.End2endIT
+</code></pre><p>运行成功结果</p>
+<pre><code>...
+That&#39;s all folks!
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 28.786 sec - in org.hyperledger.fabric.sdkintegration.End2endIT
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- jacoco-maven-plugin:0.7.9:report (post-unit-test) @ fabric-sdk-java ---
+[INFO] Loading execution data file /opt/gopath/src/github.com/hyperledger/fabric-sdk-java/target/coverage-reports/jacoco-ut.exec
+[INFO] Analyzed bundle &#39;fabric-java-sdk&#39; with 199 classes
+[WARNING] Classes in bundle &#39;fabric-java-sdk&#39; do no match with execution data. For report generation the same class files must be used as at runtime.
+[WARNING] Execution data for class org/hyperledger/fabric_ca/sdk/HFCAClient$AllHostsSSLSocketFactory does not match.
+[WARNING] Execution data for class org/hyperledger/fabric_ca/sdk/HFCAClient$AllHostsSSLSocketFactory$1 does not match.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  59.439 s
+[INFO] Finished at: 2018-11-12T18:22:42+08:00
+[INFO] ------------------------------------------------------------------------
+</code></pre><p>具体内容可以参考文件 <a href="/files/hyperledger/sdkintegration.txt">sdkintegration.txt</a></p>
+<h2 id="使用Fabric-Java-SDK"><a href="#使用Fabric-Java-SDK" class="headerlink" title="使用Fabric-Java-SDK"></a>使用Fabric-Java-SDK</h2><p>直接贴代码，代码结构如下</p>
+<p><img src="/images/blockchain/hyperledger/sdk-project.jpg" alt="image"></p>
+<h3 id="bean"><a href="#bean" class="headerlink" title="bean"></a>bean</h3><h4 id="Chaincode"><a href="#Chaincode" class="headerlink" title="Chaincode"></a>Chaincode</h4><p><code>Chaincode.java</code></p>
+<pre><code>public class Chaincode {
+
+    /** 当前将要访问的智能合约所属频道名称 */
+    private String channelName;
+    /** 智能合约名称 */
+    private String chaincodeName;
+    /** 智能合约安装路径 */
+    private String chaincodePath;
+    /** 智能合约版本号 */
+    private String chaincodeVersion;
+    /** 执行智能合约操作等待时间 */
+    private int invokeWatiTime = 100000;
+    /** 执行智能合约实例等待时间 */
+    private int deployWatiTime = 120000;
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public String getChaincodeName() {
+        return chaincodeName;
+    }
+
+    public void setChaincodeName(String chaincodeName) {
+        this.chaincodeName = chaincodeName;
+    }
+
+    public String getChaincodePath() {
+        return chaincodePath;
+    }
+
+    public void setChaincodePath(String chaincodePath) {
+        this.chaincodePath = chaincodePath;
+    }
+
+    public String getChaincodeVersion() {
+        return chaincodeVersion;
+    }
+
+    public void setChaincodeVersion(String chaincodeVersion) {
+        this.chaincodeVersion = chaincodeVersion;
+    }
+
+    public int getInvokeWatiTime() {
+        return invokeWatiTime;
+    }
+
+    public void setInvokeWatiTime(int invokeWatiTime) {
+        this.invokeWatiTime = invokeWatiTime;
+    }
+
+    public int getDeployWatiTime() {
+        return deployWatiTime;
+    }
+
+    public void setDeployWatiTime(int deployWatiTime) {
+        this.deployWatiTime = deployWatiTime;
+    }
+
+}
+</code></pre><h4 id="Orderers"><a href="#Orderers" class="headerlink" title="Orderers"></a>Orderers</h4><p><code>Orderers.java</code></p>
+<pre><code>import java.util.ArrayList;
+import java.util.List;
+
+public class Orderers {
+
+    /** orderer 排序服务器所在根域名 */
+    private String ordererDomainName;
+    /** orderer 排序服务器集合 */
+    private List&lt;Orderer&gt; orderers;
+
+    public Orderers() {
+        orderers = new ArrayList&lt;&gt;();
+    }
+
+    public String getOrdererDomainName() {
+        return ordererDomainName;
+    }
+
+    public void setOrdererDomainName(String ordererDomainName) {
+        this.ordererDomainName = ordererDomainName;
+    }
+
+    /** 新增排序服务器 */
+    public void addOrderer(String name, String location) {
+        orderers.add(new Orderer(name, location));
+    }
+
+    /** 获取排序服务器集合 */
+    public List&lt;Orderer&gt; get() {
+        return orderers;
+    }
+
+    /**
+     * 排序服务器对象
+     */
+    public class Orderer {
+
+        /** orderer 排序服务器的域名 */
+        private String ordererName;
+        /** orderer 排序服务器的访问地址 */
+        private String ordererLocation;
+
+        public Orderer(String ordererName, String ordererLocation) {
+            super();
+            this.ordererName = ordererName;
+            this.ordererLocation = ordererLocation;
+        }
+
+        public String getOrdererName() {
+            return ordererName;
+        }
+
+        public void setOrdererName(String ordererName) {
+            this.ordererName = ordererName;
+        }
+
+        public String getOrdererLocation() {
+            return ordererLocation;
+        }
+
+        public void setOrdererLocation(String ordererLocation) {
+            this.ordererLocation = ordererLocation;
+        }
+
+    }
+
+}
+</code></pre><h4 id="Peers"><a href="#Peers" class="headerlink" title="Peers"></a>Peers</h4><p><code>Peers.java</code></p>
+<pre><code>import java.util.ArrayList;
+import java.util.List;
+
+public class Peers {
+
+    /** 当前指定的组织名称 */
+    private String orgName; // Org1
+    /** 当前指定的组织名称 */
+    private String orgMSPID; // Org1MSP
+    /** 当前指定的组织所在根域名 */
+    private String orgDomainName; //org1.example.com
+    /** orderer 排序服务器集合 */
+    private List&lt;Peer&gt; peers;
+
+    public Peers() {
+        peers = new ArrayList&lt;&gt;();
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public String getOrgMSPID() {
+        return orgMSPID;
+    }
+
+    public void setOrgMSPID(String orgMSPID) {
+        this.orgMSPID = orgMSPID;
+    }
+
+    public String getOrgDomainName() {
+        return orgDomainName;
+    }
+
+    public void setOrgDomainName(String orgDomainName) {
+        this.orgDomainName = orgDomainName;
+    }
+
+    /** 新增排序服务器 */
+    public void addPeer(String peerName, String peerEventHubName, String peerLocation, String peerEventHubLocation, String caLocation) {
+        peers.add(new Peer(peerName, peerEventHubName, peerLocation, peerEventHubLocation, caLocation));
+    }
+
+    /** 获取排序服务器集合 */
+    public List&lt;Peer&gt; get() {
+        return peers;
+    }
+
+    /**
+     * 节点服务器对象
+     */
+    public class Peer {
+
+        /** 当前指定的组织节点域名 */
+        private String peerName; // peer0.org1.example.com
+        /** 当前指定的组织节点事件域名 */
+        private String peerEventHubName; // peer0.org1.example.com
+        /** 当前指定的组织节点访问地址 */
+        private String peerLocation; // grpc://110.131.116.21:7051
+        /** 当前指定的组织节点事件监听访问地址 */
+        private String peerEventHubLocation; // grpc://110.131.116.21:7053
+        /** 当前指定的组织节点ca访问地址 */
+        private String caLocation; // http://110.131.116.21:7054
+        /** 当前peer是否增加Event事件处理 */
+        private boolean addEventHub = false;
+
+        public Peer(String peerName, String peerEventHubName, String peerLocation, String peerEventHubLocation, String caLocation) {
+            this.peerName = peerName;
+            this.peerEventHubName = peerEventHubName;
+            this.peerLocation = peerLocation;
+            this.peerEventHubLocation = peerEventHubLocation;
+            this.caLocation = caLocation;
+        }
+
+        public String getPeerName() {
+            return peerName;
+        }
+
+        public void setPeerName(String peerName) {
+            this.peerName = peerName;
+        }
+
+        public String getPeerEventHubName() {
+            return peerEventHubName;
+        }
+
+        public void setPeerEventHubName(String peerEventHubName) {
+            this.peerEventHubName = peerEventHubName;
+        }
+
+        public String getPeerLocation() {
+            return peerLocation;
+        }
+
+        public void setPeerLocation(String peerLocation) {
+            this.peerLocation = peerLocation;
+        }
+
+        public String getPeerEventHubLocation() {
+            return peerEventHubLocation;
+        }
+
+        public void setPeerEventHubLocation(String eventHubLocation) {
+            this.peerEventHubLocation = eventHubLocation;
+        }
+
+        public String getCaLocation() {
+            return caLocation;
+        }
+
+        public void setCaLocation(String caLocation) {
+            this.caLocation = caLocation;
+        }
+
+        public boolean isAddEventHub() {
+            return addEventHub;
+        }
+
+        public void addEventHub(boolean addEventHub) {
+            this.addEventHub = addEventHub;
+        }
+
+    }
+
+}
+</code></pre><h3 id="ChaincodeManager"><a href="#ChaincodeManager" class="headerlink" title="ChaincodeManager"></a>ChaincodeManager</h3><p><code>ChaincodeManager.java</code></p>
+<pre><code>import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import it.fabric.labour.bean.Chaincode;
+import it.fabric.labour.bean.Orderers;
+import it.fabric.labour.bean.Peers;
+import org.apache.log4j.Logger;
+import org.hyperledger.fabric.sdk.*;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
+import org.hyperledger.fabric.sdk.exception.ProposalException;
+import org.hyperledger.fabric.sdk.exception.TransactionException;
+import org.hyperledger.fabric.sdk.security.CryptoSuite;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+
+public class ChaincodeManager {
+
+    private static Logger log = Logger.getLogger(ChaincodeManager.class);
+
+    private FabricConfig config;
+    private Orderers orderers;
+    private Peers peers;
+    private Chaincode chaincode;
+
+    private HFClient client;
+    private FabricOrg fabricOrg;
+    private Channel channel;
+    private ChaincodeID chaincodeID;
+
+    public ChaincodeManager(FabricConfig fabricConfig)
+            throws CryptoException, InvalidArgumentException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, IOException, TransactionException, IllegalAccessException, InstantiationException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException {
+        this.config = fabricConfig;
+
+        orderers = this.config.getOrderers();
+        peers = this.config.getPeers();
+        chaincode = this.config.getChaincode();
+
+        client = HFClient.createNewInstance();
+        log.debug(&quot;Create instance of HFClient&quot;);
+        client.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
+        log.debug(&quot;Set Crypto Suite of HFClient&quot;);
+
+        fabricOrg = getFabricOrg();
+        channel = getChannel();
+        chaincodeID = getChaincodeID();
+
+        client.setUserContext(fabricOrg.getPeerAdmin());
+    }
+
+    private FabricOrg getFabricOrg() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, IOException {
+
+        // java.io.tmpdir : C:\Users\&lt;user&gt;\AppData\Local\Temp\
+        File storeFile = new File(System.getProperty(&quot;java.io.tmpdir&quot;) + &quot;/HFCSampletest.properties&quot;);
+        FabricStore fabricStore = new FabricStore(storeFile);
+
+        // Get Org1 from configuration
+        FabricOrg fabricOrg = new FabricOrg(peers, orderers, fabricStore, config.getCryptoConfigPath());
+        log.debug(&quot;Get FabricOrg&quot;);
+        return fabricOrg;
+    }
+
+    private Channel getChannel()
+            throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, IOException, CryptoException, InvalidArgumentException, TransactionException {
+        client.setUserContext(fabricOrg.getPeerAdmin());
+        return getChannel(fabricOrg, client);
+    }
+
+    private Channel getChannel(FabricOrg fabricOrg, HFClient client)
+            throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, IOException, CryptoException, InvalidArgumentException, TransactionException {
+        Channel channel = client.newChannel(chaincode.getChannelName());
+        //Channel channel = client.getChannel(chaincode.getChaincodeName());
+        log.debug(&quot;Get Chain &quot; + chaincode.getChannelName());
+
+        //v1.1.0版本之后取消了该方法  channel.setTransactionWaitTime(chaincode.getInvokeWatiTime());
+        //v1.1.0版本之后取消了该方法  channel.setDeployWaitTime(chaincode.getDeployWatiTime());
+
+        for (int i = 0; i &lt; peers.get().size(); i++) {
+            File peerCert = Paths.get(config.getCryptoConfigPath(), &quot;/peerOrganizations&quot;, peers.getOrgDomainName(), &quot;peers&quot;, peers.get().get(i).getPeerName(), &quot;tls/server.crt&quot;)
+                    .toFile();
+            if (!peerCert.exists()) {
+                throw new RuntimeException(
+                        String.format(&quot;Missing cert file for: %s. Could not find at location: %s&quot;, peers.get().get(i).getPeerName(), peerCert.getAbsolutePath()));
+            }
+            Properties peerProperties = new Properties();
+            peerProperties.setProperty(&quot;pemFile&quot;, peerCert.getAbsolutePath());
+            // ret.setProperty(&quot;trustServerCertificate&quot;, &quot;true&quot;); //testing
+            // environment only NOT FOR PRODUCTION!
+            peerProperties.setProperty(&quot;hostnameOverride&quot;, peers.getOrgDomainName());
+            peerProperties.setProperty(&quot;sslProvider&quot;, &quot;openSSL&quot;);
+            peerProperties.setProperty(&quot;negotiationType&quot;, &quot;TLS&quot;);
+            // 在grpc的NettyChannelBuilder上设置特定选项
+            peerProperties.put(&quot;grpc.ManagedChannelBuilderOption.maxInboundMessageSize&quot;, 9000000);
+            channel.addPeer(client.newPeer(peers.get().get(i).getPeerName(), fabricOrg.getPeerLocation(peers.get().get(i).getPeerName()), peerProperties));
+            if (peers.get().get(i).isAddEventHub()) {
+                channel.addEventHub(
+                        client.newEventHub(peers.get().get(i).getPeerEventHubName(), fabricOrg.getEventHubLocation(peers.get().get(i).getPeerEventHubName()), peerProperties));
+            }
+        }
+
+        for (int i = 0; i &lt; orderers.get().size(); i++) {
+            File ordererCert = Paths.get(config.getCryptoConfigPath(), &quot;/ordererOrganizations&quot;, orderers.getOrdererDomainName(), &quot;orderers&quot;, orderers.get().get(i).getOrdererName(),
+                    &quot;tls/server.crt&quot;).toFile();
+            if (!ordererCert.exists()) {
+                throw new RuntimeException(
+                        String.format(&quot;Missing cert file for: %s. Could not find at location: %s&quot;, orderers.get().get(i).getOrdererName(), ordererCert.getAbsolutePath()));
+            }
+            Properties ordererProperties = new Properties();
+            ordererProperties.setProperty(&quot;pemFile&quot;, ordererCert.getAbsolutePath());
+            ordererProperties.setProperty(&quot;hostnameOverride&quot;, orderers.getOrdererDomainName());
+            ordererProperties.setProperty(&quot;sslProvider&quot;, &quot;openSSL&quot;);
+            ordererProperties.setProperty(&quot;negotiationType&quot;, &quot;TLS&quot;);
+            ordererProperties.put(&quot;grpc.ManagedChannelBuilderOption.maxInboundMessageSize&quot;, 9000000);
+            ordererProperties.setProperty(&quot;ordererWaitTimeMilliSecs&quot;, &quot;300000&quot;);
+            channel.addOrderer(
+                    client.newOrderer(orderers.get().get(i).getOrdererName(), fabricOrg.getOrdererLocation(orderers.get().get(i).getOrdererName()), ordererProperties));
+        }
+
+        log.debug(&quot;channel.isInitialized() = &quot; + channel.isInitialized());
+        if (!channel.isInitialized()) {
+            channel.initialize();
+        }
+        if (config.isRegisterEvent()) {
+            channel.registerBlockListener(new BlockListener() {
+
+                @Override
+                public void received(BlockEvent event) {
+                    // TODO
+                    log.debug(&quot;========================Event事件监听开始========================&quot;);
+                    try {
+                        log.debug(&quot;event.getChannelId() = &quot; + event.getChannelId());
+                        //v1.0.1 log.debug(&quot;event.getEvent().getChaincodeEvent().getPayload().toStringUtf8() = &quot; + event.getEvent().getChaincodeEvent().getPayload().toStringUtf8());
+                        log.debug(&quot;event.getBlock().getData().getDataList().size() = &quot; + event.getBlock().getData().getDataList().size());
+                        ByteString byteString = event.getBlock().getData().getData(0);
+                        String result = byteString.toStringUtf8();
+                        log.debug(&quot;byteString.toStringUtf8() = &quot; + result);
+
+                        String r1[] = result.split(&quot;END CERTIFICATE&quot;);
+                        String rr = r1[2];
+                        log.debug(&quot;rr = &quot; + rr);
+                    } catch (InvalidProtocolBufferException e) {
+                        // TODO
+                        e.printStackTrace();
+                    }
+                    log.debug(&quot;========================Event事件监听结束========================&quot;);
+                }
+            });
+        }
+        return channel;
+    }
+
+    private ChaincodeID getChaincodeID() {
+        return ChaincodeID.newBuilder().setName(chaincode.getChaincodeName()).setVersion(chaincode.getChaincodeVersion()).setPath(chaincode.getChaincodePath()).build();
+    }
+
+    /**
+     * 执行智能合约
+     * 
+     * @param fcn
+     *            方法名
+     * @param args
+     *            参数数组
+     * @return
+     * @throws InvalidArgumentException
+     * @throws ProposalException
+     * @throws InterruptedException
+     * @throws ExecutionException
+     * @throws TimeoutException
+     * @throws IOException 
+     * @throws TransactionException 
+     * @throws CryptoException 
+     * @throws InvalidKeySpecException 
+     * @throws NoSuchProviderException 
+     * @throws NoSuchAlgorithmException 
+     */
+    public Map&lt;String, String&gt; invoke(String fcn, String[] args)
+            throws InvalidArgumentException, ProposalException, InterruptedException, ExecutionException, TimeoutException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, CryptoException, TransactionException, IOException {
+        Map&lt;String, String&gt; resultMap = new HashMap&lt;&gt;();
+
+        Collection&lt;ProposalResponse&gt; successful = new LinkedList&lt;&gt;();
+        Collection&lt;ProposalResponse&gt; failed = new LinkedList&lt;&gt;();
+
+        /// Send transaction proposal to all peers
+        TransactionProposalRequest transactionProposalRequest = client.newTransactionProposalRequest();
+        transactionProposalRequest.setChaincodeID(chaincodeID);
+        transactionProposalRequest.setFcn(fcn);
+        transactionProposalRequest.setArgs(args);
+
+        Map&lt;String, byte[]&gt; tm2 = new HashMap&lt;&gt;();
+        tm2.put(&quot;HyperLedgerFabric&quot;, &quot;TransactionProposalRequest:JavaSDK&quot;.getBytes(UTF_8));
+        tm2.put(&quot;method&quot;, &quot;TransactionProposalRequest&quot;.getBytes(UTF_8));
+        tm2.put(&quot;result&quot;, &quot;:)&quot;.getBytes(UTF_8));
+        transactionProposalRequest.setTransientMap(tm2);
+
+        Collection&lt;ProposalResponse&gt; transactionPropResp = channel.sendTransactionProposal(transactionProposalRequest, channel.getPeers());
+        for (ProposalResponse response : transactionPropResp) {
+            if (response.getStatus() == ProposalResponse.Status.SUCCESS) {
+                successful.add(response);
+            } else {
+                failed.add(response);
+            }
+        }
+
+        Collection&lt;Set&lt;ProposalResponse&gt;&gt; proposalConsistencySets = SDKUtils.getProposalConsistencySets(transactionPropResp);
+        if (proposalConsistencySets.size() != 1) {
+            log.error(&quot;Expected only one set of consistent proposal responses but got &quot; + proposalConsistencySets.size());
+        }
+
+        if (failed.size() &gt; 0) {
+            ProposalResponse firstTransactionProposalResponse = failed.iterator().next();
+            log.error(&quot;Not enough endorsers for inspect:&quot; + failed.size() + &quot; endorser error: &quot; + firstTransactionProposalResponse.getMessage() + &quot;. Was verified: &quot;
+                    + firstTransactionProposalResponse.isVerified());
+            resultMap.put(&quot;code&quot;, &quot;error&quot;);
+            resultMap.put(&quot;data&quot;, firstTransactionProposalResponse.getMessage());
+            return resultMap;
+        } else {
+            log.info(&quot;Successfully received transaction proposal responses.&quot;);
+            ProposalResponse resp = transactionPropResp.iterator().next();
+            byte[] x = resp.getChaincodeActionResponsePayload();
+            String resultAsString = null;
+            if (x != null) {
+                resultAsString = new String(x, &quot;UTF-8&quot;);
+            }
+            log.info(&quot;resultAsString = &quot; + resultAsString);
+            channel.sendTransaction(successful);
+            resultMap.put(&quot;code&quot;, &quot;success&quot;);
+            resultMap.put(&quot;data&quot;, resultAsString);
+            return resultMap;
+        }
+
+//        channel.sendTransaction(successful).thenApply(transactionEvent -&gt; {
+//            if (transactionEvent.isValid()) {
+//                log.info(&quot;Successfully send transaction proposal to orderer. Transaction ID: &quot; + transactionEvent.getTransactionID());
+//            } else {
+//                log.info(&quot;Failed to send transaction proposal to orderer&quot;);
+//            }
+//            // chain.shutdown(true);
+//            return transactionEvent.getTransactionID();
+//        }).get(chaincode.getInvokeWatiTime(), TimeUnit.SECONDS);
+    }
+
+    /**
+     * 查询智能合约
+     * 
+     * @param fcn
+     *            方法名
+     * @param args
+     *            参数数组
+     * @return
+     * @throws InvalidArgumentException
+     * @throws ProposalException
+     * @throws IOException 
+     * @throws TransactionException 
+     * @throws CryptoException 
+     * @throws InvalidKeySpecException 
+     * @throws NoSuchProviderException 
+     * @throws NoSuchAlgorithmException 
+     */
+    public Map&lt;String, String&gt; query(String fcn, String[] args) throws InvalidArgumentException, ProposalException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, CryptoException, TransactionException, IOException {
+        Map&lt;String, String&gt; resultMap = new HashMap&lt;&gt;();
+        String payload = &quot;&quot;;
+        QueryByChaincodeRequest queryByChaincodeRequest = client.newQueryProposalRequest();
+        queryByChaincodeRequest.setArgs(args);
+        queryByChaincodeRequest.setFcn(fcn);
+        queryByChaincodeRequest.setChaincodeID(chaincodeID);
+
+        Map&lt;String, byte[]&gt; tm2 = new HashMap&lt;&gt;();
+        tm2.put(&quot;HyperLedgerFabric&quot;, &quot;QueryByChaincodeRequest:JavaSDK&quot;.getBytes(UTF_8));
+        tm2.put(&quot;method&quot;, &quot;QueryByChaincodeRequest&quot;.getBytes(UTF_8));
+        queryByChaincodeRequest.setTransientMap(tm2);
+
+        Collection&lt;ProposalResponse&gt; queryProposals = channel.queryByChaincode(queryByChaincodeRequest, channel.getPeers());
+        for (ProposalResponse proposalResponse : queryProposals) {
+            if (!proposalResponse.isVerified() || proposalResponse.getStatus() != ProposalResponse.Status.SUCCESS) {
+                log.debug(&quot;Failed query proposal from peer &quot; + proposalResponse.getPeer().getName() + &quot; status: &quot; + proposalResponse.getStatus() + &quot;. Messages: &quot;
+                        + proposalResponse.getMessage() + &quot;. Was verified : &quot; + proposalResponse.isVerified());
+                resultMap.put(&quot;code&quot;, &quot;error&quot;);
+                resultMap.put(&quot;data&quot;, &quot;Failed query proposal from peer &quot; + proposalResponse.getPeer().getName() + &quot; status: &quot; + proposalResponse.getStatus() + &quot;. Messages: &quot;
+                        + proposalResponse.getMessage() + &quot;. Was verified : &quot; + proposalResponse.isVerified());
+            } else {
+                payload = proposalResponse.getProposalResponse().getResponse().getPayload().toStringUtf8();
+                log.debug(&quot;Query payload from peer: &quot; + proposalResponse.getPeer().getName());
+                log.debug(&quot;&quot; + payload);
+                resultMap.put(&quot;code&quot;, &quot;success&quot;);
+                resultMap.put(&quot;data&quot;, payload);
+            }
+        }
+        return resultMap;
+    }
+
+}
+</code></pre><h3 id="FabricConfig"><a href="#FabricConfig" class="headerlink" title="FabricConfig"></a>FabricConfig</h3><p><code>FabricConfig.java</code></p>
+<pre><code>import java.io.File;
+
+import it.fabric.labour.bean.Chaincode;
+import it.fabric.labour.bean.Orderers;
+import it.fabric.labour.bean.Peers;
+import org.apache.log4j.Logger;
+
+
+public class FabricConfig {
+
+    private static Logger log = Logger.getLogger(FabricConfig.class);
+
+    /** 节点服务器对象 */
+    private Peers peers;
+    /** 排序服务器对象 */
+    private Orderers orderers;
+    /** 智能合约对象 */
+    private Chaincode chaincode;
+    /** channel-artifacts所在路径：默认channel-artifacts所在路径/xxx/WEB-INF/classes/fabric/channel-artifacts/ */
+    private String channelArtifactsPath;
+    /** crypto-config所在路径：默认crypto-config所在路径/xxx/WEB-INF/classes/fabric/crypto-config/ */
+    private String cryptoConfigPath;
+    private boolean registerEvent = false;
+
+    public FabricConfig() {
+        // 默认channel-artifacts所在路径 /xxx/WEB-INF/classes/fabric/channel-artifacts/
+        channelArtifactsPath = getChannlePath() + &quot;/channel-artifacts/&quot;;
+        // 默认crypto-config所在路径 /xxx/WEB-INF/classes/fabric/crypto-config/
+        cryptoConfigPath = getChannlePath() + &quot;/crypto-config/&quot;;
+    }
+
+    /**
+     * 默认fabric配置路径
+     * 
+     * @return channel path
+     */
+    private String getChannlePath() {
+        String directorys = ChaincodeManager.class.getClassLoader().getResource(&quot;fabric&quot;).getFile();
+        log.debug(&quot;directorys = &quot; + directorys);
+        File directory = new File(directorys);
+        log.debug(&quot;directory = &quot; + directory.getPath());
+
+        return directory.getPath();
+        // return &quot;src/main/resources/fabric/channel-artifacts/&quot;;
+    }
+
+    public Peers getPeers() {
+        return peers;
+    }
+
+    public void setPeers(Peers peers) {
+        this.peers = peers;
+    }
+
+    public Orderers getOrderers() {
+        return orderers;
+    }
+
+    public void setOrderers(Orderers orderers) {
+        this.orderers = orderers;
+    }
+
+    public Chaincode getChaincode() {
+        return chaincode;
+    }
+
+    public void setChaincode(Chaincode chaincode) {
+        this.chaincode = chaincode;
+    }
+
+    public String getChannelArtifactsPath() {
+        return channelArtifactsPath;
+    }
+
+    public void setChannelArtifactsPath(String channelArtifactsPath) {
+        this.channelArtifactsPath = channelArtifactsPath;
+    }
+
+    public String getCryptoConfigPath() {
+        return cryptoConfigPath;
+    }
+
+    public void setCryptoConfigPath(String cryptoConfigPath) {
+        this.cryptoConfigPath = cryptoConfigPath;
+    }
+
+    public boolean isRegisterEvent() {
+        return registerEvent;
+    }
+
+    public void setRegisterEvent(boolean registerEvent) {
+        this.registerEvent = registerEvent;
+    }
+
+}
+</code></pre><h3 id="FabricManager"><a href="#FabricManager" class="headerlink" title="FabricManager"></a>FabricManager</h3><p><code>FabricManager.java</code></p>
+<pre><code>import it.fabric.labour.bean.Chaincode;
+import it.fabric.labour.bean.Orderers;
+import it.fabric.labour.bean.Peers;
+
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
+import org.hyperledger.fabric.sdk.exception.TransactionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
+
+public class FabricManager {
+
+    private static Logger log = LoggerFactory.getLogger(FabricManager.class);
+
+    private ChaincodeManager manager;
+
+    private static FabricManager instance = null;
+
+    public static FabricManager obtain()
+            throws CryptoException, InvalidArgumentException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, TransactionException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException {
+        if (null == instance) {
+            synchronized (FabricManager.class) {
+                if (null == instance) {
+                    instance = new FabricManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private FabricManager()
+            throws CryptoException, InvalidArgumentException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, TransactionException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException {
+        manager = new ChaincodeManager(getConfig());
+    }
+
+    /**
+     * 获取节点服务器管理器
+     * 
+     * @return 节点服务器管理器
+     */
+    public ChaincodeManager getManager() {
+        return manager;
+    }
+
+    /**
+     * 根据节点作用类型获取节点服务器配置
+     * 
+     * @param type
+     *            服务器作用类型（1、执行；2、查询）
+     * @return 节点服务器配置
+     */
+    private FabricConfig getConfig() {
+        FabricConfig config = new FabricConfig();
+        config.setOrderers(getOrderers());
+        config.setPeers(getPeers());
+        config.setChaincode(getChaincode(&quot;foo&quot;, &quot;example_cc_go&quot;, &quot;github.com/example_cc&quot;, &quot;1&quot;));
+        config.setChannelArtifactsPath(getChannleArtifactsPath());
+        config.setCryptoConfigPath(getCryptoConfigPath());
+        return config;
+    }
+
+    private Orderers getOrderers() {
+        Orderers orderer = new Orderers();
+        orderer.setOrdererDomainName(&quot;example.com&quot;);
+        orderer.addOrderer(&quot;orderer.example.com&quot;, &quot;grpc://222.201.145.194:7050&quot;);
+        //orderer.addOrderer(&quot;orderer0.example.com&quot;, &quot;grpc://192.168.10.31x:7050&quot;);
+        //orderer.addOrderer(&quot;orderer2.example.com&quot;, &quot;grpc://192.168.10.31xx:7050&quot;);
+        return orderer;
+    }
+
+    /**
+     * 获取节点服务器集
+     * 
+     * @return 节点服务器集
+     */
+    private Peers getPeers() {
+        Peers peers = new Peers();
+        peers.setOrgName(&quot;peerOrg1&quot;);
+        peers.setOrgMSPID(&quot;Org1MSP&quot;);
+        peers.setOrgDomainName(&quot;org1.example.com&quot;);
+        // peer1 无法进行链码操作  peers.addPeer(&quot;peer1.org1.example.com&quot;, &quot;peer1.org1.example.com&quot;, &quot;grpc://222.201.145.194:8051&quot;, &quot;grpc://222.201.145.194:8053&quot;, &quot;http://222.201.145.194:7054&quot;);
+        peers.addPeer(&quot;peer0.org1.example.com&quot;, &quot;peer0.org1.example.com&quot;, &quot;grpc://222.201.145.194:7051&quot;, &quot;grpc://222.201.145.194:7053&quot;, &quot;http://222.201.145.194:7054&quot;);
+        return peers;
+    }
+
+    /**
+     * 获取智能合约
+     * 
+     * @param channelName
+     *            频道名称
+     * @param chaincodeName
+     *            智能合约名称
+     * @param chaincodePath
+     *            智能合约路径
+     * @param chaincodeVersion
+     *            智能合约版本
+     * @return chaincode
+     *              智能合约
+     */
+    private Chaincode getChaincode(String channelName, String chaincodeName, String chaincodePath, String chaincodeVersion) {
+        Chaincode chaincode = new Chaincode();
+        chaincode.setChannelName(channelName);
+        chaincode.setChaincodeName(chaincodeName);
+        chaincode.setChaincodePath(chaincodePath);
+        chaincode.setChaincodeVersion(chaincodeVersion);
+        chaincode.setInvokeWatiTime(100000);
+        chaincode.setDeployWatiTime(120000);
+        return chaincode;
+    }
+
+    /**
+     * 获取channel-artifacts配置路径
+     * 
+     * @return .../fabric/channel-artifacts/
+     */
+    private String getChannleArtifactsPath() {
+        String directorys = FabricManager.class.getClassLoader().getResource(&quot;fabric&quot;).getFile();
+        log.debug(&quot;directorys = &quot; + directorys);
+        File directory = new File(directorys);
+        log.debug(&quot;directory = &quot; + directory.getPath());
+
+        return directory.getPath() + &quot;/channel-artifacts/&quot;;
+    }
+
+    /**
+     * 获取crypto-config配置路径
+     * 
+     * @return .../fabric/crypto-config/
+     */
+    private String getCryptoConfigPath() {
+        String directorys = FabricManager.class.getClassLoader().getResource(&quot;fabric&quot;).getFile();
+        log.debug(&quot;directorys = &quot; + directorys);
+        File directory = new File(directorys);
+        log.debug(&quot;directory = &quot; + directory.getPath());
+
+        return directory.getPath() + &quot;/crypto-config/&quot;;
+    }
+
+}
+</code></pre><h3 id="FabricOrg"><a href="#FabricOrg" class="headerlink" title="FabricOrg"></a>FabricOrg</h3><p><code>FabricOrg.java</code></p>
+<pre><code>import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import it.fabric.labour.bean.Orderers;
+import it.fabric.labour.bean.Peers;
+import org.apache.log4j.Logger;
+import org.hyperledger.fabric.sdk.Peer;
+import org.hyperledger.fabric.sdk.User;
+import org.hyperledger.fabric_ca.sdk.HFCAClient;
+
+
+public class FabricOrg {
+
+    private static Logger log = Logger.getLogger(FabricOrg.class);
+
+    /** 名称 */
+    private String name;
+    /** 会员id */
+    private String mspid;
+    /** ca 客户端 */
+    private HFCAClient caClient;
+
+    /** 用户集合 */
+    Map&lt;String, User&gt; userMap = new HashMap&lt;&gt;();
+    /** 本地节点集合 */
+    Map&lt;String, String&gt; peerLocations = new HashMap&lt;&gt;();
+    /** 本地排序服务集合 */
+    Map&lt;String, String&gt; ordererLocations = new HashMap&lt;&gt;();
+    /** 本地事件集合 */
+    Map&lt;String, String&gt; eventHubLocations = new HashMap&lt;&gt;();
+    /** 节点集合 */
+    Set&lt;Peer&gt; peers = new HashSet&lt;&gt;();
+    /** 联盟管理员用户 */
+    private FabricUser admin;
+    /** 本地 ca */
+    private String caLocation;
+    /** ca 配置 */
+    private Properties caProperties = null;
+
+    /** 联盟单节点管理员用户 */
+    private FabricUser peerAdmin;
+
+    /** 域名名称 */
+    private String domainName;
+
+    public FabricOrg(Peers peers, Orderers orderers, FabricStore fabricStore, String cryptoConfigPath)
+            throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, IOException {
+        this.name = peers.getOrgName();
+        this.mspid = peers.getOrgMSPID();
+        for (int i = 0; i &lt; peers.get().size(); i++) {
+            addPeerLocation(peers.get().get(i).getPeerName(), peers.get().get(i).getPeerLocation());
+            addEventHubLocation(peers.get().get(i).getPeerEventHubName(), peers.get().get(i).getPeerEventHubLocation());
+            setCALocation(peers.get().get(i).getCaLocation());
+        }
+        for (int i = 0; i &lt; orderers.get().size(); i++) {
+            addOrdererLocation(orderers.get().get(i).getOrdererName(), orderers.get().get(i).getOrdererLocation());
+        }
+        setDomainName(peers.getOrgDomainName()); // domainName=tk.anti-moth.com
+
+        // Set up HFCA for Org1
+        // setCAClient(HFCAClient.createNewInstance(peers.getCaLocation(), getCAProperties()));
+
+        setAdmin(fabricStore.getMember(&quot;admin&quot;, peers.getOrgName())); // 设置该组织的管理员
+
+        File skFile = Paths.get(cryptoConfigPath, &quot;/peerOrganizations/&quot;, peers.getOrgDomainName(), String.format(&quot;/users/Admin@%s/msp/keystore&quot;, peers.getOrgDomainName())).toFile();
+        File certificateFile = Paths.get(cryptoConfigPath, &quot;/peerOrganizations/&quot;, peers.getOrgDomainName(),
+                String.format(&quot;/users/Admin@%s/msp/signcerts/Admin@%s-cert.pem&quot;, peers.getOrgDomainName(), peers.getOrgDomainName())).toFile();
+        log.debug(&quot;skFile = &quot; + skFile.getAbsolutePath());
+        log.debug(&quot;certificateFile = &quot; + certificateFile.getAbsolutePath());
+        setPeerAdmin(fabricStore.getMember(peers.getOrgName() + &quot;Admin&quot;, peers.getOrgName(), peers.getOrgMSPID(), findFileSk(skFile), certificateFile)); // 一个特殊的用户，可以创建通道，连接对等点，并安装链码
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 获取联盟管理员用户
+     * 
+     * @return 联盟管理员用户
+     */
+    public FabricUser getAdmin() {
+        return admin;
+    }
+
+    /**
+     * 设置联盟管理员用户
+     * 
+     * @param admin
+     *            联盟管理员用户
+     */
+    public void setAdmin(FabricUser admin) {
+        this.admin = admin;
+    }
+
+    /**
+     * 获取会员id
+     * 
+     * @return 会员id
+     */
+    public String getMSPID() {
+        return mspid;
+    }
+
+    /**
+     * 设置本地ca
+     * 
+     * @param caLocation
+     *            本地ca
+     */
+    public void setCALocation(String caLocation) {
+        this.caLocation = caLocation;
+    }
+
+    /**
+     * 获取本地ca
+     * 
+     * @return 本地ca
+     */
+    public String getCALocation() {
+        return this.caLocation;
+    }
+
+    /**
+     * 添加本地节点
+     * 
+     * @param name
+     *            节点key
+     * @param location
+     *            节点
+     */
+    public void addPeerLocation(String name, String location) {
+        peerLocations.put(name, location);
+    }
+
+    /**
+     * 添加本地组织
+     * 
+     * @param name
+     *            组织key
+     * @param location
+     *            组织
+     */
+    public void addOrdererLocation(String name, String location) {
+        ordererLocations.put(name, location);
+    }
+
+    /**
+     * 添加本地事件
+     * 
+     * @param name
+     *            事件key
+     * @param location
+     *            事件
+     */
+    public void addEventHubLocation(String name, String location) {
+        eventHubLocations.put(name, location);
+    }
+
+    /**
+     * 获取本地节点
+     * 
+     * @param name
+     *            节点key
+     * @return 节点
+     */
+    public String getPeerLocation(String name) {
+        return peerLocations.get(name);
+    }
+
+    /**
+     * 获取本地组织
+     * 
+     * @param name
+     *            组织key
+     * @return 组织
+     */
+    public String getOrdererLocation(String name) {
+        return ordererLocations.get(name);
+    }
+
+    /**
+     * 获取本地事件
+     * 
+     * @param name
+     *            事件key
+     * @return 事件
+     */
+    public String getEventHubLocation(String name) {
+        return eventHubLocations.get(name);
+    }
+
+    /**
+     * 获取一个不可修改的本地节点key集合
+     * 
+     * @return 节点key集合
+     */
+    public Set&lt;String&gt; getPeerNames() {
+        return Collections.unmodifiableSet(peerLocations.keySet());
+    }
+
+    /**
+     * 获取一个不可修改的本地节点集合
+     * 
+     * @return 节点集合
+     */
+    public Set&lt;Peer&gt; getPeers() {
+        return Collections.unmodifiableSet(peers);
+    }
+
+    /**
+     * 获取一个不可修改的本地组织key集合
+     * 
+     * @return 组织key集合
+     */
+    public Set&lt;String&gt; getOrdererNames() {
+        return Collections.unmodifiableSet(ordererLocations.keySet());
+    }
+
+    /**
+     * 获取一个不可修改的本地组织集合
+     * 
+     * @return 组织集合
+     */
+    public Collection&lt;String&gt; getOrdererLocations() {
+        return Collections.unmodifiableCollection(ordererLocations.values());
+    }
+
+    /**
+     * 获取一个不可修改的本地事件key集合
+     * 
+     * @return 事件key集合
+     */
+    public Set&lt;String&gt; getEventHubNames() {
+        return Collections.unmodifiableSet(eventHubLocations.keySet());
+    }
+
+    /**
+     * 获取一个不可修改的本地事件集合
+     * 
+     * @return 事件集合
+     */
+    public Collection&lt;String&gt; getEventHubLocations() {
+        return Collections.unmodifiableCollection(eventHubLocations.values());
+    }
+
+    /**
+     * 设置 ca 客户端
+     * 
+     * @param caClient
+     *            ca 客户端
+     */
+    public void setCAClient(HFCAClient caClient) {
+        this.caClient = caClient;
+    }
+
+    /**
+     * 获取 ca 客户端
+     * 
+     * @return ca 客户端
+     */
+    public HFCAClient getCAClient() {
+        return caClient;
+    }
+
+    /**
+     * 向用户集合中添加用户
+     * 
+     * @param user
+     *            用户
+     */
+    public void addUser(FabricUser user) {
+        userMap.put(user.getName(), user);
+    }
+
+    /**
+     * 从用户集合根据名称获取用户
+     * 
+     * @param name
+     *            名称
+     * @return 用户
+     */
+    public User getUser(String name) {
+        return userMap.get(name);
+    }
+
+    /**
+     * 向节点集合中添加节点
+     * 
+     * @param peer
+     *            节点
+     */
+    public void addPeer(Peer peer) {
+        peers.add(peer);
+    }
+
+    /**
+     * 设置 ca 配置
+     * 
+     * @param caProperties
+     *            ca 配置
+     */
+    public void setCAProperties(Properties caProperties) {
+        this.caProperties = caProperties;
+    }
+
+    /**
+     * 获取 ca 配置
+     * 
+     * @return ca 配置
+     */
+    public Properties getCAProperties() {
+        return caProperties;
+    }
+
+    /**
+     * 设置联盟单节点管理员用户
+     * 
+     * @param peerAdmin
+     *            联盟单节点管理员用户
+     */
+    public void setPeerAdmin(FabricUser peerAdmin) {
+        this.peerAdmin = peerAdmin;
+    }
+
+    /**
+     * 获取联盟单节点管理员用户
+     * 
+     * @return 联盟单节点管理员用户
+     */
+    public FabricUser getPeerAdmin() {
+        return peerAdmin;
+    }
+
+    /**
+     * 设置域名名称
+     * 
+     * @param doainName
+     *            域名名称
+     */
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
+
+    /**
+     * 获取域名名称
+     * 
+     * @return 域名名称
+     */
+    public String getDomainName() {
+        return domainName;
+    }
+
+    /**
+     * 从指定路径中获取后缀为 _sk 的文件，且该路径下有且仅有该文件
+     * 
+     * @param directorys
+     *            指定路径
+     * @return File
+     */
+    private File findFileSk(File directory) {
+        File[] matches = directory.listFiles((dir, name) -&gt; name.endsWith(&quot;_sk&quot;));
+        if (null == matches) {
+            throw new RuntimeException(String.format(&quot;Matches returned null does %s directory exist?&quot;, directory.getAbsoluteFile().getName()));
+        }
+        if (matches.length != 1) {
+            throw new RuntimeException(String.format(&quot;Expected in %s only 1 sk file but found %d&quot;, directory.getAbsoluteFile().getName(), matches.length));
+        }
+        return matches[0];
+    }
+
+}
+</code></pre><h3 id="FabircStore"><a href="#FabircStore" class="headerlink" title="FabircStore"></a>FabircStore</h3><p><code>FabricStore.java</code></p>
+<pre><code>import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Serializable;
+import java.io.StringReader;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.io.IOUtils;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.hyperledger.fabric.sdk.Enrollment;
+
+/**
+ * 联盟存储配置对象
+ */
+public class FabricStore {
+
+    private String file;
+    /** 用户信息集合 */
+    private final Map&lt;String, FabricUser&gt; members = new HashMap&lt;&gt;();
+
+    public FabricStore(File file) {
+        this.file = file.getAbsolutePath();
+    }
+
+    /**
+     * 设置与名称相关的值
+     *
+     * @param name
+     *            名称
+     * @param value
+     *            相关值
+     */
+    public void setValue(String name, String value) {
+        Properties properties = loadProperties();
+        try (OutputStream output = new FileOutputStream(file)) {
+            properties.setProperty(name, value);
+            properties.store(output, &quot;&quot;);
+            output.close();
+        } catch (IOException e) {
+            System.out.println(String.format(&quot;Could not save the keyvalue store, reason:%s&quot;, e.getMessage()));
+        }
+    }
+
+    /**
+     * 获取与名称相关的值
+     *
+     * @param 名称
+     * @return 相关值
+     */
+    public String getValue(String name) {
+        Properties properties = loadProperties();
+        return properties.getProperty(name);
+    }
+
+    /**
+     * 加载配置文件
+     * 
+     * @return 配置文件对象
+     */
+    private Properties loadProperties() {
+        Properties properties = new Properties();
+        try (InputStream input = new FileInputStream(file)) {
+            properties.load(input);
+            input.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(String.format(&quot;Could not find the file \&quot;%s\&quot;&quot;, file));
+        } catch (IOException e) {
+            System.out.println(String.format(&quot;Could not load keyvalue store from file \&quot;%s\&quot;, reason:%s&quot;, file, e.getMessage()));
+        }
+        return properties;
+    }
+
+    /**
+     * 用给定的名称获取用户
+     * 
+     * @param 名称
+     * @param 组织
+     * 
+     * @return 用户
+     */
+    public FabricUser getMember(String name, String org) {
+        // 尝试从缓存中获取User状态
+        FabricUser fabricUser = members.get(FabricUser.toKeyValStoreName(name, org));
+        if (null != fabricUser) {
+            return fabricUser;
+        }
+        // 创建User，并尝试从键值存储中恢复它的状态(如果找到的话)
+        fabricUser = new FabricUser(name, org, this);
+        return fabricUser;
+    }
+
+    /**
+     * 用给定的名称获取用户
+     * 
+     * @param name
+     *            名称
+     * @param org
+     *            组织
+     * @param mspId
+     *            会员id
+     * @param privateKeyFile
+     * @param certificateFile
+     * 
+     * @return user 用户
+     * 
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchProviderException
+     * @throws InvalidKeySpecException
+     */
+    public FabricUser getMember(String name, String org, String mspId, File privateKeyFile, File certificateFile)
+            throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException {
+        try {
+            // 尝试从缓存中获取User状态
+            FabricUser fabricUser = members.get(FabricUser.toKeyValStoreName(name, org));
+            if (null != fabricUser) {
+                System.out.println(&quot;尝试从缓存中获取User状态  User = &quot; + fabricUser);
+                return fabricUser;
+            }
+            // 创建User，并尝试从键值存储中恢复它的状态(如果找到的话)
+            fabricUser = new FabricUser(name, org, this);
+            fabricUser.setMspId(mspId);
+            String certificate = new String(IOUtils.toByteArray(new FileInputStream(certificateFile)), &quot;UTF-8&quot;);
+            PrivateKey privateKey = getPrivateKeyFromBytes(IOUtils.toByteArray(new FileInputStream(privateKeyFile)));
+            fabricUser.setEnrollment(new StoreEnrollement(privateKey, certificate));
+            return fabricUser;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    /**
+     * 通过字节数组信息获取私钥
+     * 
+     * @param data
+     *            字节数组
+     * 
+     * @return 私钥
+     * 
+     * @throws IOException
+     * @throws NoSuchProviderException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
+    private PrivateKey getPrivateKeyFromBytes(byte[] data) throws IOException, NoSuchProviderException, NoSuchAlgorithmException, InvalidKeySpecException {
+        final Reader pemReader = new StringReader(new String(data));
+        final PrivateKeyInfo pemPair;
+        try (PEMParser pemParser = new PEMParser(pemReader)) {
+            pemPair = (PrivateKeyInfo) pemParser.readObject();
+        }
+        PrivateKey privateKey = new JcaPEMKeyConverter().setProvider(BouncyCastleProvider.PROVIDER_NAME).getPrivateKey(pemPair);
+        return privateKey;
+    }
+
+    static {
+        try {
+            Security.addProvider(new BouncyCastleProvider());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 自定义注册登记操作类
+     * 
+     * @author yangyi47
+     *
+     */
+    static final class StoreEnrollement implements Enrollment, Serializable {
+
+        private static final long serialVersionUID = 6965341351799577442L;
+
+        /** 私钥 */
+        private final PrivateKey privateKey;
+        /** 授权证书 */
+        private final String certificate;
+
+        StoreEnrollement(PrivateKey privateKey, String certificate) {
+            this.certificate = certificate;
+            this.privateKey = privateKey;
+        }
+
+        @Override
+        public PrivateKey getKey() {
+            return privateKey;
+        }
+
+        @Override
+        public String getCert() {
+            return certificate;
+        }
+    }
+
+}
+</code></pre><h3 id="FabricUser"><a href="#FabricUser" class="headerlink" title="FabricUser"></a>FabricUser</h3><p><code>FabricUser.java</code></p>
+<pre><code>import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Set;
+
+import org.bouncycastle.util.encoders.Hex;
+import org.hyperledger.fabric.sdk.Enrollment;
+import org.hyperledger.fabric.sdk.User;
+
+import io.netty.util.internal.StringUtil;
+
+/**
+ * 联盟用户对象
+ */
+public class FabricUser implements User, Serializable {
+
+    private static final long serialVersionUID = 5695080465408336815L;
+
+    /** 名称 */
+    private String name;
+    /** 规则 */
+    private Set&lt;String&gt; roles;
+    /** 账户 */
+    private String account;
+    /** 从属联盟 */
+    private String affiliation;
+    /** 组织 */
+    private String organization;
+    /** 注册操作的密�? */
+    private String enrollmentSecret;
+    /** 会员id */
+    private String mspId;
+    /** 注册登记操作 */
+    Enrollment enrollment = null;
+
+    /** 存储配置对象 */
+    private transient FabricStore keyValStore;
+    private String keyValStoreName;
+
+    public FabricUser(String name, String org, FabricStore store) {
+        this.name = name;
+        this.keyValStore = store;
+        this.organization = org;
+        this.keyValStoreName = toKeyValStoreName(this.name, org);
+
+        String memberStr = keyValStore.getValue(keyValStoreName);
+        if (null != memberStr) {
+            saveState();
+        } else {
+            restoreState();
+        }
+    }
+
+    /**
+     * 设置账户信息并将用户状态更新至存储配置对象
+     * 
+     * @param account
+     *            账户
+     */
+    public void setAccount(String account) {
+        this.account = account;
+        saveState();
+    }
+
+    @Override
+    public String getAccount() {
+        return this.account;
+    }
+
+    /**
+     * 设置从属联盟信息并将用户状态信息更新至存储配置对象
+     * 
+     * @param affiliation
+     *            从属联盟
+     */
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+        saveState();
+    }
+
+    @Override
+    public String getAffiliation() {
+        return this.affiliation;
+    }
+
+    @Override
+    public Enrollment getEnrollment() {
+        return this.enrollment;
+    }
+
+    /**
+     * 设置会员id信息并将用户状态信息更新至存储配置对象
+     * 
+     * @param mspID
+     *            会员id
+     */
+    public void setMspId(String mspID) {
+        this.mspId = mspID;
+        saveState();
+    }
+
+    @Override
+    public String getMspId() {
+        return this.mspId;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * 设置规则信息并将用户状态信息更新至存储配置对象
+     * 
+     * @param roles
+     *            规则
+     */
+    public void setRoles(Set&lt;String&gt; roles) {
+        this.roles = roles;
+        saveState();
+    }
+
+    @Override
+    public Set&lt;String&gt; getRoles() {
+        return this.roles;
+    }
+
+    public String getEnrollmentSecret() {
+        return enrollmentSecret;
+    }
+
+    /**
+     * 设置注册操作的密钥信息并将用户状态更新至存储配置对象
+     * 
+     * @param enrollmentSecret
+     *            注册操作的密钥
+     */
+    public void setEnrollmentSecret(String enrollmentSecret) {
+        this.enrollmentSecret = enrollmentSecret;
+        saveState();
+    }
+
+    /**
+     * 设置注册登记操作信息并将用户状态信息更新至存储配置对象
+     * 
+     * @param enrollment
+     *            注册登记操作
+     */
+    public void setEnrollment(Enrollment enrollment) {
+        this.enrollment = enrollment;
+        saveState();
+    }
+
+    /**
+     * 确定这个名称是否已注册
+     * 
+     * @return 与否
+     */
+    public boolean isRegistered() {
+        return !StringUtil.isNullOrEmpty(enrollmentSecret);
+    }
+
+    /**
+     * 确定这个名字是否已经注册
+     *
+     * @return 与否
+     */
+    public boolean isEnrolled() {
+        return this.enrollment != null;
+    }
+
+    /** 将用户状态保存至存储配置对象 */
+    public void saveState() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(this);
+            oos.flush();
+            keyValStore.setValue(keyValStoreName, Hex.toHexString(bos.toByteArray()));
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 从键值存储中恢复该用户的状态(如果找到的话)。如果找不到，什么也不要做
+     * 
+     * @return 返回用户
+     */
+    private FabricUser restoreState() {
+        String memberStr = keyValStore.getValue(keyValStoreName);
+        if (null != memberStr) {
+            // 用户在键值存储中被找到，因此恢复状�?��??
+            byte[] serialized = Hex.decode(memberStr);
+            ByteArrayInputStream bis = new ByteArrayInputStream(serialized);
+            try {
+                ObjectInputStream ois = new ObjectInputStream(bis);
+                FabricUser state = (FabricUser) ois.readObject();
+                if (state != null) {
+                    this.name = state.name;
+                    this.roles = state.roles;
+                    this.account = state.account;
+                    this.affiliation = state.affiliation;
+                    this.organization = state.organization;
+                    this.enrollmentSecret = state.enrollmentSecret;
+                    this.enrollment = state.enrollment;
+                    this.mspId = state.mspId;
+                    return this;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(String.format(&quot;Could not restore state of member %s&quot;, this.name), e);
+            }
+        }
+        return null;
+    }
+
+    public static String toKeyValStoreName(String name, String org) {
+        System.out.println(&quot;toKeyValStoreName = &quot; + &quot;user.&quot; + name + org);
+        return &quot;user.&quot; + name + org;
+    }
+
+}
+</code></pre><h3 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h3><p><code>Example.java</code>, 这个类主要用于测试链码调用</p>
+<pre><code>import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.hyperledger.fabric.sdk.exception.CryptoException;
+import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
+import org.hyperledger.fabric.sdk.exception.ProposalException;
+import org.hyperledger.fabric.sdk.exception.TransactionException;
+
+import static java.lang.String.format;
+
+public class Example{
+
+    public static void out(String format, Object... args) {
+
+        System.err.flush();// 冲刷缓冲区
+        System.out.flush();
+
+        System.out.println(format(format, args));
+        System.err.flush();
+        System.out.flush();
+
+    }
+
+    public static void main(String[] args) throws CryptoException, InvalidArgumentException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, TransactionException, IOException, ProposalException, InterruptedException, ExecutionException, TimeoutException, IllegalAccessException, InstantiationException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException {
+        ChaincodeManager manager = FabricManager.obtain().getManager();
+        out(&quot;\n\n\nRUNNING: %s.\n&quot;, &quot;Fabric SDK Test&quot;);
+
+        out(&quot;fabric chaincode invoke, move(b,a) 200.&quot;);
+
+        String fcn = &quot;move&quot; ;
+        String[] arguments = new String[]{&quot;b&quot;,&quot;a&quot;,&quot;100&quot;};
+        Map&lt;String, String&gt; responses  = manager.invoke(fcn, arguments);
+        if (responses != null) {
+            out(&quot;successfully invoke chaincode method invoke, move (a, b) 200.&quot;);
+            out(&quot;response: &quot;);
+            JSONObject successful = JSONObject.parseObject(JSON.toJSONString(responses));
+            System.out.println(successful);
+
+            out(&quot;fabric invoke test done! \n&quot;);
+        }
+
+
+        out(&quot;fabric chaincode query, query(b).&quot;);
+        fcn = &quot;query&quot; ;
+        arguments = new String[]{&quot;b&quot;};
+        responses = manager.query(fcn, arguments);
+
+        if (responses != null) {
+            out(&quot;successfully get query result query(b).&quot;);
+            out(&quot;response: &quot;);
+            JSONObject successful = JSONObject.parseObject(JSON.toJSONString(responses));
+            System.out.println(successful);
+        }
+    }
+}
+</code></pre><h2 id="运行测试代码-1"><a href="#运行测试代码-1" class="headerlink" title="运行测试代码"></a>运行测试代码</h2><p>会得到结果</p>
+<pre><code>RUNNING: Fabric SDK Test.
+
+fabric chaincode invoke, move(b,a) 200.
+successfully invoke chaincode method invoke, move (a, b) 200.
+response: 
+{&quot;code&quot;:&quot;success&quot;,&quot;data&quot;:&quot;:)&quot;}
+fabric invoke test done! 
+
+fabric chaincode query, query(b).
+successfully get query result query(b).
+response: 
+{&quot;code&quot;:&quot;success&quot;,&quot;data&quot;:&quot;100&quot;}
+
+Process finished with exit code 0
+</code></pre><h2 id="结"><a href="#结" class="headerlink" title="结"></a>结</h2><p>对于JAVA-SDK的使用于开发具体可以参考官方<code>sdkintegration</code>的<code>End2endIT</code>代码。</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>以上示例是基于<code>java-sdk-integration</code>的，而如果想要使用<code>first-network</code>网络来作为sdk的对接网络，则需要对原来的网络进行相应修改，将TLS认证关闭（当然这个在生产环境中不建议使用）</p>
+<p>分别对<code>first-network/docker-compose-cli.yaml</code>、<code>first-network/base/peer-base.yaml</code>、<code>first-network/base/docker-compose-base.yaml</code>文件中的配置项<code>xxx_TLS_ENABLED</code>设置为<code>false</code>。</p>
+<pre><code>...
+CORE_PEER_TLS_ENABLED=false
+...
+
+...
+ORDERER_GENERAL_TLS_ENABLED=false
+...
+</code></pre><p>然后重新启动网络，之后将<code>crypto-config</code>和<code>channel-artifacts</code>目录下的内容拷贝到<code>fabric-labour</code>项目的<code>resources</code>中。</p>
+<p>修改<code>FabricManager.java</code>类</p>
+<pre><code>private FabricConfig getConfig() {
+    FabricConfig config = new FabricConfig();
+    config.setOrderers(getOrderers());
+    config.setPeers(getPeers());
+    config.setChaincode(getChaincode(&quot;mychannel&quot;, &quot;mycc&quot;, &quot;github.com/chaincode/chaincode_example02/go/&quot;, &quot;1.0&quot;));
+    config.setChannelArtifactsPath(getChannleArtifactsPath());
+    config.setCryptoConfigPath(getCryptoConfigPath());
+    return config;
+}
+</code></pre><p>之后便可以执行查询和写读写集等操作了。</p>
+<h2 id="附-关于fabric-java-sdk导入Eclipse"><a href="#附-关于fabric-java-sdk导入Eclipse" class="headerlink" title="附 - 关于fabric-java-sdk导入Eclipse"></a>附 - 关于fabric-java-sdk导入Eclipse</h2><p>由于官方的项目对<code>eclipse</code>的兼容性问题，需要处理之后才能成功导入</p>
+<p>首先下载代码</p>
+<pre><code>git clone https://github.com/hyperledger/fabric-sdk-java.git
+</code></pre><p>然后进入到项目中修改<code>.project</code>和<code>.classpath</code>文件，删除文件头部的注释</p>
+<pre><code>&lt;!--
+#
+# Copyright DTCC Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+--&gt;
+</code></pre><p>接下来通过<code>eclipse</code>导入项目，导入之后会出现弹框提示出错</p>
+<pre><code>No marketplace entries found to handle maven-antrun-plugin:1.4:run in Eclipse. Please see Help for more information.
+</code></pre><p>这个点击<code>Finish</code>按钮跳过即可</p>
+<p>接下来执行<code>maven</code>命令</p>
+<pre><code>mvn install -DskipTests
+</code></pre><p>执行完成之后使用<code>eclipse</code>打开<code>pom.xml</code>文件，选择<code>Overview</code>，会出现一个红色错误</p>
+<pre><code>Plugin execution not covered by lifecycle configuration: org.apache.maven.plugins:maven-antrun-plugin:1.4:run (execution: default, phase: generate-test-resources). 
+</code></pre><p>右键出现选项，选择<code>Mark goal run as ignored in eclipse...</code>即可</p>
+<p>之后改项目的<code>Build Path</code>的JVM变量为JDK，如果还是会有错误，则尝试右键Proejct，选择<code>Maven</code> -&gt; <code>Update Project</code>，之后再修改<code>Build Path</code>即可。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>fabric_java_sdk_v1 : <a href="https://github.com/lzbinlantian/fabric_java_sdk_v1" target="_blank" rel="noopener">https://github.com/lzbinlantian/fabric_java_sdk_v1</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2018/11/25/essay/mac-securecrt/" data-toggle="tooltip" data-placement="top" title="Mac pro 安装SecureCRT">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/11/11/java/maven-3-installation/" data-toggle="tooltip" data-placement="top" title="Linux系统安装Maven3">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#下载sdk代码"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">下载sdk代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#启动网络"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">启动网络</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#运行测试代码"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">运行测试代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用Fabric-Java-SDK"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">使用Fabric-Java-SDK</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#bean"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">bean</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Chaincode"><span class="toc-nav-number">4.1.1.</span> <span class="toc-nav-text">Chaincode</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Orderers"><span class="toc-nav-number">4.1.2.</span> <span class="toc-nav-text">Orderers</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#Peers"><span class="toc-nav-number">4.1.3.</span> <span class="toc-nav-text">Peers</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ChaincodeManager"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">ChaincodeManager</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#FabricConfig"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">FabricConfig</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#FabricManager"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">FabricManager</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#FabricOrg"><span class="toc-nav-number">4.5.</span> <span class="toc-nav-text">FabricOrg</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#FabircStore"><span class="toc-nav-number">4.6.</span> <span class="toc-nav-text">FabircStore</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#FabricUser"><span class="toc-nav-number">4.7.</span> <span class="toc-nav-text">FabricUser</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Example"><span class="toc-nav-number">4.8.</span> <span class="toc-nav-text">Example</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#运行测试代码-1"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">运行测试代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#结"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#补充"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">补充</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#附-关于fabric-java-sdk导入Eclipse"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">附 - 关于fabric-java-sdk导入Eclipse</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Reference"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">Reference</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+                        
+                          <a class="tag" href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+                        
+                          <a class="tag" href="/tags/#Fabric" title="Fabric">Fabric</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2018/11/12/hyperledger/fabric-java-sdk/";
+    var disqus_url = "https://banbanpeppa.github.io/2018/11/12/hyperledger/fabric-java-sdk/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

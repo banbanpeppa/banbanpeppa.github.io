@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          ARP的原理与基本流程 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2019/08/06/linux/arp-and-attack/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/linux/hacker-bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>ARP的原理与基本流程</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2019-08-06
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="ARP的原理与基本流程"><a href="#ARP的原理与基本流程" class="headerlink" title="ARP的原理与基本流程"></a>ARP的原理与基本流程</h2><p>在局域网环境下，主机之间是通过ARP协议获取对应机器的MAC地址的，ARP交换是在二层网络上面的协议。IP数据包在以太网中传递，但是对于以太网设备是不能识别32位的IP地址的，它只能识别48的物理MAC地址，为此在每一台主机上面都会维护一张从IP地址到物理地址的映射表，而不断更新这个映射表就是ARP（地址解析协议）所需要做的事情，ARP协议位于TCP-IP协议的底层。</p>
+<p>ARP协议的主要流程是</p>
+<ul>
+<li>1. 当网络层的TCP-IP协议封装的数据包传来时，主机A解开对应的数据包，得到对应的主机B的目的IP地址</li>
+<li>2. 根据封包中的目的IP地址去检索本地的ARP表，分三种情况处理<ul>
+<li>如果找到了对应的记录则将对应的目的MAC地址装入到帧数据包，同时将数据包发送至对应的主机；</li>
+<li>如果在本地的ARP表中没有对应的映射记录，主机A需要确定对应的目的IP地址和自己是否在同一个子网下，如果在同一个子网下面，则主机A会发起一个ARP Reply的广播封包请求，这个封包会发送至局域网中的每一台机器；进入3</li>
+<li>如果不在同一个子网下，则主机A会将ARP Reply封包发给默认网关询问对应的MAC地址</li>
+</ul>
+</li>
+<li>3. 当机器接收到了ARP Reply封包之后，解开封包查看目的IP地址是否为自己的IP地址，如果是则将源MAC地址和IP地址记录在本地的ARP表中（如果已经存在则覆盖），同时回应自己的MAC地址和IP地址响应主机A；如果解开之后的目的IP地址不是自己的地址，则忽略</li>
+<li>4. 在发送端收到了对应的ARP响应之后，则将ARP Reply的记录添加到本地的ARP表中，同时用这个目的地址将数据发送至目的主机</li>
+</ul>
+<p>举一个例子，如下图<br><img src="/images/linux/arp.jpg" alt="image"></p>
+<ul>
+<li>主机A想要访问公网，执行了<code>ping 114.114.114.114</code>的操作</li>
+<li>A默认会将这个请求包也就是ping包发给网关192.168.10.1，但是主机A并不知道网关的mac地址，于是这个时候A会发送一个ARP Request的广播请求，询问在局域网中IP地址为192.168.10.1的mac地址。</li>
+<li>当路由器收到了这个ARP请求之后，发现请求中的ip地址是自己的地址，会回应A，发送一个回应单播包给A，告诉它自己的mac地址是什么。</li>
+<li>当A拿到了网关的物理地址后，就可以将icmp的数据包封装并发送到对应的路由器中</li>
+<li>路由器解开数据包判断对应的目的地址是什么，然后查看自己本地的路由表进行路由，将请求包转发出去。</li>
+<li>路由器在之后接受到了公网回应的icmp回显包的时候，会看到这个回显包的源地址是<code>114.114.114.114</code>，目的地址是<code>192.168.10.3</code>，因为路由器需要查看自己本地的arp表去查看是否有对应的目的地址的匹配表，如果有则将回显包发送到对应的mac地址的机器A，如果没有，就需要在局域网中发送一个arp request的请求，询问A的mac地址。</li>
+<li>主机A最后收到了icmp的回显包</li>
+</ul>
+<p>在这个过程中，会看到假设说主机A或者路由器在自己本地的arp表中如果没有对应的记录的时候，都需要去询问对应的mac地址并且更新arp表，也就是说arp表示会一致刷新的。</p>
+<p>那么在linux系统中，我们的arp表到了什么情况会被清理呢？</p>
+<p>在linux系统中，arp表是缓存在内存中的，因此在到了一定的量之后，会有对应的垃圾回收器来回收对应的arp表。对应的配置在一下文件中可以找到</p>
+<pre><code>Debian 9
+
+/proc/sys/net/ipv4/neigh/default/gc_thresh1 
+/proc/sys/net/ipv4/neigh/default/gc_thresh2 
+/proc/sys/net/ipv4/neigh/default/gc_thresh3
+</code></pre><p>默认来说他们的值分别为128、512、1024，第一个值的垃圾回收器运行的最低要求，也就是说在arp数目达到了这个值之后才会启动对应的垃圾回收进程，第二个值是一个开始回收的阈值，当arp表的数目超过这个值一定时间（5秒）之后，垃圾回收器就会对arp表进行回收，而第三个值则是一个触发阈值，就是说一旦超过这个值垃圾回收器马上就进行arp的清理，当然在垃圾回收的时候，并不是全部都刷掉的，而是会根据一定的策略进行回收。</p>
+<h2 id="ARP欺骗"><a href="#ARP欺骗" class="headerlink" title="ARP欺骗"></a>ARP欺骗</h2><p>其实在ARP的整个工作流程中不难看出，其实是存在一定的可乘之机的。也就是说在图中的B主机是可以加入到整个arp工作流程来进行arp欺骗的。</p>
+<p>具体的做法如下<br><img src="/images/linux/arp-cheat.jpg" alt="image"></p>
+<ul>
+<li>在A需要往外发送icmp的一个回显请求报文的时候，主机B发起ARP攻击，重复得发送一个ARP回应包，包的内容为<code>mac:xx:xx:xx:yy:xx ip:192.168.10.1</code>，以此来伪装自己就是网关，让A将数据发给自己</li>
+<li>于此同时，主机B也通过回应报文的形式告诉网关也就是路由器，称自己是主机A，具体的报文内容为<code>max: xx:xx:xx:yy:xx ip: 192.168.10.3</code>，这样主机B就达到了数据包嗅探的能力</li>
+<li>主机A先将自己的数据包发给B，因为它误以为B是网关，B再将数据转发给路由器，这个时候路由器接收了数据之后将数据转发到公网</li>
+<li>这里主机B是完全可以侦听A的数据包的，甚至去篡改A的数据包</li>
+</ul>
+<p>下面可以通过linux来模拟这么一个实验</p>
+<p>首先安装一个arp攻击的模拟工具包</p>
+<pre><code>apt install dsniff
+</code></pre><p>同时在攻击的机器上面打开ip转发</p>
+<pre><code>echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+</code></pre><p>然后使用 arpspoof 命令进行欺骗, 命令使用方法如下:</p>
+<pre><code>arpspoof -i &lt;网卡名&gt; -t &lt;欺骗的目标&gt; &lt;我是谁&gt;
+</code></pre><p>分别开两个终端:</p>
+<p>终端1, 欺骗主机 A 我是网关</p>
+<pre><code>arpspoof -i eth0 -t 192.168.10.3 192.168.10.1
+</code></pre><p>终端2, 欺骗网关我是主机 A</p>
+<pre><code>arpspoof -i eth0 -t 192.168.10.1 192.168.10.3
+</code></pre><p>这样之后，在主机B上面就可以执行tcpdump或者urlsnarf来侦听数据了</p>
+<pre><code>apt install tcpdump snarf
+</code></pre><p>使用tcpdump</p>
+<pre><code>tcpdump -nntvvv -i eth0 port 8080 
+</code></pre><p>使用urlsnarf</p>
+<pre><code>urlsnarf -i eth0
+</code></pre><p>arp欺骗的形式有很多，例如有：中间人攻击、被动式数据嗅探。</p>
+<p>如何防御 ARP 欺骗攻击?</p>
+<ul>
+<li>可以通过登陆到网关地址所在的机器中（路由器）中修改配置，将ip和mac地址绑定，绑定之后就不会让arp攻击者肆意更改网关所在的arp表了。网络设备例如交换机有一种叫做动态ARP防御的技术叫做DAI，交换机会维护一张ip-mac-port的表，如果在arp询问过程中出现有冲突的就会丢弃。</li>
+<li>对于客户机，可以在本地记录mac-ip的对应关系表，当出现欺骗的时候及时发现并且丢弃。这方面可以使用一些软件辅助电脑例如腾讯管家、360。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://segmentfault.com/a/1190000009562333" target="_blank" rel="noopener">局域网 ARP 欺骗原理详解</a></li>
+<li><a href="https://www.anquanke.com/post/id/151762" target="_blank" rel="noopener">浅谈Arp攻击和利用Arp欺骗进行MITM</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/08/14/linux/mysql/" data-toggle="tooltip" data-placement="top" title="MySQL杂记">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/07/20/essay/ohmyzsh/" data-toggle="tooltip" data-placement="top" title="MAC终端神器iterm2">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#ARP的原理与基本流程"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">ARP的原理与基本流程</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#ARP欺骗"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">ARP欺骗</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">参考</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2019/08/06/linux/arp-and-attack/";
+    var disqus_url = "https://banbanpeppa.github.io/2019/08/06/linux/arp-and-attack/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2019
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
