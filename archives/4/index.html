@@ -218,18 +218,18 @@
 
 <div class="post-preview">
 
-    <a href="/2018/12/03/linux/centos-source-config/">
+    <a href="/2018/12/03/linux/golang-installation/">
         <h2 class="post-title">
-            CentOS 配置国内源
+            Linux 安装golang环境
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            CentOS 配置国内源阿里云Linux安装镜像源地址：http://mirrors.aliyun.com/
-CentOS系统更换软件安装源第一步备份你的原镜像文件，以免出错后可以恢复。
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-第二步下载新的CentOS-Base.repo 到......
+            安装golang环境下载golangwget https://dl.google.com/go/go1.11.2.linux-amd64.tar.gz
+解压tar -C /usr/local -xzf go1.11.2.linux-amd64.tar.gz
+配置环境变量cp /etc/profile /etc/profile.bak
+echo &quot;export GOROOT=/usr......
         </div>
     </a>
     
@@ -251,18 +251,17 @@ mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 
 <div class="post-preview">
 
-    <a href="/2018/12/03/linux/golang-installation/">
+    <a href="/2018/12/03/linux/nodejs-installation/">
         <h2 class="post-title">
-            Linux 安装golang环境
+            Linux 下 Nodejs 安装
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            安装golang环境下载golangwget https://dl.google.com/go/go1.11.2.linux-amd64.tar.gz
-解压tar -C /usr/local -xzf go1.11.2.linux-amd64.tar.gz
-配置环境变量cp /etc/profile /etc/profile.bak
-echo &quot;export GOROOT=/usr......
+            Nodejs安装安装nodejs的方法有很多，这边介绍两种，一种是编译安装，另一种是源安装
+二进制文件安装打开 Node.js - 下载 version 8.11.x or greater，8.x版本可以通过链接：https://nodejs.org/dist/ 查询，然后下载对应版本的tar.gz包, 其余版本系类似
+wget https://nodejs.org/dist/v8.11.0......
         </div>
     </a>
     
