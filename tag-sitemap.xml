@@ -73,13 +73,6 @@
     </url>
 
     <url>
-        <loc>https://banbanpeppa.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
-        <lastmod>2019-10-11T11:42:05.840Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://banbanpeppa.github.io/tags/Blockchain/</loc>
         <lastmod>2019-10-11T12:02:13.413Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -110,6 +103,13 @@
     <url>
         <loc>https://banbanpeppa.github.io/tags/AngularJS/</loc>
         <lastmod>2019-11-10T15:27:33.878Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
+        <lastmod>2019-12-03T12:08:46.610Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
