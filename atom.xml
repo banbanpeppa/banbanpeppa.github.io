@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://banbanpeppa.github.io/"/>
-  <updated>2019-11-10T15:27:33.878Z</updated>
+  <updated>2020-01-15T03:45:22.077Z</updated>
   <id>https://banbanpeppa.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AngularJS使用Echarts</title>
+    <link href="https://banbanpeppa.github.io/2020/01/13/angularjs/ng-echarts/"/>
+    <id>https://banbanpeppa.github.io/2020/01/13/angularjs/ng-echarts/</id>
+    <published>2020-01-13T03:27:23.847Z</published>
+    <updated>2020-01-15T03:45:22.077Z</updated>
+    
+    <content type="html"><![CDATA[<p>🤪</p><p>Echarts提供了非常强大的可视化功能，在平时的开发过程中难免用到echarts来助力数据展示，推动数据更加方便使用。</p><p>那么在Angularjs中该如何使用echarts呢？下面撸一个例子方便后面参考。</p><h2 id="指令-amp-echarts"><a href="#指令-amp-echarts" class="headerlink" title="指令&amp;echarts"></a>指令&amp;echarts</h2><p>AngularJS中的指令是一种特有的处理DOM节点的方式，它可以操作以及渲染可重用的UI组件。例如想要用AngularJS处理echarts的一个柱状图📊，则可以通过下面的方式操作</p><pre><code class="js">angular.module(&#39;demo&#39;)    .directive(&#39;myBarChart&#39;, function($window) { //定义柱状图指令        return {            restrict: &#39;EA&#39;, // 以属性或者tag的形式调用指令            link: function($scope, element, attrs) {  //attrs 是DOM元素的属性集合                var myBarChart = echarts.init(element[0]); // element是一个jqlite对象，如果JQuery再AngularJS之前引入，则是一个Jquery对象，可以使用Jquery所有的方法                $scope.$watch(attrs.eData, function(newVal, oldVal, scope) {//监听属性e-data的值，当数据发生改变时执行作为第二个参数的函数                    var xData = [],                        sData = [],                        data = newVal,                        totalCount = 0;                    angular.forEach(data, function(val) {                        xData.push(val.name);                        sData.push(val.value);                        totalCount += val.value;                    });                    var option = {                        title: {                            text: &#39;用户访问来源统计&#39;,                            subtext: &#39;总计值:&#39; + totalCount,                            x: &#39;center&#39;,                        },                        color: [&#39;#333642&#39;],                        tooltip: {                            trigger: &#39;axis&#39;,                            axisPointer: {                                type: &#39;shadow&#39;                            }                        },                        grid: {                            left: &#39;3%&#39;,                            right: &#39;4%&#39;,                            bottom: &#39;3%&#39;,                            containLabel: true                        },                        xAxis: [{                            type: &#39;category&#39;,                            data: xData,                            axisTick: {                            alignWithLabel: true                            }                        }],                        yAxis: [{                            type: &#39;value&#39;                        }],                        series: [{                            name: &#39;直接访问&#39;,                            type: &#39;bar&#39;,                            barWidth: &#39;60%&#39;,                            data: sData                        }]                    };                    myBarChart.setOption(option);                }, true);                $window.onresize = function() {                    myBarChart.resize();                }            }        }    });</code></pre><p>通过指令处理好了组件之后，便可以在之后的开发中使用组件。</p><h2 id="使用echarts指令"><a href="#使用echarts指令" class="headerlink" title="使用echarts指令"></a>使用echarts指令</h2><p><strong>JavaScript</strong></p><pre><code class="js">var app = angular.module(&quot;demo&quot;, []); //定义一个模块angular.module(&quot;demo&quot;).controller(&quot;myCtrl&quot;, function($scope, $http, $interval) {  //定义控制器  $interval(function() {    //调用$interval服务执行循环任务，3秒自动更新一次数据    $http      .get(&quot;/demo_get&quot;) //调用$http服务获取数据      .success(function(data) {        if (data.status == &quot;0&quot;) {          $scope.data = data.data; //将数据放在model中        }      })      .error(function() {        $scope.data[0].value = Math.floor(Math.random() * 2000); //模拟数据改变测试      });  }, 5000);  //假设获取到的数据如下：  var fakeData = {    status: 0,    data: [      {        value: 335,        name: &quot;直接访问&quot;      },      {        value: 310,        name: &quot;邮件营销&quot;      },      {        value: 234,        name: &quot;微信跳转&quot;      },      {        value: 135,        name: &quot;视频广告&quot;      },      {        value: 748,        name: &quot;搜索引擎&quot;      }    ]  };  $scope.data = fakeData.data;});</code></pre><p><strong>HTML</strong></p><pre><code class="html">&lt;div ng-app=&quot;demo&quot; ng-controller=&quot;myCtrl&quot; id=&quot;demo&quot;&gt;  &lt;div style=&quot;height:320px;&quot; my-bar-chart e-data=&quot;data&quot;&gt;&lt;/div&gt;&lt;/div&gt;</code></pre><p>整体效果可以参考：<a href="https://codepen.io/zhilingsomnus/pen/mdyjqKX?editors=1010" target="_blank" rel="noopener">https://codepen.io/zhilingsomnus/pen/mdyjqKX?editors=1010</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;🤪&lt;/p&gt;
+&lt;p&gt;Echarts提供了非常强大的可视化功能，在平时的开发过程中难免用到echarts来助力数据展示，推动数据更加方便使用。&lt;/p&gt;
+&lt;p&gt;那么在Angularjs中该如何使用echarts呢？下面撸一个例子方便后面参考。&lt;/p&gt;
+&lt;h2 id=&quot;指令-am
+      
+    
+    </summary>
+    
+    
+      <category term="AngularJS" scheme="https://banbanpeppa.github.io/tags/AngularJS/"/>
+    
+  </entry>
   
   <entry>
     <title>[转] 关于 Angular 里的 $q 和 Promise</title>
@@ -206,6 +232,29 @@
   </entry>
   
   <entry>
+    <title>Linux命令 - find</title>
+    <link href="https://banbanpeppa.github.io/2019/08/15/linux/cmd/find/"/>
+    <id>https://banbanpeppa.github.io/2019/08/15/linux/cmd/find/</id>
+    <published>2019-08-15T08:23:00.000Z</published>
+    <updated>2019-08-23T06:38:10.309Z</updated>
+    
+    <content type="html"><![CDATA[<p>find命令让用户能够在系统上根据目录执行文件搜索，同时还可以对结果进行一些后续操作。它是GNU的findutils工具的一个子模块，并且和其他的工具一同形成了强大的文件搜索功能。find工具具有很强的灵活性，可以根据一些特定的条件来搜索文件或者目录，同时还可以根据一些条件参数来处理获取到的结果。</p><h2 id="FindUtils"><a href="#FindUtils" class="headerlink" title="FindUtils"></a>FindUtils</h2><p>GNU Find Utilities是一个在GNU操作系统下基本的文件目录搜索工具集合，这些程式通常用于与其他的一些程式结合一起使用，进而实现模块化的强大的文件目录搜索能力。</p><p>Find Utilities工具主要包含了如下：</p><ul><li>find - 在对应目录下面搜索对应的文件</li><li>locate - 把在数据库中符合一定格式的文件列出来</li><li>updatedb - 更新一个文件名数据库</li><li>xargs - 根据标准输入来构建一个可执行命令</li></ul><p>find工具在一个目录树下去寻找一系列的文件，它会搜寻对应的目录树并且处理得到那些符合用户预设好条件的文件。</p><p>locate工具会搜索一个或者多个文件名的数据库，并且将符合条件的文件名打印出来，通常locate命令会结合updatedb命令使用，updatedb会更新整个系统的文件信息，之后locate命令可以定位到对应的文件内容。locate的查询效率是非常高的，只要对应的database更新了，就能快速定位到文件。</p><p>updatedb程序就是维护一个文件名数据库，这个数据库会被locate程序使用，这个文件名数据库会维护一系列的目录树组成的文件列表，updatedb命令执行的时候会更新对应的目录树，这个程序可以交给cron来做定时更新，每天跟新以此即可。如果再平时使用的时候想要用最新的数据库，手动执行updatedb即可。</p><p>xargs 程序从标准输入流中获取得到一些列内容作为参数，并提供给后续的命令或程序使用，例如一个非常常见的例子就是讲find命令得到的文件名收集在一起作为参数，提供后续的删除操作等等：</p><pre><code>find . -type f | xargs ls -lkh</code></pre><p>具体的FileUtils功能可以查看<a href="https://www.gnu.org/software/findutils/" target="_blank" rel="noopener">Findutils</a></p><h2 id="find的使用"><a href="#find的使用" class="headerlink" title="find的使用"></a>find的使用</h2><p>接下来介绍find命令的使用，同时会根据其提供的参数举例子。</p><p>find命令的基础用法是</p><pre><code class="bash">find [paths] [expression] [actions]</code></pre><p>find命令允许用户传入多个paths，其会根据不同的path递归的去在每一个path下面寻找用户想要的文件，知道全部找完。默认find命令会把paths下面的所有paths都走一遍因为为了能够寻找对应满足一定要求的path下面的文件，可以使用正则表达式来表示对应的path。</p><p>同时find命令也可以对寻找得到的结果进行一些处理，默认是直接输出找到的所有文件，为了能够根据一定的要求来寻找对应的文件，用户可以使用对应的一些action来过滤或者处理文件。</p><p>接下来根据几个例子来加强对find命令的理解</p><h3 id="find-所有的文件和目录"><a href="#find-所有的文件和目录" class="headerlink" title="find 所有的文件和目录"></a>find 所有的文件和目录</h3><p>有时候用户想要将某一个目录下面的所有文件和目录都显示出来，find命令默认能实现这个功能，例如将/usr/bin下面的所有文件找出来</p><pre><code class="bash">$ find /usr/bin//usr/bin//usr/bin/dpkg/usr/bin/dpkg-deb/usr/bin/dpkg-divert/usr/bin/dpkg-maintscript-helper/usr/bin/dpkg-query/usr/bin/dpkg-split/usr/bin/dpkg-statoverride/usr/bin/dpkg-trigger/usr/bin/update-alternatives/usr/bin/debconf/usr/bin/debconf-apt-progress/usr/bin/debconf-communicate/usr/bin/debconf-copydb/usr/bin/debconf-escape/usr/bin/debconf-set-selections/usr/bin/debconf-show/usr/bin/deb-systemd-helper/usr/bin/deb-systemd-invoke/usr/bin/ischroot...</code></pre><p>会看到这个文件列表非常大，因为它把<code>/usr/bin</code>目录下面的所有文件和目录都显示出来了，包括<code>/usr/bin</code>目录本身。</p><p>如果想要从一堆的文件目录中寻找出所有的文件，则可以在find后面追加不同的path</p><pre><code class="bash">find /usr/share /bin /usr/lib</code></pre><p>如果想要把当前目录的所有文件都找出来</p><pre><code class="bash">find .</code></pre><p>或者</p><pre><code class="bash">find</code></pre><h3 id="find-by-name"><a href="#find-by-name" class="headerlink" title="find by name"></a>find by name</h3><p>有时候我们只想根据文件的名字来寻找对应的文件，则可以使用<code>-name</code>的action来实现</p><pre><code class="bash">find . -name hello.txt</code></pre><p>这种方式是根据文件的全名来寻找的，也就是说<code>-name</code>的默认行为就是根据文件的全名来寻找。</p><p>如果说用户不能确定文件的大小写，可以用<code>-iname</code>来寻找</p><pre><code class="bash">find /usr -iname hello.txt</code></pre><p>如果用户连文件的完整名字也无法确定，只想通过模糊匹配的形式来寻找文件，则可以使用正则表达式来寻找</p><pre><code class="bash">find /usr -name &#39;*.txt&#39;</code></pre><p>如果想根据文件名的长度来寻找文件，例如想寻找路径下文件的字符数目是4的文件</p><pre><code class="bash">find /usr -name &#39;????&#39;</code></pre><p>在一些情况下，用户想要寻找某一个特定的目录下面的符合要求的文件，而不是将整个目录中的所有符合要求的文件都显示出来，则可以使用<code>-path</code>。例如一个目录下面有很多目录，现在想要在tmp目录下面寻找出文件名字符数为3的文件或目录，则可以执行</p><pre><code class="bash">find . -path &#39;*tmp/???&#39;</code></pre><p>同时也有一个<code>-ipath</code>的action来忽略掉大小写的操作</p><h3 id="find-文件类型"><a href="#find-文件类型" class="headerlink" title="find 文件类型"></a>find 文件类型</h3><p>在Linux系统下面，所有的东西都是以文件的形式存在。</p><p>在一些情况下，用户不想找出目录，只想找出对应路径下满足条件的文件，这个时候就可以使用<code>-type</code>的action来寻找。</p><p><code>-type</code>的类型比较常见的有</p><ul><li>f: 文件</li><li>d: 目录</li><li>l: 软链接</li></ul><p>例如，找出tmp目录下面出了目录的文件</p><pre><code class="bash">find tmp -type f</code></pre><p>自然，用户可组合不同的actions来寻找文件，例如只找出txt后缀的文件</p><pre><code class="bash">find tmp -type f -name &#39;*.txt&#39;</code></pre><h3 id="find-空文件或者空目录"><a href="#find-空文件或者空目录" class="headerlink" title="find 空文件或者空目录"></a>find 空文件或者空目录</h3><p>find命令支持寻找空的文件或者空的目录</p><pre><code class="bash">find /tmp -empty</code></pre><h3 id="否定action"><a href="#否定action" class="headerlink" title="否定action"></a>否定action</h3><p>find命令可以根据action的否定来处理寻找的文件结果。</p><p>例如可以寻找出了后缀为<code>.txt</code>的文件</p><pre><code class="bash">find . ! -name &#39;*.txt&#39;</code></pre><p>或者寻找出了空文件或者空目录以外的文件</p><pre><code class="bash">find . ! -empty</code></pre><h3 id="根据文件属主寻找"><a href="#根据文件属主寻找" class="headerlink" title="根据文件属主寻找"></a>根据文件属主寻找</h3><p>find命令可以根据文件的属主来寻找。例如想要寻找文件属主为chenzhiling的文件</p><pre><code class="bash">find . -username chenzhiling</code></pre><p><code>-username</code>接受的参数值可以使username或者UID，想要获取对应用户的UID可以通过</p><pre><code class="bash">id -u chenzhiling</code></pre><p>同时也可以根据用户所在的组或者GID来寻找对应的文件</p><pre><code class="bash">find . -group root</code></pre><p>如果想要使用GID来寻找，可以通过下面的命令获取对应的GID</p><pre><code>id -g chenzhiling</code></pre><h3 id="根据文件的时间寻找"><a href="#根据文件的时间寻找" class="headerlink" title="根据文件的时间寻找"></a>根据文件的时间寻找</h3><p>文件在创建之后就会有三个时间跟随着文件。着三个时间分别是mtime、atime、ctime。他们分别表示</p><ul><li>mtime - 文件的内容被修改的时候更新的时间</li><li>atime - 文件被访问的时候被更新的时间</li><li>ctime - 文件的元信息被修改（例如权限）的时候更新的时间</li></ul><p>为此我们可以使用<code>-mtime</code>、<code>-atime</code>、<code>-ctime</code>的action来寻找对应的文件。</p><p>例如寻找在五天内被修改的文件</p><pre><code class="bash">find . -mtime -5 -type f</code></pre><p>寻找在五天以前被修改的文件</p><pre><code class="bash">find . -mtime +5 -type f</code></pre><p>寻找文件在五天前（就在第五天前）被修改的文件</p><pre><code class="bash">find . -mtime 5 -type f</code></pre><p>以此类推另外两个action的用法类似。</p><p>如果觉得使用天来寻找太长了， find还提供了使用<code>mmin</code>、<code>amin</code>、<code>cmin</code>这种分钟级别的action来寻找，例如寻找在5分钟以内被访问的文件</p><pre><code class="bash">find . -type f -amin -5</code></pre><h3 id="根据文件大小来寻找"><a href="#根据文件大小来寻找" class="headerlink" title="根据文件大小来寻找"></a>根据文件大小来寻找</h3><p>在一些时候，用户想要寻找一些大于某个大小或者小于某一个大小的文件，这个时候可以使用<code>-size</code>来寻找</p><pre><code>find . -type f -size -10M</code></pre><p>以上命令把目录下面小于10MB的文件都找出来。</p><p>文件的大小主要分为了4类</p><ul><li>c - bytes</li><li>k - kb</li><li>M - MB</li><li>G - GB</li></ul><h3 id="根据文件权限来寻找"><a href="#根据文件权限来寻找" class="headerlink" title="根据文件权限来寻找"></a>根据文件权限来寻找</h3><p>根据文件权限来寻找文件使用<code>-perm</code>，他有两种方式来寻找，一种是根据权限的标识，另一种用权限的数字。</p><p>我们知道在Linux系统中，文件的权限主要分为了User、Group和Other级别的权限。如下图所示<br><img src="/images/linux/permissions.jpg" alt="image"></p><p>例如要寻找文件权限为<code>rwxr-xr-x</code>的文件，</p><pre><code class="bash">find . -type f -perm u=rwx,g=rx,o=x</code></pre><p>同时为了寻找对于所有的用户权限都是一样的情况，可以使用a来表示，例如寻找文件权限为<code>r-xr-xr-x</code>的文件，这个文件对于所有的用户的权限都是一样的，则可以使用</p><pre><code class="bash">find . -type f -perm a=rx</code></pre><p>为了寻找某一类文件，只想关心它有执行权限<code>x</code>，其他的权限可以设置，也可以没有，这个时候不能只是简单的设置<code>-perm a=x</code>，因为这表示的是要寻找的文件对于所有的用户都只有执行权限，即<code>--x--x--x</code>，这时候可以用<code>-perm /a=x</code>的形式来寻找那些包含了执行权限的文件，但是别的权限为可以是有或者无</p><pre><code class="bash">find . -type f -perm /a=x</code></pre><p>使用权限数字来寻找文件，则直接在<code>-perm</code>后面追加数字为参数即可。例如某一个文件的权限是<code>rwxr-xr-x</code>，这个权限对应的数字表示模式为644，则寻找文件的时候可以</p><pre><code class="bash">find . -type f -perm 644</code></pre><p>同样的，在只想关心某一个权限位的时候，find也有一个表示的方式。例如上面的图中，我们想要找一系列文件，值关心这个文件是否有执行权限<code>x</code>，那么每个权限位置的x位置都设置为1，其它不关心的设置为0，也就是111。这时候在111前面加上<code>-</code>就可以实现只处理权限的子集了。</p><pre><code class="bash">find . -type f -perm -111</code></pre><p>那么如果说使用</p><pre><code>find . -type f -perm -000</code></pre><p>则其实-perm的效果就失效了。</p><h3 id="寻找SUID文件"><a href="#寻找SUID文件" class="headerlink" title="寻找SUID文件"></a>寻找SUID文件</h3><p>在上面学会了使用数字模式的权限寻找文件了，那么如果想要寻找具有SUID权限的文件，其实就是一样的做法，只关心SUID的权限位置，其余权限都不管</p><pre><code class="bash">find .  -type f -perm -4000</code></pre><p>同样的，先刚查看有setuid的权限文件的同时想查看具有执行权限的文件</p><pre><code class="bash">find . -type f -perm -4111</code></pre><p>查看设置了setgid的文件</p><pre><code class="bash">find . -type -f -perm -2000</code></pre><p>查看设置了粘滞位的文件</p><pre><code class="bash">find . -type -f -perm -1000</code></pre><p>这个sticky位比较神奇，有兴趣可以Google一下。</p><p>查看设置了setuid和sticky的该怎么找呢，当然这个属于比较少见到的文件了，权限的格式类似于<code>--s-----t</code>，find命令只要求将这里两个权限数字模式相加即可，也就是5000</p><pre><code class="bash">find . -type f -perm -5000</code></pre><p>如果想要使用权限标识来表示，则可以</p><pre><code class="bash">find . -type f -perm /u=sfind . -type f -perm /g=sfind . -type f -perm /o=t</code></pre><h3 id="设置查询深度"><a href="#设置查询深度" class="headerlink" title="设置查询深度"></a>设置查询深度</h3><p>前面提到了find寻找文件是通过路径去递归查询的，那么有时候有些目录下面的文件深度非常深，则会导致搜索的结果非常庞大。这时候可以使用<code>-maxdepth</code>来限制搜索的深度</p><pre><code class="bash">find . -type f -maxdepth 3</code></pre><p>反过来也可以设置最小的搜索深度</p><pre><code class="bash">find . -type f -mindepth 3</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://www.booleanworld.com/guide-linux-find-command/" target="_blank" rel="noopener">A Guide to the Linux “Find” Command</a></li><li><a href="http://man7.org/linux/man-pages/man1/find.1.html" target="_blank" rel="noopener">man find</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;find命令让用户能够在系统上根据目录执行文件搜索，同时还可以对结果进行一些后续操作。它是GNU的findutils工具的一个子模块，并且和其他的工具一同形成了强大的文件搜索功能。find工具具有很强的灵活性，可以根据一些特定的条件来搜索文件或者目录，同时还可以根据一些条件
+      
+    
+    </summary>
+    
+    
+      <category term="Linux" scheme="https://banbanpeppa.github.io/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Linux命令 — grep</title>
     <link href="https://banbanpeppa.github.io/2019/08/15/linux/cmd/grep/"/>
     <id>https://banbanpeppa.github.io/2019/08/15/linux/cmd/grep/</id>
@@ -220,29 +269,6 @@
       
         &lt;p&gt;在使用Linux的过程中，经常会遇到在大量文件中查找某一些文件是否包含了某些文件内容的情况。例如在一堆的日志文件里面把出现“memory”字眼的文件过滤出来。&lt;/p&gt;
 &lt;p&gt;我们知道用find命令可以使用一些正则表达式来寻找某一些文件，但是却不能够用来寻找文件内是否包含某一
-      
-    
-    </summary>
-    
-    
-      <category term="Linux" scheme="https://banbanpeppa.github.io/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux命令 - find</title>
-    <link href="https://banbanpeppa.github.io/2019/08/15/linux/cmd/find/"/>
-    <id>https://banbanpeppa.github.io/2019/08/15/linux/cmd/find/</id>
-    <published>2019-08-15T08:23:00.000Z</published>
-    <updated>2019-08-23T06:38:10.309Z</updated>
-    
-    <content type="html"><![CDATA[<p>find命令让用户能够在系统上根据目录执行文件搜索，同时还可以对结果进行一些后续操作。它是GNU的findutils工具的一个子模块，并且和其他的工具一同形成了强大的文件搜索功能。find工具具有很强的灵活性，可以根据一些特定的条件来搜索文件或者目录，同时还可以根据一些条件参数来处理获取到的结果。</p><h2 id="FindUtils"><a href="#FindUtils" class="headerlink" title="FindUtils"></a>FindUtils</h2><p>GNU Find Utilities是一个在GNU操作系统下基本的文件目录搜索工具集合，这些程式通常用于与其他的一些程式结合一起使用，进而实现模块化的强大的文件目录搜索能力。</p><p>Find Utilities工具主要包含了如下：</p><ul><li>find - 在对应目录下面搜索对应的文件</li><li>locate - 把在数据库中符合一定格式的文件列出来</li><li>updatedb - 更新一个文件名数据库</li><li>xargs - 根据标准输入来构建一个可执行命令</li></ul><p>find工具在一个目录树下去寻找一系列的文件，它会搜寻对应的目录树并且处理得到那些符合用户预设好条件的文件。</p><p>locate工具会搜索一个或者多个文件名的数据库，并且将符合条件的文件名打印出来，通常locate命令会结合updatedb命令使用，updatedb会更新整个系统的文件信息，之后locate命令可以定位到对应的文件内容。locate的查询效率是非常高的，只要对应的database更新了，就能快速定位到文件。</p><p>updatedb程序就是维护一个文件名数据库，这个数据库会被locate程序使用，这个文件名数据库会维护一系列的目录树组成的文件列表，updatedb命令执行的时候会更新对应的目录树，这个程序可以交给cron来做定时更新，每天跟新以此即可。如果再平时使用的时候想要用最新的数据库，手动执行updatedb即可。</p><p>xargs 程序从标准输入流中获取得到一些列内容作为参数，并提供给后续的命令或程序使用，例如一个非常常见的例子就是讲find命令得到的文件名收集在一起作为参数，提供后续的删除操作等等：</p><pre><code>find . -type f | xargs ls -lkh</code></pre><p>具体的FileUtils功能可以查看<a href="https://www.gnu.org/software/findutils/" target="_blank" rel="noopener">Findutils</a></p><h2 id="find的使用"><a href="#find的使用" class="headerlink" title="find的使用"></a>find的使用</h2><p>接下来介绍find命令的使用，同时会根据其提供的参数举例子。</p><p>find命令的基础用法是</p><pre><code class="bash">find [paths] [expression] [actions]</code></pre><p>find命令允许用户传入多个paths，其会根据不同的path递归的去在每一个path下面寻找用户想要的文件，知道全部找完。默认find命令会把paths下面的所有paths都走一遍因为为了能够寻找对应满足一定要求的path下面的文件，可以使用正则表达式来表示对应的path。</p><p>同时find命令也可以对寻找得到的结果进行一些处理，默认是直接输出找到的所有文件，为了能够根据一定的要求来寻找对应的文件，用户可以使用对应的一些action来过滤或者处理文件。</p><p>接下来根据几个例子来加强对find命令的理解</p><h3 id="find-所有的文件和目录"><a href="#find-所有的文件和目录" class="headerlink" title="find 所有的文件和目录"></a>find 所有的文件和目录</h3><p>有时候用户想要将某一个目录下面的所有文件和目录都显示出来，find命令默认能实现这个功能，例如将/usr/bin下面的所有文件找出来</p><pre><code class="bash">$ find /usr/bin//usr/bin//usr/bin/dpkg/usr/bin/dpkg-deb/usr/bin/dpkg-divert/usr/bin/dpkg-maintscript-helper/usr/bin/dpkg-query/usr/bin/dpkg-split/usr/bin/dpkg-statoverride/usr/bin/dpkg-trigger/usr/bin/update-alternatives/usr/bin/debconf/usr/bin/debconf-apt-progress/usr/bin/debconf-communicate/usr/bin/debconf-copydb/usr/bin/debconf-escape/usr/bin/debconf-set-selections/usr/bin/debconf-show/usr/bin/deb-systemd-helper/usr/bin/deb-systemd-invoke/usr/bin/ischroot...</code></pre><p>会看到这个文件列表非常大，因为它把<code>/usr/bin</code>目录下面的所有文件和目录都显示出来了，包括<code>/usr/bin</code>目录本身。</p><p>如果想要从一堆的文件目录中寻找出所有的文件，则可以在find后面追加不同的path</p><pre><code class="bash">find /usr/share /bin /usr/lib</code></pre><p>如果想要把当前目录的所有文件都找出来</p><pre><code class="bash">find .</code></pre><p>或者</p><pre><code class="bash">find</code></pre><h3 id="find-by-name"><a href="#find-by-name" class="headerlink" title="find by name"></a>find by name</h3><p>有时候我们只想根据文件的名字来寻找对应的文件，则可以使用<code>-name</code>的action来实现</p><pre><code class="bash">find . -name hello.txt</code></pre><p>这种方式是根据文件的全名来寻找的，也就是说<code>-name</code>的默认行为就是根据文件的全名来寻找。</p><p>如果说用户不能确定文件的大小写，可以用<code>-iname</code>来寻找</p><pre><code class="bash">find /usr -iname hello.txt</code></pre><p>如果用户连文件的完整名字也无法确定，只想通过模糊匹配的形式来寻找文件，则可以使用正则表达式来寻找</p><pre><code class="bash">find /usr -name &#39;*.txt&#39;</code></pre><p>如果想根据文件名的长度来寻找文件，例如想寻找路径下文件的字符数目是4的文件</p><pre><code class="bash">find /usr -name &#39;????&#39;</code></pre><p>在一些情况下，用户想要寻找某一个特定的目录下面的符合要求的文件，而不是将整个目录中的所有符合要求的文件都显示出来，则可以使用<code>-path</code>。例如一个目录下面有很多目录，现在想要在tmp目录下面寻找出文件名字符数为3的文件或目录，则可以执行</p><pre><code class="bash">find . -path &#39;*tmp/???&#39;</code></pre><p>同时也有一个<code>-ipath</code>的action来忽略掉大小写的操作</p><h3 id="find-文件类型"><a href="#find-文件类型" class="headerlink" title="find 文件类型"></a>find 文件类型</h3><p>在Linux系统下面，所有的东西都是以文件的形式存在。</p><p>在一些情况下，用户不想找出目录，只想找出对应路径下满足条件的文件，这个时候就可以使用<code>-type</code>的action来寻找。</p><p><code>-type</code>的类型比较常见的有</p><ul><li>f: 文件</li><li>d: 目录</li><li>l: 软链接</li></ul><p>例如，找出tmp目录下面出了目录的文件</p><pre><code class="bash">find tmp -type f</code></pre><p>自然，用户可组合不同的actions来寻找文件，例如只找出txt后缀的文件</p><pre><code class="bash">find tmp -type f -name &#39;*.txt&#39;</code></pre><h3 id="find-空文件或者空目录"><a href="#find-空文件或者空目录" class="headerlink" title="find 空文件或者空目录"></a>find 空文件或者空目录</h3><p>find命令支持寻找空的文件或者空的目录</p><pre><code class="bash">find /tmp -empty</code></pre><h3 id="否定action"><a href="#否定action" class="headerlink" title="否定action"></a>否定action</h3><p>find命令可以根据action的否定来处理寻找的文件结果。</p><p>例如可以寻找出了后缀为<code>.txt</code>的文件</p><pre><code class="bash">find . ! -name &#39;*.txt&#39;</code></pre><p>或者寻找出了空文件或者空目录以外的文件</p><pre><code class="bash">find . ! -empty</code></pre><h3 id="根据文件属主寻找"><a href="#根据文件属主寻找" class="headerlink" title="根据文件属主寻找"></a>根据文件属主寻找</h3><p>find命令可以根据文件的属主来寻找。例如想要寻找文件属主为chenzhiling的文件</p><pre><code class="bash">find . -username chenzhiling</code></pre><p><code>-username</code>接受的参数值可以使username或者UID，想要获取对应用户的UID可以通过</p><pre><code class="bash">id -u chenzhiling</code></pre><p>同时也可以根据用户所在的组或者GID来寻找对应的文件</p><pre><code class="bash">find . -group root</code></pre><p>如果想要使用GID来寻找，可以通过下面的命令获取对应的GID</p><pre><code>id -g chenzhiling</code></pre><h3 id="根据文件的时间寻找"><a href="#根据文件的时间寻找" class="headerlink" title="根据文件的时间寻找"></a>根据文件的时间寻找</h3><p>文件在创建之后就会有三个时间跟随着文件。着三个时间分别是mtime、atime、ctime。他们分别表示</p><ul><li>mtime - 文件的内容被修改的时候更新的时间</li><li>atime - 文件被访问的时候被更新的时间</li><li>ctime - 文件的元信息被修改（例如权限）的时候更新的时间</li></ul><p>为此我们可以使用<code>-mtime</code>、<code>-atime</code>、<code>-ctime</code>的action来寻找对应的文件。</p><p>例如寻找在五天内被修改的文件</p><pre><code class="bash">find . -mtime -5 -type f</code></pre><p>寻找在五天以前被修改的文件</p><pre><code class="bash">find . -mtime +5 -type f</code></pre><p>寻找文件在五天前（就在第五天前）被修改的文件</p><pre><code class="bash">find . -mtime 5 -type f</code></pre><p>以此类推另外两个action的用法类似。</p><p>如果觉得使用天来寻找太长了， find还提供了使用<code>mmin</code>、<code>amin</code>、<code>cmin</code>这种分钟级别的action来寻找，例如寻找在5分钟以内被访问的文件</p><pre><code class="bash">find . -type f -amin -5</code></pre><h3 id="根据文件大小来寻找"><a href="#根据文件大小来寻找" class="headerlink" title="根据文件大小来寻找"></a>根据文件大小来寻找</h3><p>在一些时候，用户想要寻找一些大于某个大小或者小于某一个大小的文件，这个时候可以使用<code>-size</code>来寻找</p><pre><code>find . -type f -size -10M</code></pre><p>以上命令把目录下面小于10MB的文件都找出来。</p><p>文件的大小主要分为了4类</p><ul><li>c - bytes</li><li>k - kb</li><li>M - MB</li><li>G - GB</li></ul><h3 id="根据文件权限来寻找"><a href="#根据文件权限来寻找" class="headerlink" title="根据文件权限来寻找"></a>根据文件权限来寻找</h3><p>根据文件权限来寻找文件使用<code>-perm</code>，他有两种方式来寻找，一种是根据权限的标识，另一种用权限的数字。</p><p>我们知道在Linux系统中，文件的权限主要分为了User、Group和Other级别的权限。如下图所示<br><img src="/images/linux/permissions.jpg" alt="image"></p><p>例如要寻找文件权限为<code>rwxr-xr-x</code>的文件，</p><pre><code class="bash">find . -type f -perm u=rwx,g=rx,o=x</code></pre><p>同时为了寻找对于所有的用户权限都是一样的情况，可以使用a来表示，例如寻找文件权限为<code>r-xr-xr-x</code>的文件，这个文件对于所有的用户的权限都是一样的，则可以使用</p><pre><code class="bash">find . -type f -perm a=rx</code></pre><p>为了寻找某一类文件，只想关心它有执行权限<code>x</code>，其他的权限可以设置，也可以没有，这个时候不能只是简单的设置<code>-perm a=x</code>，因为这表示的是要寻找的文件对于所有的用户都只有执行权限，即<code>--x--x--x</code>，这时候可以用<code>-perm /a=x</code>的形式来寻找那些包含了执行权限的文件，但是别的权限为可以是有或者无</p><pre><code class="bash">find . -type f -perm /a=x</code></pre><p>使用权限数字来寻找文件，则直接在<code>-perm</code>后面追加数字为参数即可。例如某一个文件的权限是<code>rwxr-xr-x</code>，这个权限对应的数字表示模式为644，则寻找文件的时候可以</p><pre><code class="bash">find . -type f -perm 644</code></pre><p>同样的，在只想关心某一个权限位的时候，find也有一个表示的方式。例如上面的图中，我们想要找一系列文件，值关心这个文件是否有执行权限<code>x</code>，那么每个权限位置的x位置都设置为1，其它不关心的设置为0，也就是111。这时候在111前面加上<code>-</code>就可以实现只处理权限的子集了。</p><pre><code class="bash">find . -type f -perm -111</code></pre><p>那么如果说使用</p><pre><code>find . -type f -perm -000</code></pre><p>则其实-perm的效果就失效了。</p><h3 id="寻找SUID文件"><a href="#寻找SUID文件" class="headerlink" title="寻找SUID文件"></a>寻找SUID文件</h3><p>在上面学会了使用数字模式的权限寻找文件了，那么如果想要寻找具有SUID权限的文件，其实就是一样的做法，只关心SUID的权限位置，其余权限都不管</p><pre><code class="bash">find .  -type f -perm -4000</code></pre><p>同样的，先刚查看有setuid的权限文件的同时想查看具有执行权限的文件</p><pre><code class="bash">find . -type f -perm -4111</code></pre><p>查看设置了setgid的文件</p><pre><code class="bash">find . -type -f -perm -2000</code></pre><p>查看设置了粘滞位的文件</p><pre><code class="bash">find . -type -f -perm -1000</code></pre><p>这个sticky位比较神奇，有兴趣可以Google一下。</p><p>查看设置了setuid和sticky的该怎么找呢，当然这个属于比较少见到的文件了，权限的格式类似于<code>--s-----t</code>，find命令只要求将这里两个权限数字模式相加即可，也就是5000</p><pre><code class="bash">find . -type f -perm -5000</code></pre><p>如果想要使用权限标识来表示，则可以</p><pre><code class="bash">find . -type f -perm /u=sfind . -type f -perm /g=sfind . -type f -perm /o=t</code></pre><h3 id="设置查询深度"><a href="#设置查询深度" class="headerlink" title="设置查询深度"></a>设置查询深度</h3><p>前面提到了find寻找文件是通过路径去递归查询的，那么有时候有些目录下面的文件深度非常深，则会导致搜索的结果非常庞大。这时候可以使用<code>-maxdepth</code>来限制搜索的深度</p><pre><code class="bash">find . -type f -maxdepth 3</code></pre><p>反过来也可以设置最小的搜索深度</p><pre><code class="bash">find . -type f -mindepth 3</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://www.booleanworld.com/guide-linux-find-command/" target="_blank" rel="noopener">A Guide to the Linux “Find” Command</a></li><li><a href="http://man7.org/linux/man-pages/man1/find.1.html" target="_blank" rel="noopener">man find</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;find命令让用户能够在系统上根据目录执行文件搜索，同时还可以对结果进行一些后续操作。它是GNU的findutils工具的一个子模块，并且和其他的工具一同形成了强大的文件搜索功能。find工具具有很强的灵活性，可以根据一些特定的条件来搜索文件或者目录，同时还可以根据一些条件
       
     
     </summary>
@@ -399,29 +425,6 @@
   </entry>
   
   <entry>
-    <title>PostMan自动设置OAuth2请求头Auhtorization</title>
-    <link href="https://banbanpeppa.github.io/2019/04/28/java/post-man-authorization/"/>
-    <id>https://banbanpeppa.github.io/2019/04/28/java/post-man-authorization/</id>
-    <published>2019-04-28T02:00:00.000Z</published>
-    <updated>2019-04-28T10:20:30.547Z</updated>
-    
-    <content type="html"><![CDATA[<p>在开发java应用过程中，难免遇到资源请求的测试过程，一般开发过程中会借助类似PostMan或者Insomnia的工具。在使用PostMan的过程中，当需要结合oauth2请求认证的token时，如果不设置变量，每次都需要手动去更换每一个请求的Token，操作非常繁琐。</p><p>为了自动化地设置这个token，我们需要使用postman的<code>Tests</code>功能。Postman的<code>Tests</code>功能支持使用JS进行一些变量操作。我们可以在授权接口的请求中填入如下的Tests脚本：</p><pre><code>var token = JSON.parse(responseBody).value;postman.clearGlobalVariable(&quot;token&quot;);postman.setGlobalVariable(&quot;token&quot;, token);</code></pre><p>具体内容如下图所示</p><p><img src="/images/java/postman_test.jpg" alt="image"></p><p>之后其他需要用到认证Token的请求都可以通过如下设置方式自动设置好Token</p><p><img src="/images/java/postman_req.png" alt="image"></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;在开发java应用过程中，难免遇到资源请求的测试过程，一般开发过程中会借助类似PostMan或者Insomnia的工具。在使用PostMan的过程中，当需要结合oauth2请求认证的token时，如果不设置变量，每次都需要手动去更换每一个请求的Token，操作非常繁琐。&lt;/
-      
-    
-    </summary>
-    
-    
-      <category term="Java" scheme="https://banbanpeppa.github.io/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
     <title>使用Retrofit访问HTTPS接口</title>
     <link href="https://banbanpeppa.github.io/2019/04/28/java/retrofit-https/"/>
     <id>https://banbanpeppa.github.io/2019/04/28/java/retrofit-https/</id>
@@ -435,6 +438,29 @@
       
       
         &lt;h1 id=&quot;使用Retrofit访问HTTPS接口&quot;&gt;&lt;a href=&quot;#使用Retrofit访问HTTPS接口&quot; class=&quot;headerlink&quot; title=&quot;使用Retrofit访问HTTPS接口&quot;&gt;&lt;/a&gt;使用Retrofit访问HTTPS接口&lt;/h1&gt;&lt;p&gt;Re
+      
+    
+    </summary>
+    
+    
+      <category term="Java" scheme="https://banbanpeppa.github.io/tags/Java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PostMan自动设置OAuth2请求头Auhtorization</title>
+    <link href="https://banbanpeppa.github.io/2019/04/28/java/post-man-authorization/"/>
+    <id>https://banbanpeppa.github.io/2019/04/28/java/post-man-authorization/</id>
+    <published>2019-04-28T02:00:00.000Z</published>
+    <updated>2019-04-28T10:20:30.547Z</updated>
+    
+    <content type="html"><![CDATA[<p>在开发java应用过程中，难免遇到资源请求的测试过程，一般开发过程中会借助类似PostMan或者Insomnia的工具。在使用PostMan的过程中，当需要结合oauth2请求认证的token时，如果不设置变量，每次都需要手动去更换每一个请求的Token，操作非常繁琐。</p><p>为了自动化地设置这个token，我们需要使用postman的<code>Tests</code>功能。Postman的<code>Tests</code>功能支持使用JS进行一些变量操作。我们可以在授权接口的请求中填入如下的Tests脚本：</p><pre><code>var token = JSON.parse(responseBody).value;postman.clearGlobalVariable(&quot;token&quot;);postman.setGlobalVariable(&quot;token&quot;, token);</code></pre><p>具体内容如下图所示</p><p><img src="/images/java/postman_test.jpg" alt="image"></p><p>之后其他需要用到认证Token的请求都可以通过如下设置方式自动设置好Token</p><p><img src="/images/java/postman_req.png" alt="image"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;在开发java应用过程中，难免遇到资源请求的测试过程，一般开发过程中会借助类似PostMan或者Insomnia的工具。在使用PostMan的过程中，当需要结合oauth2请求认证的token时，如果不设置变量，每次都需要手动去更换每一个请求的Token，操作非常繁琐。&lt;/
       
     
     </summary>
@@ -465,31 +491,6 @@
     
     
       <category term="随笔" scheme="https://banbanpeppa.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux安装NFS服务</title>
-    <link href="https://banbanpeppa.github.io/2019/03/25/linux/nfs-server-deploy/"/>
-    <id>https://banbanpeppa.github.io/2019/03/25/linux/nfs-server-deploy/</id>
-    <published>2019-03-25T06:23:00.000Z</published>
-    <updated>2019-03-25T06:47:03.586Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Linux安装NFS服务"><a href="#Linux安装NFS服务" class="headerlink" title="Linux安装NFS服务"></a>Linux安装NFS服务</h1><h2 id="NFS服务器"><a href="#NFS服务器" class="headerlink" title="NFS服务器"></a>NFS服务器</h2><p>NFS（Network File System）即网络文件系统， 在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。nfs是通过挂载的方式来访问</p><h2 id="Ubuntu、Debian系统安装NFS"><a href="#Ubuntu、Debian系统安装NFS" class="headerlink" title="Ubuntu、Debian系统安装NFS"></a>Ubuntu、Debian系统安装NFS</h2><h3 id="安装nfs服务器"><a href="#安装nfs服务器" class="headerlink" title="安装nfs服务器"></a>安装nfs服务器</h3><pre><code>apt-get install nfs-kernel-server</code></pre><h2 id="CentOS安装NFS"><a href="#CentOS安装NFS" class="headerlink" title="CentOS安装NFS"></a>CentOS安装NFS</h2><pre><code>yum -y install nfs-utils rpcbind</code></pre><h2 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h2><p>在NFS服务端上创建共享目录<code>/opt/share</code>并设置权限</p><pre><code>mkdir -p /opt/sharechmod 666 /opt/share</code></pre><h3 id="设置-etc-exports配置文件"><a href="#设置-etc-exports配置文件" class="headerlink" title="设置/etc/exports配置文件"></a>设置/etc/exports配置文件</h3><pre><code>vim /etc/exports/opt/share *(rw,no_root_squash,no_all_squash,sync)</code></pre><p>添加这行配置，rw读写权限，sync同步，no_root_squash来访的root用户保持root帐号权限</p><p>客户端的指定方式:</p><ul><li><p>指定ip地址的主机：192.168.1.100</p><pre><code>/opt/share 192.168.1.100 (rw,no_root_squash,no_all_squash,sync)</code></pre></li><li><p>指定子网中的所有：192.168.2.0/24</p><pre><code>/opt/share 192.168.2.0/24(rw,no_root_squash,no_all_squash,sync)</code></pre></li><li><p>所有主机：*</p><pre><code>/opt/share *(rw,no_root_squash,no_all_squash,sync)</code></pre></li></ul><p>权限指定方式:</p><ul><li><p>rw读写</p></li><li><p>ro只读</p></li></ul><h3 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h3><pre><code>exportfs -r</code></pre><h3 id="启动rpcbind、nfs服务"><a href="#启动rpcbind、nfs服务" class="headerlink" title="启动rpcbind、nfs服务"></a>启动rpcbind、nfs服务</h3><p>CentOS</p><pre><code>service rpcbind startservice nfs start</code></pre><p>Ubuntu、 Debian</p><pre><code>service nfs-kernel-server restart</code></pre><h3 id="查看-RPC-服务的注册状况"><a href="#查看-RPC-服务的注册状况" class="headerlink" title="查看 RPC 服务的注册状况"></a>查看 RPC 服务的注册状况</h3><pre><code># rpcinfo -p localhostprogram vers proto   port  service100000    4   tcp    111  portmapper100000    3   tcp    111  portmapper100000    2   tcp    111  portmapper100000    4   udp    111  portmapper100000    3   udp    111  portmapper100000    2   udp    111  portmapper100005    1   udp  49979  mountd100005    1   tcp  58393  mountd100005    2   udp  45516  mountd100005    2   tcp  37792  mountd100005    3   udp  32997  mountd100005    3   tcp  39937  mountd100003    2   tcp   2049  nfs100003    3   tcp   2049  nfs100003    4   tcp   2049  nfs100227    2   tcp   2049  nfs_acl100227    3   tcp   2049  nfs_acl100003    2   udp   2049  nfs100003    3   udp   2049  nfs100003    4   udp   2049  nfs100227    2   udp   2049  nfs_acl100227    3   udp   2049  nfs_acl100021    1   udp  51112  nlockmgr100021    3   udp  51112  nlockmgr100021    4   udp  51112  nlockmgr100021    1   tcp  43271  nlockmgr100021    3   tcp  43271  nlockmgr100021    4   tcp  43271  nlockmgr</code></pre><p>在你的 NFS 服务器设定妥当之后，我们可以在 server 端先自我测试一下是否可以联机</p><pre><code># showmount -e localhostExport list for localhost:/opt/share *</code></pre><pre><code>选项与参数：-a ：显示目前主机与客户端的 NFS 联机分享的状态；-e ：显示某部主机的 /etc/exports 所分享的目录数据。</code></pre><h2 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h2><p>创建挂载目录</p><pre><code>mkdir -p /data/fabric</code></pre><p>挂载目录到NFS服务器</p><pre><code>mount -t nfs 125.216.243.88:/opt/share /data/fabric -o proto=tcp -o nolock</code></pre><pre><code>-t nfs                          #挂载类型-o nolock                       #读写的时候不锁定 -o tcp                          #tcp模式，&lt;nfs-ip&gt;:/home/where/nfs        #服务器地址，/mnt                            #挂载到本地mnt目录</code></pre><p>查看挂载情况</p><pre><code># df -hFilesystem                 Size  Used Avail Use% Mounted on/dev/mapper/centos-root     50G   13G   38G  26% /...125.216.243.88:/opt/share   50G   11G   40G  21% /data/fabric</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;Linux安装NFS服务&quot;&gt;&lt;a href=&quot;#Linux安装NFS服务&quot; class=&quot;headerlink&quot; title=&quot;Linux安装NFS服务&quot;&gt;&lt;/a&gt;Linux安装NFS服务&lt;/h1&gt;&lt;h2 id=&quot;NFS服务器&quot;&gt;&lt;a href=&quot;#NFS服务器&quot;
-      
-    
-    </summary>
-    
-    
-      <category term="Linux" scheme="https://banbanpeppa.github.io/tags/Linux/"/>
-    
-      <category term="软件安装" scheme="https://banbanpeppa.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"/>
     
   </entry>
   

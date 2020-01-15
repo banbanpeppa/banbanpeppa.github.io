@@ -218,6 +218,37 @@
 
 <div class="post-preview">
 
+    <a href="/2019/08/15/linux/cmd/grep/">
+        <h2 class="post-title">
+            Linux命令 — grep
+        </h2>
+        <h3 class="post-subtitle">
+            keep moving ...
+        </h3>
+        <div class="post-content-preview">
+            在使用Linux的过程中，经常会遇到在大量文件中查找某一些文件是否包含了某些文件内容的情况。例如在一堆的日志文件里面把出现“memory”字眼的文件过滤出来。
+我们知道用find命令可以使用一些正则表达式来寻找某一些文件，但是却不能够用来寻找文件内是否包含某一些内容。
+grep可以帮我们实现这种效果。
+grepgrep的中文全称是“全面搜索正则表达式并把行打印出来”，它能使用正则表达式来搜索......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2019-08-15
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Linux" title="Linux">Linux</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2019/08/14/linux/mysql/">
         <h2 class="post-title">
             MySQL杂记
@@ -409,16 +440,15 @@ Spring SecuritySpring Security是一个强大的高度可定制化的身份认�
 
 <div class="post-preview">
 
-    <a href="/2019/04/28/java/post-man-authorization/">
+    <a href="/2019/04/28/java/retrofit-https/">
         <h2 class="post-title">
-            PostMan自动设置OAuth2请求头Auhtorization
+            使用Retrofit访问HTTPS接口
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            在开发java应用过程中，难免遇到资源请求的测试过程，一般开发过程中会借助类似PostMan或者Insomnia的工具。在使用PostMan的过程中，当需要结合oauth2请求认证的token时，如果不设置变量，每次都需要手动去更换每一个请求的Token，操作非常繁琐。
-为了自动化地设置这个token，我们需要使用postman的Tests功能。Postman的Tests功能支持使用JS进行......
+            使用Retrofit访问HTTPS接口Retrofit是一个类型安全的HTTP客户端工具，使用Java语言开发，主要为Android和Java客户端的HTTP请求的提供方便，Retrofit可以认为是OkHttp的加强版，是一个网络加载框架，底层使用的是OkHttp封装。从根本上来说，网络请求的工作本质上都是OkHttp完成的，而Retrofit则负责网络请求接口的封装，它提供了很多注解，简......
         </div>
     </a>
     
@@ -438,15 +468,16 @@ Spring SecuritySpring Security是一个强大的高度可定制化的身份认�
 
 <div class="post-preview">
 
-    <a href="/2019/04/28/java/retrofit-https/">
+    <a href="/2019/04/28/java/post-man-authorization/">
         <h2 class="post-title">
-            使用Retrofit访问HTTPS接口
+            PostMan自动设置OAuth2请求头Auhtorization
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            使用Retrofit访问HTTPS接口Retrofit是一个类型安全的HTTP客户端工具，使用Java语言开发，主要为Android和Java客户端的HTTP请求的提供方便，Retrofit可以认为是OkHttp的加强版，是一个网络加载框架，底层使用的是OkHttp封装。从根本上来说，网络请求的工作本质上都是OkHttp完成的，而Retrofit则负责网络请求接口的封装，它提供了很多注解，简......
+            在开发java应用过程中，难免遇到资源请求的测试过程，一般开发过程中会借助类似PostMan或者Insomnia的工具。在使用PostMan的过程中，当需要结合oauth2请求认证的token时，如果不设置变量，每次都需要手动去更换每一个请求的Token，操作非常繁琐。
+为了自动化地设置这个token，我们需要使用postman的Tests功能。Postman的Tests功能支持使用JS进行......
         </div>
     </a>
     
@@ -486,38 +517,6 @@ Spring SecuritySpring Security是一个强大的高度可定制化的身份认�
         <div class="tags">
             
               <a href="/tags/#随笔" title="随笔">随笔</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/03/25/linux/nfs-server-deploy/">
-        <h2 class="post-title">
-            Linux安装NFS服务
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Linux安装NFS服务NFS服务器NFS（Network File System）即网络文件系统， 在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。nfs是通过挂载的方式来访问
-Ubuntu、Debian系统安装NFS安装nfs服务器apt-get install nfs-kernel-server
-CentOS安装NFSyum -......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2019-03-25
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-              <a href="/tags/#软件安装" title="软件安装">软件安装</a>
             
         </div>
     
@@ -641,6 +640,10 @@ CentOS安装NFSyum -......
     <ul>
       
         <li>
+          <a href="/2020/01/13/angularjs/ng-echarts/">AngularJS使用Echarts</a>
+        </li>
+      
+        <li>
           <a href="/2019/11/10/angularjs/promise/">[转] 关于 Angular 里的 $q 和 Promise</a>
         </li>
       
@@ -654,10 +657,6 @@ CentOS安装NFSyum -......
       
         <li>
           <a href="/2019/10/09/essay/v2ray_ws/">v2ray + websocket + nginx</a>
-        </li>
-      
-        <li>
-          <a href="/2019/09/18/linux/rsync/">rsync - 文件同步与传输神器</a>
         </li>
       
     </ul>
@@ -802,7 +801,7 @@ CentOS安装NFSyum -......
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Chen Zhi Ling 2019
+                    Copyright &copy; Chen Zhi Ling 2020
                     <br>
                     <!-- Theme by <a href="http://huangxuan.me">Hux</a>
                     <span style="display: inline-block; margin: 0 5px;">
