@@ -10,13 +10,6 @@
     </url>
 
     <url>
-        <loc>https://banbanpeppa.github.io/tags/Ethereum/</loc>
-        <lastmod>2019-01-25T06:48:05.141Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://banbanpeppa.github.io/tags/Kubernetes/</loc>
         <lastmod>2019-03-25T04:01:44.837Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -73,13 +66,6 @@
     </url>
 
     <url>
-        <loc>https://banbanpeppa.github.io/tags/Blockchain/</loc>
-        <lastmod>2019-10-11T12:02:13.413Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://banbanpeppa.github.io/tags/Bitcoin/</loc>
         <lastmod>2019-10-11T12:02:13.413Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -110,6 +96,20 @@
     <url>
         <loc>https://banbanpeppa.github.io/tags/AngularJS/</loc>
         <lastmod>2020-01-15T04:00:10.518Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/Blockchain/</loc>
+        <lastmod>2021-05-17T14:42:33.430Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/Ethereum/</loc>
+        <lastmod>2021-05-17T14:42:33.430Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
