@@ -14,7 +14,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          以太坊开发环境搭建 - banban&#39;s Blog
+          在以太坊测试网络 Goerli 部署 Swarm - banban&#39;s Blog
         
     </title>
 
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/images/blockchain/ethereum/bg.jpg')
+            background-image: url('/images/blockchain/ethereum/swarm/bg.jpeg')
             /*post*/
         
     }
@@ -90,8 +90,10 @@
                             
                               <a class="tag" href="/tags/#Ethereum" title="Ethereum">Ethereum</a>
                             
+                              <a class="tag" href="/tags/#Swarm" title="Swarm">Swarm</a>
+                            
                         </div>
-                        <h1>以太坊开发环境搭建</h1>
+                        <h1>在以太坊测试网络 Goerli 部署 Swarm</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by banban on
@@ -221,12 +223,65 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <h1 id="在以太坊测试网络-Goerli-部署-Swarm"><a href="#在以太坊测试网络-Goerli-部署-Swarm" class="headerlink" title="在以太坊测试网络 Goerli 部署 Swarm"></a>在以太坊测试网络 Goerli 部署 Swarm</h1><p>以下主要以 Linux 系统为例，Darwin 类似。</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="安装-Bee-Clef"><a href="#安装-Bee-Clef" class="headerlink" title="安装 Bee Clef"></a>安装 Bee Clef</h3><p>这个服务负责签名，是 Bee 节点的前置依赖之一。</p>
+<p><strong>Ubuntu / Debian / Raspbian</strong></p>
+<p>执行命令，通过 deb 包安装</p>
+<pre><code class="bash">wget https://github.com/ethersphere/bee-clef/releases/download/v0.4.9/bee-clef_0.4.9_amd64.deb
+sudo dpkg -i bee-clef_0.4.9_amd64.deb
+</code></pre>
+<p><strong>CentOS</strong></p>
+<pre><code class="bash">wget https://github.com/ethersphere/bee-clef/releases/download/v0.4.9/bee-clef_0.4.9_amd64.rpm
+sudo rpm -i bee-clef_0.4.9_amd64.rpm
+</code></pre>
+<p><strong>MacOS</strong></p>
+<pre><code class="bash">brew tap ethersphere/tap
+brew install swarm-clef
+</code></pre>
+<p>运行服务</p>
+<pre><code class="bash">brew services start swarm-clef
+</code></pre>
+<h3 id="安装-Bee"><a href="#安装-Bee" class="headerlink" title="安装 Bee"></a>安装 Bee</h3><p>Bee 节点是分布式存储服务的主体服务。</p>
+<p><strong>Ubuntu / Debian / Raspbian</strong></p>
+<p>执行命令，通过 deb 包安装</p>
+<pre><code class="bash">wget https://github.com/ethersphere/bee/releases/download/v0.5.3/bee_0.5.3_amd64.deb
+sudo dpkg -i bee_0.5.3_amd64.deb
+</code></pre>
+<p><strong>CentOS</strong></p>
+<pre><code class="bash">wget https://github.com/ethersphere/bee/releases/download/v0.5.3/bee_0.5.3_amd64.rpm
+sudo rpm -i bee_0.5.3_amd64.rpm
+</code></pre>
+<p><strong>MacOS</strong></p>
+<pre><code class="bash">brew tap ethersphere/tap
+brew install swarm-bee
+</code></pre>
+<p>运行服务</p>
+<pre><code class="bash">brew services start swarm-bee
+</code></pre>
+<h2 id="运行属于自己的-Goerli-节点"><a href="#运行属于自己的-Goerli-节点" class="headerlink" title="运行属于自己的 Goerli 节点"></a>运行属于自己的 Goerli 节点</h2><p>安装好工具之后，可以使用默认的配置运行 bee 节点，但是默认 bee 节点连接的以太坊测试网络的 endpoint 为：<a href="https://rpc.slock.it/goerli" target="_blank" rel="noopener">https://rpc.slock.it/goerli</a>, 这个入口很容易被堵塞(发送的交易请求过多)，进而导致 bee 节点无法正常工作，报错如下：</p>
+<pre><code class="bash">Error: get chain id: Post &quot;https://rpc.slock.it/goerli&quot;: dial tcp 87.117.121.163:443: i/o timeout
+</code></pre>
+<p>为此安装属于个人的 Goerli endpoint，进入：<a href="https://infura.io/，创建项目" target="_blank" rel="noopener">https://infura.io/，创建项目</a></p>
+<p><img src="/images/blockchain/ethereum/swarm/infura_create_project.png" alt=""><br>创建之后选择测试网络 Goerli，记录保存 endpoint 地址：<br><img src="/images/blockchain/ethereum/swarm/infura_endpoint.png" alt=""></p>
+<p>将地址替换配置文件</p>
+<pre><code class="bash">vim /etc/bee/bee.yaml
+
+...
+# swap-endpoint: https://rpc.slock.it/goerli 注释默认测试网络
+swap-endpoint: https://goerli.infura.io/v3/6a542820bd61406e98c3a682312eb9ed
+...
+</code></pre>
+<h3 id="运行-bee-节点"><a href="#运行-bee-节点" class="headerlink" title="运行 bee 节点"></a>运行 bee 节点</h3><p>运行 bee 节点准备存储工作（挖矿）。</p>
+
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2022/04/11/bigdata/mongodb/mongodb/" data-toggle="tooltip" data-placement="top" title="MongoDB 笔记">&larr; Previous Post</a>
+                        </li>
                     
                     
                         <li class="next">
@@ -260,7 +315,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#在以太坊测试网络-Goerli-部署-Swarm"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">在以太坊测试网络 Goerli 部署 Swarm</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Quick-Start"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Quick Start</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装-Bee-Clef"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">安装 Bee Clef</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装-Bee"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">安装 Bee</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#运行属于自己的-Goerli-节点"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">运行属于自己的 Goerli 节点</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#运行-bee-节点"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">运行 bee 节点</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -283,6 +338,8 @@
                           <a class="tag" href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
                         
                           <a class="tag" href="/tags/#Ethereum" title="Ethereum">Ethereum</a>
+                        
+                          <a class="tag" href="/tags/#Swarm" title="Swarm">Swarm</a>
                         
                     </div>
                 </section>
@@ -437,7 +494,7 @@
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Chen Zhi Ling 2021
+                    Copyright &copy; Chen Zhi Ling 2022
                     <br>
                     <!-- Theme by <a href="http://huangxuan.me">Hux</a>
                     <span style="display: inline-block; margin: 0 5px;">

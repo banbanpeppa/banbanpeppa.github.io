@@ -218,15 +218,120 @@
 
 <div class="post-preview">
 
-    <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">
+    <a href="/2022/05/05/golang/prof/">
         <h2 class="post-title">
-            以太坊开发环境搭建
+            Linux 服务性能分析与火焰图🔥
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            ...
+            运行在生产环境中的服务遇到资源消耗大，吃 CPU、内存的情况，便需要分析具体是哪一块代码执行出了问题。Linux 提供了许多性能分析工具，这边主要尝试使用 perf_events.
+Perf_events简称perf是 Linux 系统原生提供的性能分析工具，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2022-05-05
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Linux" title="Linux">Linux</a>
+            
+              <a href="/tags/#Golang" title="Golang">Golang</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2022/04/12/bigdata/redis/redis/">
+        <h2 class="post-title">
+            Redis 笔记
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            最佳实践查出什么拖慢了 Redis127.0.0.1:6379&gt; INFO commandstats
+# Commandstats
+cmdstat_get:calls=78,usec=608,usec_per_call=7.79
+cmdstat_setex:calls=5,usec=71,usec_per_call=14.20
+cmdstat_keys:calls=2,usec=42,......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2022-04-12
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Big Data" title="Big Data">Big Data</a>
+            
+              <a href="/tags/#Redis" title="Redis">Redis</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2022/04/11/bigdata/mongodb/mongodb/">
+        <h2 class="post-title">
+            MongoDB 笔记
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            最佳实践传送门：《50 Tips and Tricks for MongoDB Developers》
+速度优先使用嵌入数据，完整性优先使用引用数据规范化架构
+{
+     &quot;_id&quot; : productId,
+     &quot;name&quot; : name,
+     &quot;price&quot; : price,
+     &quot;desc&quo......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2022-04-11
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Big Data" title="Big Data">Big Data</a>
+            
+              <a href="/tags/#MongoDB" title="MongoDB">MongoDB</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">
+        <h2 class="post-title">
+            在以太坊测试网络 Goerli 部署 Swarm
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            在以太坊测试网络 Goerli 部署 Swarm以下主要以 Linux 系统为例，Darwin 类似。
+Quick Start安装 Bee Clef这个服务负责签名，是 Bee 节点的前置依赖之一。
+Ubuntu / Debian / Raspbian
+执行命令，通过 deb 包安装
+wget https://github.com/ethersphere/bee-clef/releases/......
         </div>
     </a>
     
@@ -239,6 +344,8 @@
               <a href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
             
               <a href="/tags/#Ethereum" title="Ethereum">Ethereum</a>
+            
+              <a href="/tags/#Swarm" title="Swarm">Swarm</a>
             
         </div>
     
@@ -440,100 +547,6 @@ Rsync作为文件同步工具，其在许多场景下都提供了便捷。为了
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2019/09/16/linux/autojump/">
-        <h2 class="post-title">
-            懒人神器autojump
-        </h2>
-        <h3 class="post-subtitle">
-            Faster File Navigation with autojump
-        </h3>
-        <div class="post-content-preview">
-            
-What is autojumpautojump是一个类似于cd命令的工具，它可以快速定位到目录或者文件，其实现的基本原理是由于autojump维护了一个目录访问历史表，如果出现目录名同名的情况，autojump会根据不同目录的访问频率来设置对应的权重，权重高的优先进入。
-开源地址：https://github.com/wting/autojump
-Installationautojump......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2019-09-16
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/09/16/bigdata/elk/elasticsearch/">
-        <h2 class="post-title">
-            Elasticsearch的安装与使用
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Elasticsearch
-Getting StartedElasticsearch是一个高可扩展的开源全文检索和分析引擎。它提供了快速实时进行存储、查询和分析海量数据的功能。这个工具通常用于那些需要复杂查询功能和需求的场景，我们将Elasticsearch作为一个底层引擎技术来驱动顶层应用。
-以下是一些简单的使用Elasticsearch的用例
-
-在一个在线电商平台中，需要允许用户对不同的......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2019-09-16
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Big Data" title="Big Data">Big Data</a>
-            
-              <a href="/tags/#ELK" title="ELK">ELK</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2019/08/21/linux/holefile/">
-        <h2 class="post-title">
-            Linux空洞文件
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            概念什么是空洞文件(hole file)？💁‍♂️在Linux中，lseek的系统调用是可以改变在文件上面的偏移量的，而且还允许其超出文件的长度。偏移量一旦超出了文件的长度，下一次进行文件IO写入操作文件的时候便会延续偏移量的位置继续写入，进而在文件中间产生了空洞的部分，这部分会以”\0”填充，而从原来的文件结尾到新写入数据间的这段空间就被称为“文件空洞”。
-在Linux中，EOF（文件结......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2019-08-21
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -646,23 +659,23 @@ Getting StartedElasticsearch是一个高可扩展的开源全文检索和分析�
     <ul>
       
         <li>
-          <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">以太坊开发环境搭建</a>
+          <a href="/2022/05/05/golang/prof/">Linux 服务性能分析与火焰图🔥</a>
+        </li>
+      
+        <li>
+          <a href="/2022/04/12/bigdata/redis/redis/">Redis 笔记</a>
+        </li>
+      
+        <li>
+          <a href="/2022/04/11/bigdata/mongodb/mongodb/">MongoDB 笔记</a>
+        </li>
+      
+        <li>
+          <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">在以太坊测试网络 Goerli 部署 Swarm</a>
         </li>
       
         <li>
           <a href="/2020/01/13/angularjs/ng-echarts/">AngularJS使用Echarts</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/10/angularjs/promise/">[转] 关于 Angular 里的 $q 和 Promise</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/10/bigdata/elk/logstash_performance_tuning/">Logstash性能调优</a>
-        </li>
-      
-        <li>
-          <a href="/2019/10/10/angularjs/ng-focus/">AngularJS实现input autofocus属性</a>
         </li>
       
     </ul>
@@ -676,6 +689,14 @@ Getting StartedElasticsearch是一个高可扩展的开源全文检索和分析�
     <!-- no hr -->
     <h5><a href="/tags/">FEATURED TAGS</a></h5>
     <div class="tags">
+        
+            
+        
+            
+        
+            
+        
+            
         
             
         
@@ -809,7 +830,7 @@ Getting StartedElasticsearch是一个高可扩展的开源全文检索和分析�
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Chen Zhi Ling 2021
+                    Copyright &copy; Chen Zhi Ling 2022
                     <br>
                     <!-- Theme by <a href="http://huangxuan.me">Hux</a>
                     <span style="display: inline-block; margin: 0 5px;">

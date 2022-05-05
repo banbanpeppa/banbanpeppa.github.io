@@ -59,22 +59,8 @@
     </url>
 
     <url>
-        <loc>https://banbanpeppa.github.io/tags/Linux/</loc>
-        <lastmod>2019-10-01T09:19:38.523Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://banbanpeppa.github.io/tags/Bitcoin/</loc>
         <lastmod>2019-10-11T12:02:13.413Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://banbanpeppa.github.io/tags/Big-Data/</loc>
-        <lastmod>2019-11-10T13:53:10.781Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -101,15 +87,57 @@
     </url>
 
     <url>
+        <loc>https://banbanpeppa.github.io/tags/MongoDB/</loc>
+        <lastmod>2022-05-05T08:59:16.961Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/Big-Data/</loc>
+        <lastmod>2022-05-05T09:00:06.443Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/Redis/</loc>
+        <lastmod>2022-05-05T09:00:06.443Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/Linux/</loc>
+        <lastmod>2022-05-05T09:46:51.774Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/Golang/</loc>
+        <lastmod>2022-05-05T09:46:51.774Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://banbanpeppa.github.io/tags/Blockchain/</loc>
-        <lastmod>2021-05-17T14:42:33.430Z</lastmod>
+        <lastmod>2022-05-05T11:33:11.912Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://banbanpeppa.github.io/tags/Ethereum/</loc>
-        <lastmod>2021-05-17T14:42:33.430Z</lastmod>
+        <lastmod>2022-05-05T11:33:11.912Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://banbanpeppa.github.io/tags/Swarm/</loc>
+        <lastmod>2022-05-05T11:33:11.912Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

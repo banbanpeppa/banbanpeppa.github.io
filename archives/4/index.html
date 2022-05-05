@@ -218,6 +218,112 @@
 
 <div class="post-preview">
 
+    <a href="/2019/01/24/docker/docker-mysql-adminer/">
+        <h2 class="post-title">
+            Docker 安装 Mysql + Adminer
+        </h2>
+        <h3 class="post-subtitle">
+            "实现远程访问"
+        </h3>
+        <div class="post-content-preview">
+            Docker 安装 Mysql + Adminer使用docker-compose本教程时，使用mysql镜像最新版本为：8, 编辑 mysql-docker-compose.yml文件，
+# Use root/example as user/password credentials
+version: &#39;3.1&#39;
+
+services:
+
+  db:
+    image: my......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2019-01-24
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Docker" title="Docker">Docker</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/01/13/blockchain/ethereum/iiot-experiment/">
+        <h2 class="post-title">
+            使用以太坊进行IIOT实验
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            使用以太坊进行IIOT实验编写智能合约合约Iiot.sol内容如下
+//由于需要开启返回数组类型，因此需要开启这个实验环境下的环境
+pragma experimental ABIEncoderV2;
+//编译器版本需要是0.4.25+commit.59dbf8f1
+pragma solidity &gt;=0.4.22 &lt;0.6.0;
+
+//本合约用于工业物联网中实现访问控制及其数据读......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2019-01-13
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+            
+              <a href="/tags/#Ethereum" title="Ethereum">Ethereum</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2019/01/12/blockchain/ethereum/ethereum-installation/">
+        <h2 class="post-title">
+            以太坊开发环境搭建
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            以太坊开发环境搭建安装以太坊Ubuntu 16.04分别执行命令
+apt-get update -y 
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:ethereum/ethereum
+add-apt-repository -y ppa:ethereum/ethereum-dev
+apt-get......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2019-01-12
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+            
+              <a href="/tags/#Ethereum" title="Ethereum">Ethereum</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/12/15/java/spring/spring-boot-use-gson/">
         <h2 class="post-title">
             Spring Boot 配置使用 Gson
@@ -284,17 +390,18 @@ echo &quot;export GOROOT=/usr......
 
 <div class="post-preview">
 
-    <a href="/2018/12/03/linux/nodejs-installation/">
+    <a href="/2018/12/03/linux/centos-source-config/">
         <h2 class="post-title">
-            Linux 下 Nodejs 安装
+            CentOS 配置国内源
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            Nodejs安装安装nodejs的方法有很多，这边介绍两种，一种是编译安装，另一种是源安装
-二进制文件安装打开 Node.js - 下载 version 8.11.x or greater，8.x版本可以通过链接：https://nodejs.org/dist/ 查询，然后下载对应版本的tar.gz包, 其余版本系类似
-wget https://nodejs.org/dist/v8.11.0......
+            CentOS 配置国内源阿里云Linux安装镜像源地址：http://mirrors.aliyun.com/
+CentOS系统更换软件安装源第一步备份你的原镜像文件，以免出错后可以恢复。
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+第二步下载新的CentOS-Base.repo 到......
         </div>
     </a>
     
@@ -316,18 +423,17 @@ wget https://nodejs.org/dist/v8.11.0......
 
 <div class="post-preview">
 
-    <a href="/2018/12/03/linux/centos-source-config/">
+    <a href="/2018/12/03/linux/nodejs-installation/">
         <h2 class="post-title">
-            CentOS 配置国内源
+            Linux 下 Nodejs 安装
         </h2>
         <h3 class="post-subtitle">
             
         </h3>
         <div class="post-content-preview">
-            CentOS 配置国内源阿里云Linux安装镜像源地址：http://mirrors.aliyun.com/
-CentOS系统更换软件安装源第一步备份你的原镜像文件，以免出错后可以恢复。
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-第二步下载新的CentOS-Base.repo 到......
+            Nodejs安装安装nodejs的方法有很多，这边介绍两种，一种是编译安装，另一种是源安装
+二进制文件安装打开 Node.js - 下载 version 8.11.x or greater，8.x版本可以通过链接：https://nodejs.org/dist/ 查询，然后下载对应版本的tar.gz包, 其余版本系类似
+wget https://nodejs.org/dist/v8.11.0......
         </div>
     </a>
     
@@ -430,105 +536,6 @@ git clo......
         <p class="post-meta" style="margin: 10px 0;">
             Posted by banban on
             2018-11-12
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
-            
-              <a href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
-            
-              <a href="/tags/#Fabric" title="Fabric">Fabric</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/11/11/java/maven-3-installation/">
-        <h2 class="post-title">
-            Linux系统安装Maven3
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            下载maven创建目录
-mkdir -p /usr/share/maven/ &amp;&amp; cd /usr/share/maven
-下载maven3.6
-wget https://www-eu.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
-解压
-tar -zxvf apache-m......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2018-11-11
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Java" title="Java">Java</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/11/08/java/java-8-installation/">
-        <h2 class="post-title">
-            Linux系统安装JDK8
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            源安装Ubuntu 16.04使用ppa/源方式安装
-添加ppa
-sudo add-apt-repository ppa:webupd8team/java &amp;&amp; sudo apt-get update
-安装oracle-java-installer
-sudo apt-get install oracle-java8-installer
-切换到jdk8
-sudo update-......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2018-11-08
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Java" title="Java">Java</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/11/06/hyperledger/fabric-config-update/">
-        <h2 class="post-title">
-            Hyperledger Fabric (五) — Fabric更新配置
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Fabric更新频道配置什么是channel配置channel配置包含了所有管理channel的配置信息，同时也说明了对应channel的成员有哪些、访问的权限控制、区块大小配置等内容，这些配置信息都会存储在区块链上，被称为配置区块，第一个配置区块被称为genesis block， 它包含了Fabric网络启动的所有基本配置。而在之后的区块链更新中，所有的排序节点和peer节点都在自己的内存......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2018-11-06
         </p>
         <div class="tags">
             
@@ -660,23 +667,23 @@ sudo update-......
     <ul>
       
         <li>
-          <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">以太坊开发环境搭建</a>
+          <a href="/2022/05/05/golang/prof/">Linux 服务性能分析与火焰图🔥</a>
+        </li>
+      
+        <li>
+          <a href="/2022/04/12/bigdata/redis/redis/">Redis 笔记</a>
+        </li>
+      
+        <li>
+          <a href="/2022/04/11/bigdata/mongodb/mongodb/">MongoDB 笔记</a>
+        </li>
+      
+        <li>
+          <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">在以太坊测试网络 Goerli 部署 Swarm</a>
         </li>
       
         <li>
           <a href="/2020/01/13/angularjs/ng-echarts/">AngularJS使用Echarts</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/10/angularjs/promise/">[转] 关于 Angular 里的 $q 和 Promise</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/10/bigdata/elk/logstash_performance_tuning/">Logstash性能调优</a>
-        </li>
-      
-        <li>
-          <a href="/2019/10/10/angularjs/ng-focus/">AngularJS实现input autofocus属性</a>
         </li>
       
     </ul>
@@ -690,6 +697,14 @@ sudo update-......
     <!-- no hr -->
     <h5><a href="/tags/">FEATURED TAGS</a></h5>
     <div class="tags">
+        
+            
+        
+            
+        
+            
+        
+            
         
             
         
@@ -823,7 +838,7 @@ sudo update-......
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Chen Zhi Ling 2021
+                    Copyright &copy; Chen Zhi Ling 2022
                     <br>
                     <!-- Theme by <a href="http://huangxuan.me">Hux</a>
                     <span style="display: inline-block; margin: 0 5px;">

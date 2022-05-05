@@ -218,6 +218,105 @@
 
 <div class="post-preview">
 
+    <a href="/2018/11/11/java/maven-3-installation/">
+        <h2 class="post-title">
+            Linux系统安装Maven3
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            下载maven创建目录
+mkdir -p /usr/share/maven/ &amp;&amp; cd /usr/share/maven
+下载maven3.6
+wget https://www-eu.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+解压
+tar -zxvf apache-m......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2018-11-11
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Java" title="Java">Java</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/11/08/java/java-8-installation/">
+        <h2 class="post-title">
+            Linux系统安装JDK8
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            源安装Ubuntu 16.04使用ppa/源方式安装
+添加ppa
+sudo add-apt-repository ppa:webupd8team/java &amp;&amp; sudo apt-get update
+安装oracle-java-installer
+sudo apt-get install oracle-java8-installer
+切换到jdk8
+sudo update-......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2018-11-08
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Java" title="Java">Java</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2018/11/06/hyperledger/fabric-config-update/">
+        <h2 class="post-title">
+            Hyperledger Fabric (五) — Fabric更新配置
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            Fabric更新频道配置什么是channel配置channel配置包含了所有管理channel的配置信息，同时也说明了对应channel的成员有哪些、访问的权限控制、区块大小配置等内容，这些配置信息都会存储在区块链上，被称为配置区块，第一个配置区块被称为genesis block， 它包含了Fabric网络启动的所有基本配置。而在之后的区块链更新中，所有的排序节点和peer节点都在自己的内存......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by banban on
+            2018-11-06
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
+            
+              <a href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
+            
+              <a href="/tags/#Fabric" title="Fabric">Fabric</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2018/10/31/essay/shengjinyuan_fanjiabi_test/">
         <h2 class="post-title">
             盛金源反假币2018测试题库
@@ -453,128 +552,6 @@ cli
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/09/26/hyperledger/fabric-first-network/">
-        <h2 class="post-title">
-            Hyperledger Fabric (一) — 超级账本使用fabric-first-network
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            环境准备
-环境基于Ubuntu16.04
-Fabric version = 1.2.0
-
-安装dockerapt-get install docker.io -y
-安装docker-composeapt-get install -y python-pip python-setuptools
-pip install --upgrade pip
-pip install docker-compos......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2018-09-26
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Blockchain" title="Blockchain">Blockchain</a>
-            
-              <a href="/tags/#Hyperledger" title="Hyperledger">Hyperledger</a>
-            
-              <a href="/tags/#Fabric" title="Fabric">Fabric</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/09/25/docker/docker-installation/">
-        <h2 class="post-title">
-            Docker 安装
-        </h2>
-        <h3 class="post-subtitle">
-            "不同操作系统"
-        </h3>
-        <div class="post-content-preview">
-            Debian9移除旧的docker相关软件# apt-get remove docker docker-engine docker.io
-# apt-get update
-安装基本软件# sudo apt-get install -y \
-     apt-transport-https \
-     ca-certificates \
-     curl \
-     gnupg2 \
- ......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2018-09-25
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Docker" title="Docker">Docker</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/09/25/kubernetes/installation/">
-        <h2 class="post-title">
-            Kubernetes 集群安装(使用kubeadm)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            环境准备操作系统Debian9: Debian 4.9.65-3+deb9u1 (2017-12-23) x86_64 GNU/Linux
-OR
-CentOS Linux release 7.6.1810 (Core) 
-服务器信息
-
-
-hostname
-IP
-
-
-
-
-master-node
-10.82.45.41
-
-
-minion-node-1
-10.82.45.42
-
-
-minion-n......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by banban on
-            2018-09-25
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Kubernetes" title="Kubernetes">Kubernetes</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -691,23 +668,23 @@ minion-n......
     <ul>
       
         <li>
-          <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">以太坊开发环境搭建</a>
+          <a href="/2022/05/05/golang/prof/">Linux 服务性能分析与火焰图🔥</a>
+        </li>
+      
+        <li>
+          <a href="/2022/04/12/bigdata/redis/redis/">Redis 笔记</a>
+        </li>
+      
+        <li>
+          <a href="/2022/04/11/bigdata/mongodb/mongodb/">MongoDB 笔记</a>
+        </li>
+      
+        <li>
+          <a href="/2021/05/17/blockchain/ethereum/swarm_bee/">在以太坊测试网络 Goerli 部署 Swarm</a>
         </li>
       
         <li>
           <a href="/2020/01/13/angularjs/ng-echarts/">AngularJS使用Echarts</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/10/angularjs/promise/">[转] 关于 Angular 里的 $q 和 Promise</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/10/bigdata/elk/logstash_performance_tuning/">Logstash性能调优</a>
-        </li>
-      
-        <li>
-          <a href="/2019/10/10/angularjs/ng-focus/">AngularJS实现input autofocus属性</a>
         </li>
       
     </ul>
@@ -721,6 +698,14 @@ minion-n......
     <!-- no hr -->
     <h5><a href="/tags/">FEATURED TAGS</a></h5>
     <div class="tags">
+        
+            
+        
+            
+        
+            
+        
+            
         
             
         
@@ -854,7 +839,7 @@ minion-n......
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Chen Zhi Ling 2021
+                    Copyright &copy; Chen Zhi Ling 2022
                     <br>
                     <!-- Theme by <a href="http://huangxuan.me">Hux</a>
                     <span style="display: inline-block; margin: 0 5px;">

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于后台设计、音游与设计 | 陈志凌，Web &amp; Cloud Computing，Software Engineer | 这里是 @banban 陈志凌 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword" content="陈志凌, banbanpeppa陈志凌, banbanpeppa, peppa, @banbanpeppa, 陈志凌的博客, banbanpeppa Blog, 博客, 个人网站, 互联网, Web, Cloud, Kubernetes, OpenStack, Docker, Kubeflow">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Linux 服务性能分析与火焰图🔥 - banban&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://banbanpeppa.github.io/2022/05/05/golang/prof/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/images/essay/hello-world-bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header">
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                              <a class="tag" href="/tags/#Golang" title="Golang">Golang</a>
+                            
+                        </div>
+                        <h1>Linux 服务性能分析与火焰图🔥</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by banban on
+                            2022-05-05
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">banban&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About Me</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                        
+                    
+
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>运行在生产环境中的服务遇到资源消耗大，吃 CPU、内存的情况，便需要分析具体是哪一块代码执行出了问题。Linux 提供了许多性能分析工具，这边主要尝试使用 perf_events.</p>
+<p>Perf_events简称perf是 Linux 系统原生提供的性能分析工具，会返回 CPU 正在执行的函数名以及调用栈（stack）。通常，它的执行频率是 99Hz（每秒99次），如果99次都返回同一个函数名，那就说明 CPU 这一秒钟都在执行同一个函数，可能存在性能问题。</p>
+<h3 id="工具安装"><a href="#工具安装" class="headerlink" title="工具安装"></a>工具安装</h3><h4 id="安装-perf"><a href="#安装-perf" class="headerlink" title="安装 perf"></a>安装 perf</h4><p>perf 在 Linux 的工具包中，安装</p>
+<pre><code class="bash">apt install linux-tools
+</code></pre>
+<p>由于 perf 的分析往往会结合火焰图，需要补充安装 perf_data_converter ，这个能够将 perf 生成的文件进行转化，转为火焰图工具能够识别的格式，具体可参考：<a href="https://github.com/google/perf_data_converter，这边以" target="_blank" rel="noopener">https://github.com/google/perf_data_converter，这边以</a> Debian 为例</p>
+<h4 id="安装bazel"><a href="#安装bazel" class="headerlink" title="安装bazel"></a>安装bazel</h4><p>方法1：源安装 bazel</p>
+<pre><code class="bash">apt install apt-transport-https curl gnupg
+curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor &gt; bazel.gpg
+sudo mv bazel.gpg /etc/apt/trusted.gpg.d/
+echo &quot;deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8&quot; | sudo tee /etc/apt/sources.list.d/bazel.list
+
+sudo apt update &amp;&amp; sudo apt install bazel
+bazel --version
+</code></pre>
+<p>方法2：二进制包安装 bazel</p>
+<pre><code class="bash">wget https://github.com/bazelbuild/bazel/releases/download/5.1.1/bazel-5.1.1-linux-x86_64
+chmod +x bazel-&lt;version&gt;-installer-linux-x86_64.sh
+./bazel-&lt;version&gt;-installer-linux-x86_64.sh --user
+</code></pre>
+<h4 id="安装perf-data-converter"><a href="#安装perf-data-converter" class="headerlink" title="安装perf_data_converter"></a>安装perf_data_converter</h4><pre><code class="bash">git clone https://github.com/google/perf_data_converter.git
+cd perf_data_converter
+bazel build src:perf_to_profile
+</code></pre>
+<p>编译完之后将 perf_to_profile 文件移动到 <code>/usr/local/bin</code> 目录下</p>
+<h4 id="下载-speedscope-工具并部署"><a href="#下载-speedscope-工具并部署" class="headerlink" title="下载 speedscope 工具并部署"></a>下载 speedscope 工具并部署</h4><p>项目地址： <a href="https://github.com/jlfwong/speedscope" target="_blank" rel="noopener">https://github.com/jlfwong/speedscope</a></p>
+<p>服务部署可以通过 nginx 代理的方式，采用 docker-compose 完成</p>
+<p>docker-compose.yaml</p>
+<pre><code class="yaml">version: &#39;3.1&#39;
+services:
+  custom-nginx-proxy:
+    image: nginx:1.10.1
+    volumes:
+      - ${STATIC_FILE_PATH}:/usr/share/nginx/html:ro
+      - ${NGINX_CONFIG_PATH}:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - ${PROXY_PORT:-8080}:80
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
+</code></pre>
+<p>.env</p>
+<pre><code>STATIC_FILE_PATH=/home/nginx/file_store
+NGINX_CONFIG_PATH=/home/nginx/default.conf
+PROXY_PORT=80
+</code></pre><p>default.conf</p>
+<pre><code>server {
+    listen       80;
+    server_name  localhost;
+
+    #charset koi8-r;
+    #access_log  /var/log/nginx/log/host.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+        autoindex on;
+        autoindex_exact_size on;
+        autoindex_localtime on;
+        charset utf-8;
+    }
+
+    #error_page  404              /404.html;
+}
+</code></pre><p>将 speedscope 的资源文件下载到目录 <code>/home/nginx/file_store</code> 目录下</p>
+<pre><code>cd /home/nginx/file_store
+wget https://github.com/jlfwong/speedscope/releases/download/v1.13.0/speedscope-1.13.0.zip
+unzip speedscope-1.13.0.zip
+</code></pre><p>接来下就可以通过部署服务的机器访问：<a href="http://localhost/speedscope" target="_blank" rel="noopener">http://localhost/speedscope</a></p>
+<h4 id="下载-FlameGraph"><a href="#下载-FlameGraph" class="headerlink" title="下载 FlameGraph"></a>下载 FlameGraph</h4><p>项目地址：<a href="https://github.com/brendangregg/FlameGraph" target="_blank" rel="noopener">https://github.com/brendangregg/FlameGraph</a></p>
+<p>直接下载即可：<a href="https://github.com/brendangregg/FlameGraph/releases" target="_blank" rel="noopener">https://github.com/brendangregg/FlameGraph/releases</a></p>
+<h3 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h3><p>工具已就绪，直接按照需要执行下面的命令</p>
+<p>例如要排查一个服务进程的资源使用情况，假定进程名称为：go-proxy</p>
+<p>则先获取进程的 ID</p>
+<pre><code>TARGET_PID=$(ps -ef | grep go-proxy | grep -v grep | awk -F &#39; &#39; &#39;{print $2}&#39;)
+</code></pre><p>使用 perf 获取对应的性能指标记录</p>
+<pre><code>perf record -F 99 -p ${TARGET_PID} -g -- sleep 60
+</code></pre><p>上面的命令中，perf record 表示记录，-F 99表示每秒 99 次，-p xxx 是进程号，即对哪个进程进行分析，也可以对线程进行分析，-g表示记录调用栈，sleep 60 则是持续 60 秒。运行后会产生一个庞大的文本文件 <code>perf.data</code></p>
+<p>为了能够利用火焰图进行观察，需要进行下列两个步骤获得符合火焰图格式的 profile 文件</p>
+<pre><code class="bash">perf script -i perf.data &amp;&gt; perf.unfold
+</code></pre>
+<pre><code class="bash">FlameGraph-1.0/stackcollapse-perf.pl perf.unfold &amp;&gt; perf.folded
+</code></pre>
+<p>利用上面下载的 FlameGraph 工具导出火焰图</p>
+<pre><code>FlameGraph-1.0/flamegraph.pl perf.folded &gt; perf.svg
+</code></pre><p>例如：</p>
+<p><img src="http://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg" alt="img"></p>
+<p>同时也可以将 <code>perf.folded</code> 文件放到 speedscope 中分析</p>
+<ol>
+<li>将 <code>perf.folded</code> 文件放置于 <code>/home/nginx/file_store</code> 目录下</li>
+<li>通过链接 <a href="http://localhost/speedscope/#profileURL=http%3A%2F%2Flocalhost%2Fperf.folded&amp;title=go_proxy" target="_blank" rel="noopener">http://localhost/speedscope/#profileURL=http%3A%2F%2Flocalhost%2Fperf.folded&amp;title=go_proxy</a> 访问即可</li>
+</ol>
+<p>上面的格式只要遵循：<code>#profileURL=[URL-encoded profile URL]&amp;title=[URL-encoded custom title]</code>即可，不过要注意 profileUrl 需要是可跨域的，这边示例是放在同一个域名下，不会有跨域问题</p>
+<p><img src="https://user-images.githubusercontent.com/150329/40900669-86eced80-6781-11e8-92c1-dc667b651e72.gif" alt="img"></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>火焰图最直观的就是每隔一个方法调用在整个 CPU 采样中的占比，移动鼠标到对应的方法栈上面能够显示 CPU 使用的占比，进而分析哪一个方法的资源耗费最大。</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2022/04/12/bigdata/redis/redis/" data-toggle="tooltip" data-placement="top" title="Redis 笔记">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#工具安装"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">工具安装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#安装-perf"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">安装 perf</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#安装bazel"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">安装bazel</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#安装perf-data-converter"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">安装perf_data_converter</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#下载-speedscope-工具并部署"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">下载 speedscope 工具并部署</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#下载-FlameGraph"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">下载 FlameGraph</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#定位问题"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">定位问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#分析"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">分析</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                          <a class="tag" href="/tags/#Golang" title="Golang">Golang</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.lookfor404.com/" target="_blank">lookfor404</a></li>
+                    
+                        <li><a href="https://silence-linhl.github.io/blog/" target="_blank">silence</a></li>
+                    
+                        <li><a href="https://yisiychan.github.io/" target="_blank">yisiychan</a></li>
+                    
+                        <li><a href="https://b3434lock.gitee.io/" target="_blank">b3434lock</a></li>
+                    
+                        <li><a href="http://lamyoung.com/" target="_blank">lamyoung</a></li>
+                    
+                        <li><a href="http://www.whitewood.me/" target="_blank">时间与精神的小屋</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "banbanblog";
+    var disqus_identifier = "https://banbanpeppa.github.io/2022/05/05/golang/prof/";
+    var disqus_url = "https://banbanpeppa.github.io/2022/05/05/golang/prof/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/atom.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/ZhilingSomnus">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3112637187">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://github.com/banbanpeppa">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chen Zhi Ling 2022
+                    <br>
+                    <!-- Theme by <a href="http://huangxuan.me">Hux</a>
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span>
+                    re-Ported by <a href="http://beantech.org">BeanTech</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=banbanpeppa&repo=hexo-theme-beantech&type=star&count=true" >
+                    </iframe> -->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://banbanpeppa.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Highlight.js -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://banbanpeppa.github.io/images/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
